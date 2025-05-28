@@ -5,22 +5,22 @@ Hub này là nơi lưu trữ trung tâm cho tất cả bài blog, dự án, và 
 Để đảm bảo việc quản lý hub được nhất quán và hiệu quả, vui lòng làm theo các hướng dẫn dưới đây một cách cẩn thận:<br/>
 
 ## I/ Cấu trúc folder:  
-> 1/ Folder - Blog and Project: <br/>
->> 1.1/ Folder - W1
+> 1. Folder - Blog and Project <br/>
+>> 1.1. Folder - W1
 >>> File - Blog notes
 >>> File - Projects 
 
->> 1.2/ Folder - W2 <br/>
+>> 1.2. Folder - W2 <br/>
 >> ...
 
-> 2/ Folder - Team briefing: <br/>
+> 2. Folder - Team briefing <br/>
 >> File - Meeting briefing 05.28.2025
 >> ... <br/>
 
-> 3/ Folder - Competition: <br/>
+> 3. Folder - Competition <br/>
 >> Folder - Competition Name  
 
-> 4/ Folder - Reference:
+> 4. Folder - Reference
 >> File/Link - Reference/Papers
 
 ## II/ Các deadline quan trọng:
