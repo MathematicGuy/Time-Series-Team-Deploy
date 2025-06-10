@@ -2,7 +2,7 @@
 
 🎉 **Chào mừng đến với blog Tuần 1 của team Time Series!**
 
-Tuần học đầu tiên đã chính thức bắt đầu với nhiều kiến thức nền tảng cực kỳ quan trọng cho lập trình và khoa học dữ liệu. Chúng tôi đã học tập và thảo luận sôi nổi qua từng buổi học, kết hợp lý thuyết với các ví dụ ứng dụng thực tế trong AI, Business và Phân tích Dữ liệu.
+Tuần học đầu tiên đã chính thức bắt đầu với nhiều kiến thức nền tảng cực kỳ quan trọng cho lập trình và khoa học dữ liệu. Bên cạnh tóm tắt kiến thức chính của tuần 1, các bạn có thể tìm thấy tại blog của team Time Series đơn giản hóa kiến thức, minh họa bằng những ví dụ thực tế được áp dụng, không những thế chúng mình còn mở rộng và chứng minh lại kiến thức toán bằng phép toán siêu cơ bản. Hãy dành thời gian đọc hết post từ Buổi 1 đến Buổi số 5 nhé!
 
 ---
 
