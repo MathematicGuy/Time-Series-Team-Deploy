@@ -60,7 +60,7 @@ Tuần học thứ 2 đưa chúng ta đến với những kiến thức cực k�
 
 📂 *Tài liệu đi kèm:*  
 
-- [📄 Data Structure (1) - LIST](./Week_1_Buoi_1.pdf)  
+- [📄 Data Structure (1) - LIST](./Data Structure (1) - LIST.pdf)  
 - [📄 Database - SQL (2)](./Week_1_Buoi_2.pdf)  
 - [📄 Data Structure (2) - TUPLE, SET and DICTIONARY](./Week_1_Buoi_3.pdf)  
 - [📄 Git&Github for Version Control](./Week_1_Buoi_4.pdf)  
