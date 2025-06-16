@@ -60,9 +60,9 @@ Tuần học thứ 2 đưa chúng ta đến với những kiến thức cực k�
 
 📂 *Tài liệu đi kèm:*  
 
-- [📄 Data Structure (1) - LIST](./Data Structure (1) - LIST.pdf)  
+- [📄 Data Structure (1) - LIST](./Data_Structure_(1)_LIST.pdf)  
 - [📄 Database - SQL (2)](./Week_1_Buoi_2.pdf)  
-- [📄 Data Structure (2) - TUPLE, SET and DICTIONARY](./Week_1_Buoi_3.pdf)  
+- [📄 Data Structure (2) - TUPLE, SET and DICTIONARY](./Data_Structure_(2)_TUPLE_SET_and_DICTIONARY.pdf)  
 - [📄 Git&Github for Version Control](./Week_1_Buoi_4.pdf)  
 - [📄 Đằng sau Swap.pdf](./Đằng_sau_Swap.pdf)
 - [📄 Code_sample](./Code_sample/)
