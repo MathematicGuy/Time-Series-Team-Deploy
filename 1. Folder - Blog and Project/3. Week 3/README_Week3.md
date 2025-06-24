@@ -69,7 +69,7 @@ Tuần học thứ 3 đã mang đến những kiến thức cực kỳ quan tr�
 
 ## 🗂 **Tài liệu đi kèm**
 
-- [📄 Week_3_Buoi_T3+T4_OOP](./Week_3_Buoi_T3+T4_OOP)  
+- [📄 Week_3_Buoi_T3+T4_OOP](./Week_3_Buoi_T3+T4_OOP.pdf)  
 - [📄 Week_3_Buoi_T5.pdf](./Week_3_Buoi_T5.pdf)  
 - [📄 Week_3_Buoi_T6.pdf](./Week_3_Buoi_T6.pdf)  
 
