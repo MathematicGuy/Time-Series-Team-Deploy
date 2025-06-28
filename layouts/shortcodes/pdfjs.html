@@ -1,0 +1,25 @@
+{{- $src := .Get "src" -}}
+{{- $title := .Get "title" | default "PDF Document" -}}
+{{- $height := .Get "height" | default "600px" -}}
+
+<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+  <div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+    <span class="font-semibold text-sm">📄 {{ $title }}</span>
+    <div class="flex space-x-2">
+      <a href="{{ $src }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+        Open in New Tab
+      </a>
+      <a href="{{ $src }}" download class="text-blue-600 hover:text-blue-800 text-sm">
+        Download
+      </a>
+    </div>
+  </div>
+  <iframe 
+    src="https://mozilla.github.io/pdf.js/web/viewer.html?file={{ $src | absURL }}" 
+    width="100%" 
+    height="{{ $height }}"
+    class="border-0"
+    title="{{ $title }}">
+    <p>Your browser does not support PDFs. <a href="{{ $src }}">Download the PDF</a>.</p>
+  </iframe>
+</div>

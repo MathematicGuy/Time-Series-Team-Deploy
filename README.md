@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Chào mừng đến với Team Hub!
 
 Hub này là nơi lưu trữ trung tâm cho tất cả bài blog, dự án, và cuộc họp nhóm. Các nội dung sẽ được sắp xếp trong các thư mục riêng biệt, mỗi thư mục sẽ phục vụ cho một mục đích cụ thể.

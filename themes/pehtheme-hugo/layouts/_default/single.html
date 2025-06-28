@@ -1,0 +1,120 @@
+{{ define "main" }}
+{{- partial "content/breadcrumb.html" . -}}
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+
+  <article class="md:col-span-2 prose lg:prose-lg">
+
+    <header class="not-prose">
+      
+      <h1 id="title" class="text-4xl font-bold leading-normal">{{ .Title }}</h1>
+
+      <div id="lead" class="my-6">
+
+        <p class="font-bold">{{ .Params.description }} </p>
+
+      </div>
+      
+      <div id="writer" class="flex items-center space-x-4">
+
+        {{- $name := .Site.Params.Author.name -}}
+
+        {{- with $avatar := resources.Get .Site.Params.Author.avatar }}
+
+        <img class="w-12 h-12 bg-black rounded-full" src="{{ $avatar.Permalink }}" alt="{{ $name }} avatar" width="{{ $avatar.Width }}" height="{{ $avatar.Height }}">
+
+        {{ end -}}
+        
+        <ul class="flex items-center space-x-4 flex-nowrap whitespace-nowrap overflow-x-auto">
+          
+          <li class="font-semibold my-2">{{ .Site.Params.Author.name }}</li>
+          
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2">
+            {{- $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" -}}
+            {{- $dateHuman := .Date | time.Format ":date_long" -}}
+            <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+          </li>
+
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2">
+            {{ .ReadingTime }} min read
+          </li>
+
+        </ul>
+
+      </div>
+      
+    </header>
+
+    <figure id="featureimage" class="rounded-xl aspect-video">
+
+      {{- if .Params.image }}
+
+        {{- if ( strings.HasPrefix .Params.image "http" ) }}
+
+          <img class="rounded-lg" src="{{ .Params.image }}" alt="{{ .Params.title }}">
+
+        {{- else }}
+
+          {{- with $image := resources.Get .Params.image }}
+            {{- $image := $image.Resize "750x" }}
+            <img class="rounded-lg" src="{{ $image.Permalink }}" alt="{{ .Params.title }}" width="{{ $image.Width }}" height="{{ $image.Height }}">
+          {{- end }}
+
+        {{- end }}
+
+      {{- end }}
+
+      {{- if ( isset .Params "caption" ) }}
+        <figcaption class="text-center italic text-xs">{{ .Params.caption }}</figcaption>
+      {{- end }}
+
+    </figure>
+
+    <div id="content" class="mb-14">
+      <!-- Content -->
+
+      {{- .Content -}}
+
+      <!-- Tags list -->
+
+      {{- partial "terms.html" (dict "taxonomy" "tags" "page" .) -}}
+
+    </div>
+
+    <footer id="content-footer" class="not-prose">
+
+      <div id="related-post" class="">
+
+        <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Recommended for You</h2>
+
+        {{- $related := .Site.RegularPages.Related . | first 2 -}}
+
+        {{- with $related -}}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {{- range . }}
+
+          {{- partial "content/card.html" . -}}
+
+          {{- end }}
+          
+        </div>
+
+        {{- end }}
+      </div>
+
+    </footer>
+
+  </article>
+
+  <!-- Aside -->
+  <aside class="md:col-span-1">
+
+    {{- partial "content/aside.html" . -}}
+    
+  </aside>
+
+</div>
+  
+{{ end }}
