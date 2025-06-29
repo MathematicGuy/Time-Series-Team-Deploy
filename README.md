@@ -42,20 +42,21 @@ Hub này là nơi lưu trữ trung tâm cho tất cả bài blog, dự án, và 
 - W1: Hà + Thành
 - W2: Linh + Tùng
 - W3: Phương + Huân
-- W4: Hà + Tùng
-- W5: Linh + Huân
-- W6: Phương + Thành
-- W7: Hà + Huân
-- W8: Linh + Thành
-- W9: Phương + Tùng 
 - ... Thứ tự sẽ được tiếp tục lặp lại tương tự như W1 - W9 cho các tuần tiếp theo 
-- W10: Hà + Thành
-- W11: Linh + Tùng
-- W12: Phương + Huân
-- W14: Hà + Tùng
-- W15: Linh + Huân
-- W16: Phương + Thành
-- W17: Hà + Huân
-- W18: Linh + Thành
-- W19: Phương + Tùng 
-- ...
+
+# IV/ Cách để push nội dung lên website:
+**Bước 1**: Tạo file index.md (Readme của tuần) và lưu lại tại folder `content/posts/2025/Week <xxx>`. Trong trường hợp nội dung khác không phải blog tuần thì miễn sao file `index.md` ở tại folder `content/posts` là được. <br/>
+**Bước 2**: Lưu file pdf tóm tắt buổi học tại vị trí `assets/pdf` Và để nhúng file pdf vào file `index.md`, thì tại phần Tài liệu đính kèm phải được lập trình theo mẫu syntax sau: 
+
+```bash
+ {{< pdf src="/Time-Series-Team-Hub/pdf/<TEN_FILE.pdf>" title="<TEN_FILE.pdf>" height="700px" >}}
+```
+**Bước 3**: Cách chạy hugo server để xem trước website tại máy trước khi đưa file lên github. 
+```bash
+sudo snap install hugo
+hugo server
+```
+Tại terminal, bấm vào đường dẫn tại phần Web Server để xem webpage. 
+![alt text](./assets/images/hugo-blog-instruction.png)
+
+**Note:** Chrome web browser sẽ cache trang web nên nếu có những thay đổi thì phải force refresh bằng cách Ctrl + Shift + R

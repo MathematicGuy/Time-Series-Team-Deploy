@@ -1,5 +1,5 @@
 ---
-title: "Tuần 3 – Blog của Team Time Series"
+title: "Tuần 3 – Cặp đôi OOP và Data Structure"
 date: 2025-06-28T13:03:07+07:00
 # slug: /tuan-3/
 description: Tuần học thứ 3 đã mang đến những kiến thức cực kỳ quan trọng cho cả lập trình căn bản và ứng dụng thực tiễn
