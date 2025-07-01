@@ -8,9 +8,6 @@ Original file is located at
 
 # RAG Chatbot
 """
-
-!nvidia-smi
-
 """## **Install and import libraries**"""
 
 !pip install -q transformers==4.52.4
