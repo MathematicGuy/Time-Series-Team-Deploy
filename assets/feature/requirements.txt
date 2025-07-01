@@ -10,3 +10,4 @@ langchain_huggingface==0.2.0
 python-dotenv==1.1.0
 pypdf
 streamlit==1.46.0
+protobuf==3.20.3
