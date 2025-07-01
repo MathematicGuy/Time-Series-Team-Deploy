@@ -3,11 +3,11 @@ bitsandbytes==0.46.0
 accelerate==1.7.0
 langchain==0.3.25
 langchainhub==0.1.21
-langchain-chroma==0.2.4
 langchain_experimental==0.3.4
 langchain-community==0.3.24
 langchain_huggingface==0.2.0
 python-dotenv==1.1.0
 pypdf
 streamlit==1.46.0
-protobuf==3.20.3
+protobuf==3.20.3  # ✅ Prevents descriptor crash with transformers/langchain
+faiss-cpu         # ✅ Needed for FAISS vector store (use `faiss-gpu` only if on local GPU)

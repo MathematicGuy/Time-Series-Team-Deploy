@@ -2,11 +2,12 @@ import streamlit as st
 import os
 import torch
 import requests
+import shutil
 from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_experimental.text_splitter import SemanticChunker
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS  # Changed from Chroma to FAISS
 from langchain_huggingface.llms import HuggingFacePipeline
 from langchain import hub
 from langchain_core.output_parsers import StrOutputParser
@@ -254,7 +255,7 @@ def load_pdfs_from_github(repo_url):
   status_text.empty()
 
   if not all_documents:
-    return None, 0, load_files
+    return None, 0, loaded_files
 
   semantic_splitter = SemanticChunker(
       embeddings = st.session_state.embeddings,
@@ -266,13 +267,16 @@ def load_pdfs_from_github(repo_url):
   )
 
   docs = semantic_splitter.split_documents(all_documents)
-  vector_db = Chroma.from_documents(documents = docs, embedding = st.session_state.embeddings)
-  retriever = vector_db.as_retriever()
+  
+  # FAISS implementation - Changed from Chroma
+  vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
+  retriever = vector_db.as_retriever(search_kwargs={"k": 4})  # You can adjust k value
 
   prompt = hub.pull("rlm/rag-prompt")
 
   def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
+  
   rag_chain = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
@@ -280,8 +284,7 @@ def load_pdfs_from_github(repo_url):
         | StrOutputParser()
     )
 
-
-  import shutil
+  # Clean up temporary directory
   shutil.rmtree(temp_dir)
 
   return rag_chain, len(docs), loaded_files
@@ -335,8 +338,10 @@ def load_pdfs_from_folder(folder_path):
     )
 
     docs = semantic_splitter.split_documents(all_documents)
-    vector_db = Chroma.from_documents(documents=docs, embedding=st.session_state.embeddings)
-    retriever = vector_db.as_retriever()
+    
+    # FAISS implementation - Changed from Chroma
+    vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
+    retriever = vector_db.as_retriever(search_kwargs={"k": 4})  # You can adjust k value
 
     prompt = hub.pull("rlm/rag-prompt")
 
@@ -355,13 +360,13 @@ def display_chat_message(message, is_user = True):
   if is_user:
     st.markdown(f"""
     <div class = "user-message">
-        <strong>You:</strong>{message}
+        <strong>You:</strong> {message}
     </div>
     """, unsafe_allow_html = True)
   else:
     st.markdown(f"""
     <div class = "assistant-message">
-        <strong>AI Assistant:</strong>{message}
+        <strong>AI Assistant:</strong> {message}
     </div>
     """, unsafe_allow_html = True)
 
@@ -384,8 +389,8 @@ def main():
     # Header
     st.markdown("""
     <div class="main-header">
-        <h1>🤖 PDF RAG Assistant</h1>
-        <p>Smart AI Assistant - Q&A with AIO in Vietnamese</p>
+        <h1>🤖 PDF RAG Assistant with FAISS</h1>
+        <p>Smart AI Assistant - Q&A with PDF documents using FAISS vector store</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -399,7 +404,7 @@ def main():
 
       # Document loading status
       if st.session_state.documents_loaded:
-          st.markdown('<span class="status-indicator status-ready"></span>**Documents:** Loaded', unsafe_allow_html=True)
+          st.markdown('<span class="status-indicator status-ready"></span>**Documents:** Loaded (FAISS)', unsafe_allow_html=True)
       else:
           st.markdown('<span class="status-indicator status-error"></span>**Documents:** Not loaded', unsafe_allow_html=True)
 
@@ -440,6 +445,11 @@ def main():
           st.session_state.processing_query = False
           st.rerun()
 
+      # FAISS specific settings
+      st.divider()
+      st.subheader("🔍 FAISS Settings")
+      st.info("FAISS is a fast similarity search library. It's more memory efficient than Chroma.")
+
     if not st.session_state.models_loaded:
         with st.spinner("🚀 Initializing AI models..."):
             st.session_state.embeddings = load_embeddings()
@@ -450,7 +460,7 @@ def main():
         st.rerun()
 
     if st.session_state.models_loaded and not st.session_state.documents_loaded:
-      with st.spinner("📚 Loading documents..."):
+      with st.spinner("📚 Loading documents into FAISS vector store..."):
         if st.session_state.pdf_source == "github":
           rag_chain, num_chunks, loaded_files = load_pdfs_from_github(st.session_state.github_repo_url)
         else:
@@ -462,15 +472,16 @@ def main():
 
             st.markdown(f"""
             <div class="document-info">
-                <h4>📄 Successfully loaded {len(loaded_files)} PDF documents:</h4>
+                <h4>📄 Successfully loaded {len(loaded_files)} PDF documents into FAISS:</h4>
                 <ul>
                     {"".join([f"<li>{file}</li>" for file in loaded_files])}
                 </ul>
                 <p><strong>Total chunks:</strong> {num_chunks}</p>
+                <p><strong>Vector Store:</strong> FAISS (Fast similarity search)</p>
             </div>
             """, unsafe_allow_html=True)
 
-            st.success("✅ Documents ready for Q&A!")
+            st.success("✅ Documents ready for Q&A with FAISS!")
             time.sleep(2)
             st.rerun()
         else:
@@ -537,7 +548,7 @@ def main():
     else:
       st.markdown("""
       <div style='text-align: center; padding: 2rem;'>
-        <h3>👋 Welcome to PDF RAG Assistant!</h3>
+        <h3>👋 Welcome to PDF RAG Assistant with FAISS!</h3>
         <p>To get started, please:</p>
         <ol style='text-align: left; max-width: 500px; margin: 0 auto;'>
             <li><strong>Choose your document source:</strong>
@@ -546,12 +557,14 @@ def main():
                     <li><strong>Local Folder:</strong> Use documents from your local machine</li>
                 </ul>
             </li>
-            <li><strong>Click "Load Documents"</strong> to process the PDF files</li>
+            <li><strong>Click "Load Documents"</strong> to process the PDF files into FAISS vector store</li>
             <li><strong>Start asking questions!</strong> The AI will answer based on your documents</li>
         </ol>
         <br>
         <p><strong>Default Repository:</strong><br>
         <code>https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/pdf</code></p>
+        <br>
+        <p><strong>FAISS Benefits:</strong> Faster similarity search, lower memory usage, better performance for large document collections.</p>
       </div>
       """, unsafe_allow_html=True)
 
