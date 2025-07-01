@@ -1,0 +1,13 @@
+streamlit
+torch
+transformers
+langchain-community
+langchain-huggingface
+langchain-experimental
+langchain
+langchain-core
+faiss-cpu
+requests
+pypdf
+chromadb
+sentence-transformers
