@@ -13,7 +13,6 @@ from langchain import hub
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
-from transformers import BitsAndBytesConfig
 import time
 import tempfile
 import urllib.parse
@@ -146,32 +145,43 @@ def load_embeddings():
 
 @st.cache_resource
 def load_llm():
-  MODEL_NAME = "lmsys/vicuna-7b-v1.5"
-
-  bnb_config = BitsAndBytesConfig(
-      load_in_4bit = True,
-      bnb_4bit_use_double_quant = True,
-      bnb_4bit_compute_dtype = torch.bfloat16,
-      bnb_4bit_quant_type = "nf4"
-  )
-
-  model = AutoModelForCausalLM.from_pretrained(
-      MODEL_NAME,
-      quantization_config = bnb_config,
-      device_map = "auto"
-  )
-
-  tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-  model_pipeline = pipeline(
-      "text-generation",
-      model = model,
-      tokenizer = tokenizer,
-      max_new_tokens = 512,
-      pad_token_id = tokenizer.eos_token_id,
-      device_map = "auto"
-  )
-  return HuggingFacePipeline(pipeline = model_pipeline)
+    """Load a lightweight model suitable for deployment"""
+    try:
+        st.info("🔄 Loading CPU-optimized model for deployment...")
+        
+        # Use a lightweight model that works well on CPU
+        MODEL_NAME = "microsoft/DialoGPT-small"  # Very lightweight for demo
+        
+        # Load without any quantization
+        tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+        model = AutoModelForCausalLM.from_pretrained(
+            MODEL_NAME,
+            torch_dtype=torch.float32,
+            low_cpu_mem_usage=True
+        )
+        
+        # Ensure pad token exists
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+            
+        # Create pipeline for CPU
+        model_pipeline = pipeline(
+            "text-generation",
+            model=model,
+            tokenizer=tokenizer,
+            max_new_tokens=128,  # Reduced for better performance
+            temperature=0.7,
+            do_sample=True,
+            pad_token_id=tokenizer.eos_token_id,
+            device=-1  # Force CPU usage
+        )
+        
+        return HuggingFacePipeline(pipeline=model_pipeline)
+        
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
+        st.error("Please try using a local deployment or check your environment setup.")
+        return None
 
 def get_github_pdf_files(repo_url):
   """
