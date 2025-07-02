@@ -40,13 +40,3 @@ Chatbot được xây dựng bằng:
 | Semantic Split | LangChain `SemanticChunker` |
 | Truy xuất văn bản | ChromaDB |
 | Truy vấn ngữ cảnh | RAG pipeline |
-
----
-
-## 📥 Cần hỗ trợ?
-
-Nếu bạn muốn triển khai chatbot tương tự cho nhóm, lớp học, doanh nghiệp hay dự án cá nhân, hãy liên hệ nhóm để được hỗ trợ setup!
-
----
-
-🧠 _Mọi câu hỏi đều có thể bắt đầu bằng một tệp PDF._
