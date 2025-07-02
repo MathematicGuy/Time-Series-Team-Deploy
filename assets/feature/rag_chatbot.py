@@ -258,7 +258,7 @@ def simple_text_generation(question, context):
         st.info(f"🔑 Từ khóa tìm kiếm: {', '.join(question_words)}")
         
         if not question_words:
-            return f"Không thể xác định từ khóa từ câu hỏi. Vui lòng đặt câu hỏi cụ thể hơn."
+            return "Không thể xác định từ khóa từ câu hỏi. Vui lòng đặt câu hỏi cụ thể hơn."
         
         # Tìm câu liên quan
         relevant_sentences = []
