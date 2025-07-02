@@ -23,7 +23,8 @@ import urllib.parse
 import zipfile
 
 st.set_page_config(
-    page_title="PDF RAG Assistant",
+    page_title="Trợ Lý AI Tiếng Việt",
+    page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -34,6 +35,9 @@ st.markdown("""
     text-align: center;
     padding: 1rem 0;
     margin-bottom: 2rem;
+    background: linear-gradient(90deg, #ff0000, #ffff00);
+    border-radius: 10px;
+    color: white;
   }
   .chat-container{
     max-width: 800px;
@@ -44,6 +48,7 @@ st.markdown("""
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     margin-bottom: 20px;
+    background-color: #fafafa;
   }
   .user-message{
     background-color: #000000;
@@ -134,10 +139,18 @@ st.markdown("""
     display: inline-block;
     font-size: 12px;
   }
+  .vietnam-flag {
+    background: linear-gradient(to bottom, #ff0000 50%, #ffff00 50%);
+    width: 30px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 3px;
+  }
 </style>
 """, unsafe_allow_html=True)
 
-# Session state initialization
+# Khởi tạo session state
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 if 'rag_chain' not in st.session_state:
@@ -151,7 +164,7 @@ if 'llm' not in st.session_state:
 if 'documents_loaded' not in st.session_state:
     st.session_state.documents_loaded = False
 if 'pdf_source' not in st.session_state:
-    st.session_state.pdf_source = "github"  # Default to GitHub
+    st.session_state.pdf_source = "github"
 if 'github_repo_url' not in st.session_state:
     st.session_state.github_repo_url = "https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/pdf"
 if 'local_folder_path' not in st.session_state:
@@ -163,18 +176,19 @@ if 'query_input' not in st.session_state:
 
 @st.cache_resource
 def load_embeddings():
-    return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    """Tải mô hình embedding tiếng Việt"""
+    return HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 
 @st.cache_resource
 def load_llm():
-    """Load a lightweight model suitable for deployment"""
+    """Tải mô hình ngôn ngữ nhẹ phù hợp cho triển khai"""
     try:
-        st.info("🔄 Loading CPU-optimized model for deployment...")
+        st.info("🔄 Đang tải mô hình AI tối ưu cho CPU...")
         
-        # Use a lightweight model that works well on CPU
-        MODEL_NAME = "microsoft/DialoGPT-small"  # Very lightweight for demo
+        # Sử dụng mô hình nhẹ hoạt động tốt trên CPU
+        MODEL_NAME = "microsoft/DialoGPT-small"
         
-        # Load without any quantization
+        # Tải mà không cần quantization
         tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
         model = AutoModelForCausalLM.from_pretrained(
             MODEL_NAME,
@@ -182,35 +196,35 @@ def load_llm():
             low_cpu_mem_usage=True
         )
         
-        # Ensure pad token exists
+        # Đảm bảo có pad token
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             
-        # Create pipeline for CPU
+        # Tạo pipeline cho CPU
         model_pipeline = pipeline(
             "text-generation",
             model=model,
             tokenizer=tokenizer,
-            max_new_tokens=128,  # Reduced for better performance
+            max_new_tokens=128,
             temperature=0.7,
             do_sample=True,
             pad_token_id=tokenizer.eos_token_id,
-            device=-1  # Force CPU usage
+            device=-1  # Ép buộc sử dụng CPU
         )
         
         return HuggingFacePipeline(pipeline=model_pipeline)
         
     except Exception as e:
-        st.error(f"Error loading model: {str(e)}")
-        st.error("Please try using a local deployment or check your environment setup.")
+        st.error(f"Lỗi khi tải mô hình: {str(e)}")
+        st.error("Vui lòng thử triển khai cục bộ hoặc kiểm tra cài đặt môi trường.")
         return None
 
 def extract_text_from_uploaded_file(file):
-    """Extract text from uploaded file based on file type"""
+    """Trích xuất văn bản từ file được tải lên dựa trên loại file"""
     file_extension = file.name.split('.')[-1].lower()
     
     try:
-        # Create temporary file
+        # Tạo file tạm thời
         with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{file_extension}') as tmp_file:
             tmp_file.write(file.getbuffer())
             tmp_path = tmp_file.name
@@ -227,38 +241,38 @@ def extract_text_from_uploaded_file(file):
             loader = UnstructuredExcelLoader(tmp_path)
             documents = loader.load()
         else:
-            st.warning(f"Unsupported file type: {file_extension}")
+            st.warning(f"Định dạng file không được hỗ trợ: {file_extension}")
             return []
         
-        # Clean up temporary file
+        # Dọn dẹp file tạm thời
         os.unlink(tmp_path)
         return documents
         
     except Exception as e:
-        st.error(f"Error processing {file.name}: {str(e)}")
+        st.error(f"Lỗi khi xử lý {file.name}: {str(e)}")
         if 'tmp_path' in locals() and os.path.exists(tmp_path):
             os.unlink(tmp_path)
         return []
 
 def process_zip_file(zip_file):
-    """Process uploaded zip file containing documents"""
+    """Xử lý file zip được tải lên chứa tài liệu"""
     try:
         all_documents = []
         loaded_files = []
         
-        # Create temporary directory for extraction
+        # Tạo thư mục tạm thời để giải nén
         temp_dir = tempfile.mkdtemp()
         
-        # Save uploaded zip file
+        # Lưu file zip được tải lên
         zip_path = os.path.join(temp_dir, zip_file.name)
         with open(zip_path, 'wb') as f:
             f.write(zip_file.getbuffer())
         
-        # Extract zip file
+        # Giải nén file zip
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
         
-        # Find all document files in extracted folder
+        # Tìm tất cả file tài liệu trong thư mục đã giải nén
         for root, dirs, files in os.walk(temp_dir):
             for file in files:
                 if file.lower().endswith(('.pdf', '.docx', '.xlsx', '.xls')):
@@ -274,22 +288,21 @@ def process_zip_file(zip_file):
                         documents = loader.load()
                         all_documents.extend(documents)
                         loaded_files.append(file)
-                        st.success(f"✅ Processed from zip: {file}")
+                        st.success(f"✅ Đã xử lý từ zip: {file}")
                         
                     except Exception as e:
-                        st.error(f"❌ Error processing {file} from zip: {str(e)}")
+                        st.error(f"❌ Lỗi khi xử lý {file} từ zip: {str(e)}")
         
-        # Clean up
+        # Dọn dẹp
         shutil.rmtree(temp_dir)
         return all_documents, loaded_files
         
     except Exception as e:
-        st.error(f"Error processing zip file: {str(e)}")
+        st.error(f"Lỗi khi xử lý file zip: {str(e)}")
         return [], []
 
 def get_github_pdf_files(repo_url):
-    """Link github hiện tại là giao diện dành cho người dùng (HTML), không phải API dành cho máy móc.
-    Để đọc trực tiếp danh sách file từ URL này, phải chuyển link github hiện tại sang API"""
+    """Lấy danh sách file PDF từ GitHub repository"""
     try:
         if "github.com" in repo_url and "/tree/" in repo_url:
             parts = repo_url.replace("https://github.com/", "").split("/tree/")
@@ -300,7 +313,7 @@ def get_github_pdf_files(repo_url):
 
             api_url = f"https://api.github.com/repos/{repo_path}/contents/{folder_path}?ref={branch}"
         else:
-            st.error("Invalid GitHub URL format")
+            st.error("Định dạng URL GitHub không hợp lệ")
             return []
 
         response = requests.get(api_url)
@@ -315,13 +328,14 @@ def get_github_pdf_files(repo_url):
                     })
             return pdf_files
         else:
-            st.error(f"Failed to access GitHub repository: {response.status_code}")
+            st.error(f"Không thể truy cập GitHub repository: {response.status_code}")
             return []
     except Exception as e:
-        st.error(f"Error accessing GitHub repository: {str(e)}")
+        st.error(f"Lỗi khi truy cập GitHub repository: {str(e)}")
         return []
 
 def download_pdf_from_url(url, filename, temp_dir):
+    """Tải file PDF từ URL"""
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -331,16 +345,16 @@ def download_pdf_from_url(url, filename, temp_dir):
             return file_path
         return None
     except Exception as e:
-        st.error(f"Error downloading {filename}: {str(e)}")
+        st.error(f"Lỗi khi tải {filename}: {str(e)}")
         return None
 
 def create_rag_chain(all_documents):
-    """Create RAG chain from documents"""
+    """Tạo chuỗi RAG từ tài liệu"""
     if not all_documents:
         return None, 0
     
     try:
-        # Use a more robust text splitter if SemanticChunker fails
+        # Sử dụng text splitter mạnh mẽ hơn nếu SemanticChunker thất bại
         try:
             semantic_splitter = SemanticChunker(
                 embeddings=st.session_state.embeddings,
@@ -352,9 +366,8 @@ def create_rag_chain(all_documents):
             )
             docs = semantic_splitter.split_documents(all_documents)
         except Exception as e:
-            st.warning(f"SemanticChunker failed, using RecursiveCharacterTextSplitter: {str(e)}")
-            # Fallback to basic text splitter
-            from langchain_text_splitters import RecursiveCharacterTextSplitter
+            st.warning(f"SemanticChunker thất bại, sử dụng RecursiveCharacterTextSplitter: {str(e)}")
+            # Dự phòng với text splitter cơ bản
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=1000,
                 chunk_overlap=200,
@@ -363,31 +376,30 @@ def create_rag_chain(all_documents):
             docs = text_splitter.split_documents(all_documents)
         
         if not docs:
-            st.error("No document chunks were created. Please check your documents.")
+            st.error("Không có đoạn tài liệu nào được tạo. Vui lòng kiểm tra tài liệu của bạn.")
             return None, 0
         
-        # FAISS implementation with error handling
+        # Triển khai FAISS với xử lý lỗi
         try:
             vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
             retriever = vector_db.as_retriever(search_kwargs={"k": min(4, len(docs))})
         except Exception as e:
-            st.error(f"Error creating vector database: {str(e)}")
+            st.error(f"Lỗi khi tạo cơ sở dữ liệu vector: {str(e)}")
             return None, 0
 
-        # Use a simple prompt template instead of hub.pull
+        # Sử dụng template prompt đơn giản thay vì hub.pull
         try:
             prompt = hub.pull("rlm/rag-prompt")
         except Exception as e:
-            st.warning("Using fallback prompt template")
-            from langchain.prompts import PromptTemplate
-            prompt_template = """Use the following pieces of context to answer the question at the end.
-            If you don't know the answer, just say that you don't know, don't try to make up an answer.
+            st.warning("Sử dụng template prompt dự phòng")
+            prompt_template = """Sử dụng những đoạn ngữ cảnh sau để trả lời câu hỏi ở cuối.
+            Nếu bạn không biết câu trả lời, chỉ cần nói rằng bạn không biết, đừng cố bịa ra câu trả lời.
 
-            Context: {context}
+            Ngữ cảnh: {context}
 
-            Question: {question}
+            Câu hỏi: {question}
 
-            Answer:"""
+            Trả lời:"""
             prompt = PromptTemplate(
                 template=prompt_template,
                 input_variables=["context", "question"]
@@ -395,7 +407,7 @@ def create_rag_chain(all_documents):
 
         def format_docs(docs):
             if not docs:
-                return "No relevant documents found."
+                return "Không tìm thấy tài liệu liên quan."
             return "\n\n".join(doc.page_content for doc in docs)
         
         rag_chain = (
@@ -408,14 +420,15 @@ def create_rag_chain(all_documents):
         return rag_chain, len(docs)
         
     except Exception as e:
-        st.error(f"Error creating RAG chain: {str(e)}")
+        st.error(f"Lỗi khi tạo chuỗi RAG: {str(e)}")
         return None, 0
 
 def load_pdfs_from_github(repo_url):
+    """Tải file PDF từ GitHub repository"""
     pdf_files = get_github_pdf_files(repo_url)
 
     if not pdf_files:
-        st.warning("No PDF files found in the GitHub repository")
+        st.warning("Không tìm thấy file PDF nào trong GitHub repository")
         return None, 0, []
 
     temp_dir = tempfile.mkdtemp()
@@ -427,7 +440,7 @@ def load_pdfs_from_github(repo_url):
 
     for i, pdf_file in enumerate(pdf_files):
         try:
-            status_text.text(f"Downloading and processing: {pdf_file['name']}")
+            status_text.text(f"Đang tải và xử lý: {pdf_file['name']}")
             local_path = download_pdf_from_url(pdf_file['download_url'], pdf_file['name'], temp_dir)
 
             if local_path:
@@ -436,15 +449,15 @@ def load_pdfs_from_github(repo_url):
                 all_documents.extend(documents)
                 loaded_files.append(pdf_file['name'])
 
-                st.success(f"✅ Processed: {pdf_file['name']} ({len(documents)} pages)")
+                st.success(f"✅ Đã xử lý: {pdf_file['name']} ({len(documents)} trang)")
             progress_bar.progress((i + 1) / len(pdf_files))
         except Exception as e:
-            st.error(f"❌ Error processing {pdf_file['name']}: {str(e)}")
+            st.error(f"❌ Lỗi khi xử lý {pdf_file['name']}: {str(e)}")
 
     progress_bar.empty()
     status_text.empty()
 
-    # Clean up temporary directory
+    # Dọn dẹp thư mục tạm thời
     shutil.rmtree(temp_dir)
 
     if not all_documents:
@@ -454,17 +467,17 @@ def load_pdfs_from_github(repo_url):
     return rag_chain, num_chunks, loaded_files
 
 def load_pdfs_from_folder(folder_path):
-    """Load all PDF files from the specified local folder"""
+    """Tải tất cả file PDF từ thư mục được chỉ định"""
     cleaned_path = folder_path.strip().strip('"').strip("'")
     folder = Path(cleaned_path)
 
     if not folder.exists():
-        st.error(f"❌ Folder does not exist: `{cleaned_path}`")
+        st.error(f"❌ Thư mục không tồn tại: `{cleaned_path}`")
         return None, 0, []
 
     pdf_files = list(folder.glob("*.pdf"))
     if not pdf_files:
-        st.warning(f"No PDF files found in folder: {cleaned_path}")
+        st.warning(f"Không tìm thấy file PDF nào trong thư mục: {cleaned_path}")
         return None, 0, []
 
     all_documents = []
@@ -475,16 +488,16 @@ def load_pdfs_from_folder(folder_path):
 
     for i, pdf_file in enumerate(pdf_files):
         try:
-            status_text.text(f"Processing: {pdf_file.name}")
+            status_text.text(f"Đang xử lý: {pdf_file.name}")
             loader = PyPDFLoader(str(pdf_file))
             documents = loader.load()
             all_documents.extend(documents)
             loaded_files.append(pdf_file.name)
             progress_bar.progress((i + 1) / len(pdf_files))
-            st.success(f"✅ Processed: {pdf_file.name} ({len(documents)} pages)")
+            st.success(f"✅ Đã xử lý: {pdf_file.name} ({len(documents)} trang)")
 
         except Exception as e:
-            st.error(f"❌ Error processing {pdf_file.name}: {str(e)}")
+            st.error(f"❌ Lỗi khi xử lý {pdf_file.name}: {str(e)}")
 
     progress_bar.empty()
     status_text.empty()
@@ -496,43 +509,52 @@ def load_pdfs_from_folder(folder_path):
     return rag_chain, num_chunks, loaded_files
 
 def display_chat_message(message, is_user=True):
+    """Hiển thị tin nhắn trò chuyện"""
     if is_user:
         st.markdown(f"""
         <div class="user-message">
-            <strong style="color: #ffffff;">You:</strong> <span style="color: #ffffff;">{message}</span>
+            <strong style="color: #ffffff;">Bạn:</strong> <span style="color: #ffffff;">{message}</span>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
         <div class="assistant-message">
-            <strong style="color: #ffffff;">AI Assistant:</strong> <span style="color: #ffffff;">{message}</span>
+            <strong style="color: #ffffff;">Trợ Lý AI:</strong> <span style="color: #ffffff;">{message}</span>
         </div>
         """, unsafe_allow_html=True)
 
 def display_thinking_indicator():
+    """Hiển thị chỉ báo đang suy nghĩ"""
     st.markdown(f"""
     <div class="thinking-indicator">
-        <strong>AI Assistant:</strong> 🤔 Thinking...
+        <strong>Trợ Lý AI:</strong> 🤔 Đang suy nghĩ...
     </div>
     """, unsafe_allow_html=True)
 
 def process_user_query(question):
+    """Xử lý câu hỏi của người dùng"""
     try:
         if not st.session_state.rag_chain:
-            return "Sorry, no documents are loaded. Please upload or load documents first."
+            return "Xin lỗi, chưa có tài liệu nào được tải. Vui lòng tải lên hoặc nạp tài liệu trước."
         
-        # Validate question
+        # Kiểm tra câu hỏi
         if not question or len(question.strip()) < 2:
-            return "Please ask a more specific question."
+            return "Vui lòng đặt câu hỏi cụ thể hơn."
         
-        # Invoke the RAG chain with error handling
+        # Gọi chuỗi RAG với xử lý lỗi
         output = st.session_state.rag_chain.invoke(question)
         
-        # Handle different output formats
+        # Xử lý các định dạng đầu ra khác nhau
         if isinstance(output, str):
-            # If output contains "Answer:", extract the part after it
+            # Nếu đầu ra chứa "Answer:", trích xuất phần sau nó
             if 'Answer:' in output:
                 answer_parts = output.split('Answer:')
+                if len(answer_parts) > 1:
+                    answer = answer_parts[-1].strip()
+                else:
+                    answer = output.strip()
+            elif 'Trả lời:' in output:
+                answer_parts = output.split('Trả lời:')
                 if len(answer_parts) > 1:
                     answer = answer_parts[-1].strip()
                 else:
@@ -540,78 +562,79 @@ def process_user_query(question):
             else:
                 answer = output.strip()
         else:
-            # If output is not a string, convert it
+            # Nếu đầu ra không phải là chuỗi, chuyển đổi nó
             answer = str(output).strip()
         
-        # Ensure we have a meaningful answer
+        # Đảm bảo có câu trả lời có ý nghĩa
         if not answer or len(answer) < 5:
-            return "I found some information in the documents, but I couldn't generate a clear answer. Please try rephrasing your question."
+            return "Tôi đã tìm thấy một số thông tin trong tài liệu, nhưng không thể tạo ra câu trả lời rõ ràng. Vui lòng thử diễn đạt lại câu hỏi của bạn."
         
         return answer
         
     except IndexError as e:
-        st.error(f"Index error in processing: {str(e)}")
-        return "I encountered an issue while searching through the documents. This might be due to the document processing. Please try asking a different question or reload the documents."
+        st.error(f"Lỗi chỉ mục trong xử lý: {str(e)}")
+        return "Tôi gặp sự cố khi tìm kiếm trong tài liệu. Điều này có thể do quá trình xử lý tài liệu. Vui lòng thử đặt câu hỏi khác hoặc tải lại tài liệu."
     
     except Exception as e:
-        st.error(f"Unexpected error: {str(e)}")
-        return "I'm sorry, I encountered an unexpected error while processing your question. Please try again with a different question."
+        st.error(f"Lỗi không mong đợi: {str(e)}")
+        return "Tôi xin lỗi, tôi gặp lỗi không mong đợi khi xử lý câu hỏi của bạn. Vui lòng thử lại với câu hỏi khác."
 
 def main():
-    # Header
+    # Header với cờ Việt Nam
     st.markdown("""
     <div class="main-header">
-        <h1>🤖 PDF RAG Assistant with File Upload</h1>
-        <p>Smart AI Assistant - Upload files, folders (zip), or use GitHub repository for Q&A</p>
+        <div class="vietnam-flag"></div>
+        <h1>🤖 Trợ Lý AI Tiếng Việt</h1>
+        <p>Hệ thống hỏi đáp thông minh với tài liệu PDF, Word, Excel bằng tiếng Việt</p>
     </div>
     """, unsafe_allow_html=True)
 
     with st.sidebar:
-        st.header("⚙️ Configuration")
+        st.header("⚙️ Cấu Hình")
 
         if st.session_state.models_loaded:
-            st.markdown('<span class="status-indicator status-ready"></span>**Models:** Ready', unsafe_allow_html=True)
+            st.markdown('<span class="status-indicator status-ready"></span>**Mô hình:** Sẵn sàng', unsafe_allow_html=True)
         else:
-            st.markdown('<span class="status-indicator status-loading"></span>**Models:** Loading...', unsafe_allow_html=True)
+            st.markdown('<span class="status-indicator status-loading"></span>**Mô hình:** Đang tải...', unsafe_allow_html=True)
 
-        # Document loading status
+        # Trạng thái tải tài liệu
         if st.session_state.documents_loaded:
-            st.markdown('<span class="status-indicator status-ready"></span>**Documents:** Loaded (FAISS)', unsafe_allow_html=True)
+            st.markdown('<span class="status-indicator status-ready"></span>**Tài liệu:** Đã tải (FAISS)', unsafe_allow_html=True)
         else:
-            st.markdown('<span class="status-indicator status-error"></span>**Documents:** Not loaded', unsafe_allow_html=True)
+            st.markdown('<span class="status-indicator status-error"></span>**Tài liệu:** Chưa tải', unsafe_allow_html=True)
 
         st.divider()
 
-        # Document source selection
-        st.subheader("📁 Document Source")
+        # Lựa chọn nguồn tài liệu
+        st.subheader("📁 Nguồn Tài Liệu")
 
         pdf_source = st.radio(
-            "Choose document source:",
-            ["Upload Files", "Upload Folder (ZIP)", "GitHub Repository", "Local Folder Path"],
+            "Chọn nguồn tài liệu:",
+            ["Tải File Lên", "Tải Thư Mục (ZIP)", "GitHub Repository", "Đường Dẫn Thư Mục"],
             key="pdf_source_radio"
         )
 
-        if pdf_source == "Upload Files":
+        if pdf_source == "Tải File Lên":
             st.session_state.pdf_source = "upload_files"
             
             st.markdown('<div class="upload-section">', unsafe_allow_html=True)
-            st.markdown("**📎 Upload Individual Files**")
+            st.markdown("**📎 Tải Lên Từng File**")
             uploaded_files = st.file_uploader(
-                "Choose files to upload:",
+                "Chọn file để tải lên:",
                 type=['pdf', 'docx', 'xlsx', 'xls'],
                 accept_multiple_files=True,
-                help="Supported formats: PDF, Word (.docx), Excel (.xlsx, .xls)"
+                help="Định dạng hỗ trợ: PDF, Word (.docx), Excel (.xlsx, .xls)"
             )
             st.markdown('</div>', unsafe_allow_html=True)
             
             if uploaded_files:
-                st.markdown("**Selected Files:**")
+                st.markdown("**File Đã Chọn:**")
                 for i, file in enumerate(uploaded_files):
-                    file_size = len(file.getbuffer()) / (1024 * 1024)  # Size in MB
+                    file_size = len(file.getbuffer()) / (1024 * 1024)  # Kích thước tính bằng MB
                     st.markdown(f'<span class="file-counter">{i+1}. {file.name} ({file_size:.1f} MB)</span>', unsafe_allow_html=True)
                 
-                if st.button("📤 Process Uploaded Files", type="primary"):
-                    with st.spinner("Processing uploaded files..."):
+                if st.button("📤 Xử Lý File Đã Tải", type="primary"):
+                    with st.spinner("Đang xử lý file đã tải lên..."):
                         all_documents = []
                         loaded_files = []
                         
@@ -622,7 +645,7 @@ def main():
                             if documents:
                                 all_documents.extend(documents)
                                 loaded_files.append(file.name)
-                                st.success(f"✅ Processed: {file.name}")
+                                st.success(f"✅ Đã xử lý: {file.name}")
                             progress_bar.progress((i + 1) / len(uploaded_files))
                         
                         progress_bar.empty()
@@ -632,29 +655,29 @@ def main():
                             if rag_chain:
                                 st.session_state.rag_chain = rag_chain
                                 st.session_state.documents_loaded = True
-                                st.success(f"✅ Successfully processed {len(loaded_files)} files!")
+                                st.success(f"✅ Đã xử lý thành công {len(loaded_files)} file!")
                                 st.rerun()
                         else:
-                            st.error("No documents could be processed.")
+                            st.error("Không có tài liệu nào có thể được xử lý.")
 
-        elif pdf_source == "Upload Folder (ZIP)":
+        elif pdf_source == "Tải Thư Mục (ZIP)":
             st.session_state.pdf_source = "upload_zip"
             
             st.markdown('<div class="upload-section">', unsafe_allow_html=True)
-            st.markdown("**📁 Upload Folder as ZIP**")
+            st.markdown("**📁 Tải Thư Mục Dưới Dạng ZIP**")
             zip_file = st.file_uploader(
-                "Choose a ZIP file containing documents:",
+                "Chọn file ZIP chứa tài liệu:",
                 type=['zip'],
-                help="Upload a ZIP file containing PDF, Word, or Excel files"
+                help="Tải lên file ZIP chứa file PDF, Word, hoặc Excel"
             )
             st.markdown('</div>', unsafe_allow_html=True)
             
             if zip_file:
-                file_size = len(zip_file.getbuffer()) / (1024 * 1024)  # Size in MB
-                st.info(f"📦 Selected ZIP: {zip_file.name} ({file_size:.1f} MB)")
+                file_size = len(zip_file.getbuffer()) / (1024 * 1024)  # Kích thước tính bằng MB
+                st.info(f"📦 File ZIP đã chọn: {zip_file.name} ({file_size:.1f} MB)")
                 
-                if st.button("📤 Process ZIP File", type="primary"):
-                    with st.spinner("Extracting and processing ZIP file..."):
+                if st.button("📤 Xử Lý File ZIP", type="primary"):
+                    with st.spinner("Đang giải nén và xử lý file ZIP..."):
                         all_documents, loaded_files = process_zip_file(zip_file)
                         
                         if all_documents:
@@ -662,69 +685,76 @@ def main():
                             if rag_chain:
                                 st.session_state.rag_chain = rag_chain
                                 st.session_state.documents_loaded = True
-                                st.success(f"✅ Successfully processed {len(loaded_files)} files from ZIP!")
+                                st.success(f"✅ Đã xử lý thành công {len(loaded_files)} file từ ZIP!")
                                 st.rerun()
                         else:
-                            st.error("No valid documents found in ZIP file.")
+                            st.error("Không tìm thấy tài liệu hợp lệ trong file ZIP.")
 
         elif pdf_source == "GitHub Repository":
             st.session_state.pdf_source = "github"
             github_url = st.text_input(
-                "GitHub Repository URL:",
+                "URL GitHub Repository:",
                 value=st.session_state.github_repo_url,
-                help="URL to GitHub folder containing PDF files"
+                help="URL đến thư mục GitHub chứa file PDF"
             )
             st.session_state.github_repo_url = github_url
             
-            if st.button("📥 Load from GitHub", type="primary"):
+            if st.button("📥 Tải Từ GitHub", type="primary"):
                 st.session_state.documents_loaded = False
                 st.rerun()
 
-        else:  # Local Folder Path
+        else:  # Đường Dẫn Thư Mục
             st.session_state.pdf_source = "local"
             local_path = st.text_input(
-                "Local Folder Path:",
+                "Đường Dẫn Thư Mục Cục Bộ:",
                 value=st.session_state.local_folder_path,
-                help="Path to local folder containing PDF files"
+                help="Đường dẫn đến thư mục cục bộ chứa file PDF"
             )
             st.session_state.local_folder_path = local_path
             
-            if st.button("📂 Load from Local Folder", type="primary"):
+            if st.button("📂 Tải Từ Thư Mục Cục Bộ", type="primary"):
                 st.session_state.documents_loaded = False
                 st.rerun()
 
         st.divider()
 
-        if st.button("🗑️ Clear Chat History"):
+        if st.button("🗑️ Xóa Lịch Sử Trò Chuyện"):
             st.session_state.chat_history = []
             st.session_state.processing_query = False
             st.rerun()
 
-        if st.button("🗑️ Clear All Documents"):
+        if st.button("🗑️ Xóa Tất Cả Tài Liệu"):
             st.session_state.documents_loaded = False
             st.session_state.rag_chain = None
             st.session_state.chat_history = []
             st.session_state.processing_query = False
             st.rerun()
 
-        # FAISS specific settings
+        # Cài đặt FAISS
         st.divider()
-        st.subheader("🔍 FAISS Settings")
-        st.info("FAISS is a fast similarity search library. It's more memory efficient than Chroma.")
+        st.subheader("🔍 Cài Đặt FAISS")
+        st.info("FAISS là thư viện tìm kiếm tương tự nhanh. Tiết kiệm bộ nhớ hơn Chroma.")
+        
+        # Thông tin mô hình
+        st.divider()
+        st.subheader("🇻🇳 Mô Hình Tiếng Việt")
+        st.info("Sử dụng mô hình embedding 'bkai-foundation-models/vietnamese-bi-encoder' được tối ưu cho tiếng Việt.")
 
+    # Tải mô hình nếu chưa được tải
     if not st.session_state.models_loaded:
-        with st.spinner("🚀 Initializing AI models..."):
+        with st.spinner("🚀 Đang khởi tạo các mô hình AI..."):
             st.session_state.embeddings = load_embeddings()
             st.session_state.llm = load_llm()
             if st.session_state.llm:
                 st.session_state.models_loaded = True
         if st.session_state.models_loaded:
-            st.success("✅ Models ready!")
+            st.success("✅ Các mô hình đã sẵn sàng!")
             time.sleep(1)
             st.rerun()
 
+    # Tải tài liệu nếu chưa được tải và nguồn là github hoặc local
     if st.session_state.models_loaded and not st.session_state.documents_loaded and st.session_state.pdf_source in ["github", "local"]:
-        with st.spinner("📚 Loading documents into FAISS vector store..."):
+        with st.spinner("📚 Đang tải tài liệu vào kho vector FAISS..."):
             if st.session_state.pdf_source == "github":
                 rag_chain, num_chunks, loaded_files = load_pdfs_from_github(st.session_state.github_repo_url)
             else:
@@ -736,21 +766,22 @@ def main():
 
                 st.markdown(f"""
                 <div class="document-info">
-                    <h4>📄 Successfully loaded {len(loaded_files)} PDF documents into FAISS:</h4>
+                    <h4>📄 Đã tải thành công {len(loaded_files)} tài liệu PDF vào FAISS:</h4>
                     <ul>
                         {"".join([f"<li>{file}</li>" for file in loaded_files])}
                     </ul>
-                    <p><strong>Total chunks:</strong> {num_chunks}</p>
-                    <p><strong>Vector Store:</strong> FAISS (Fast similarity search)</p>
+                    <p><strong>Tổng số đoạn:</strong> {num_chunks}</p>
+                    <p><strong>Kho Vector:</strong> FAISS (Tìm kiếm tương tự nhanh)</p>
                 </div>
                 """, unsafe_allow_html=True)
 
-                st.success("✅ Documents ready for Q&A with FAISS!")
+                st.success("✅ Tài liệu đã sẵn sàng cho hỏi đáp với FAISS!")
                 time.sleep(2)
                 st.rerun()
             else:
-                st.error("❌ Failed to load documents. Please check your configuration.")
+                st.error("❌ Không thể tải tài liệu. Vui lòng kiểm tra cấu hình của bạn.")
 
+    # Giao diện trò chuyện chính
     if st.session_state.rag_chain:
         st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
 
@@ -769,22 +800,22 @@ def main():
 
             with col1:
                 user_question = st.text_input(
-                    "Type your question...",
-                    placeholder="Ask anything about the documents...",
+                    "Nhập câu hỏi của bạn...",
+                    placeholder="Hỏi bất cứ điều gì về tài liệu...",
                     disabled=st.session_state.processing_query,
                     label_visibility="collapsed"
                 )
 
             with col2:
                 send_button = st.form_submit_button(
-                    "📤 Send",
+                    "📤 Gửi",
                     type="primary",
                     disabled=st.session_state.processing_query
                 )
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # Process user input
+        # Xử lý đầu vào của người dùng
         if send_button and user_question.strip() and not st.session_state.processing_query:
             st.session_state.processing_query = True
 
@@ -810,41 +841,43 @@ def main():
 
                 st.rerun()
     else:
+        # Tin nhắn chào mừng
         st.markdown("""
         <div style='text-align: center; padding: 2rem;'>
-            <h3>👋 Welcome to Enhanced PDF RAG Assistant!</h3>
-            <p>This version supports multiple input methods:</p>
+            <h3>👋 Chào mừng đến với Trợ Lý AI Tiếng Việt!</h3>
+            <p>Hệ thống này hỗ trợ nhiều phương thức nhập liệu:</p>
             <ul style='text-align: left; max-width: 500px; margin: 0 auto;'>
-                <li><strong>📎 Upload Individual Files:</strong>
+                <li><strong>📎 Tải File Lên:</strong>
                     <ul>
-                        <li>PDF documents (.pdf)</li>
-                        <li>Word documents (.docx)</li>
-                        <li>Excel spreadsheets (.xlsx, .xls)</li>
+                        <li>Tài liệu PDF (.pdf)</li>
+                        <li>Tài liệu Word (.docx)</li>
+                        <li>Bảng tính Excel (.xlsx, .xls)</li>
                     </ul>
                 </li>
-                <li><strong>📁 Upload Folder (ZIP):</strong> Upload a ZIP file containing multiple documents</li>
-                <li><strong>🔗 GitHub Repository:</strong> Load PDF files from a GitHub repository</li>
-                <li><strong>📂 Local Folder:</strong> Load files from a local folder path</li>
+                <li><strong>📁 Tải Thư Mục (ZIP):</strong> Tải lên file ZIP chứa nhiều tài liệu</li>
+                <li><strong>🔗 GitHub Repository:</strong> Tải file PDF từ kho GitHub</li>
+                <li><strong>📂 Thư Mục Cục Bộ:</strong> Tải file từ đường dẫn thư mục cục bộ</li>
             </ul>
             <br>
-            <p><strong>To get started:</strong></p>
+            <p><strong>Để bắt đầu:</strong></p>
             <ol style='text-align: left; max-width: 500px; margin: 0 auto;'>
-                <li>Choose your preferred document source in the sidebar</li>
-                <li>Upload files or configure repository/folder settings</li>
-                <li>Process your documents</li>
-                <li>Start asking questions!</li>
+                <li>Chọn nguồn tài liệu ưa thích trong thanh bên</li>
+                <li>Tải lên file hoặc cấu hình repository/thư mục</li>
+                <li>Xử lý tài liệu của bạn</li>
+                <li>Bắt đầu đặt câu hỏi!</li>
             </ol>
             <br>
-            <p><strong>Default Repository:</strong><br>
+            <p><strong>Repository Mặc Định:</strong><br>
             <code>https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/pdf</code></p>
             <br>
-            <p><strong>Features:</strong></p>
+            <p><strong>Tính Năng:</strong></p>
             <ul style='text-align: left; max-width: 500px; margin: 0 auto;'>
-                <li>✨ Multi-format support (PDF, Word, Excel)</li>
-                <li>🚀 FAISS vector store for fast similarity search</li>
-                <li>🔄 Multiple input methods</li>
-                <li>💬 ChatGPT-like conversation interface</li>
-                <li>🎯 Context-aware responses</li>
+                <li>✨ Hỗ trợ đa định dạng (PDF, Word, Excel)</li>
+                <li>🚀 Kho vector FAISS cho tìm kiếm tương tự nhanh</li>
+                <li>🇻🇳 Tối ưu cho tiếng Việt</li>
+                <li>🔄 Nhiều phương thức nhập liệu</li>
+                <li>💬 Giao diện trò chuyện giống ChatGPT</li>
+                <li>🎯 Phản hồi nhận thức ngữ cảnh</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
