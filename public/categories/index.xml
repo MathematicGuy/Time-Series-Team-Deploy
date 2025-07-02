@@ -2,31 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Time Series Team Hub</title>
-    <link>http://localhost:44855/Time-Series-Team-Hub/categories/</link>
+    <link>http://localhost:42167/Time-Series-Team-Hub/categories/</link>
     <description>Recent content in Categories on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 28 Jun 2025 13:03:07 +0700</lastBuildDate>
-    <atom:link href="http://localhost:44855/Time-Series-Team-Hub/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:42167/Time-Series-Team-Hub/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>AI</title>
-      <link>http://localhost:44855/Time-Series-Team-Hub/categories/ai/</link>
+      <title>Feature</title>
+      <link>http://localhost:42167/Time-Series-Team-Hub/categories/feature/</link>
       <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:44855/Time-Series-Team-Hub/categories/ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Công Nghệ</title>
-      <link>http://localhost:44855/Time-Series-Team-Hub/categories/c%C3%B4ng-ngh%E1%BB%87/</link>
-      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:44855/Time-Series-Team-Hub/categories/c%C3%B4ng-ngh%E1%BB%87/</guid>
+      <guid>http://localhost:42167/Time-Series-Team-Hub/categories/feature/</guid>
       <description></description>
     </item>
     <item>
       <title>Minutes</title>
-      <link>http://localhost:44855/Time-Series-Team-Hub/categories/minutes/</link>
+      <link>http://localhost:42167/Time-Series-Team-Hub/categories/minutes/</link>
       <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:44855/Time-Series-Team-Hub/categories/minutes/</guid>
+      <guid>http://localhost:42167/Time-Series-Team-Hub/categories/minutes/</guid>
       <description></description>
     </item>
   </channel>

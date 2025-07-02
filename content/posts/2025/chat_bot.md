@@ -6,7 +6,8 @@ image: images/nasa-Ed2AELHKYBw-unsplash.jpg
 caption: Photo by Nasa on Unsplash
 categories:
   - feature
-tags: ["chatbot", "streamlit", "PDF", "hỗ trợ"]
+tags:
+  - feature
 draft: false
 ---
 
@@ -28,41 +29,11 @@ Chatbot được xây dựng bằng:
 
 ---
 
-## 🧪 Trải nghiệm Chatbot
-
-<div style="display: flex; justify-content: center; padding: 2rem;">
-  <iframe src="https://ragchatbotaio.streamlit.app/" 
-          width="100%" 
-          height="800" 
-          style="max-width: 1200px; border: 2px solid #ddd; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"
-          frameborder="0">
-    <p>Trình duyệt của bạn không hỗ trợ iframe. 
-       <a href="https://ragchatbotaio.streamlit.app/" target="_blank">Nhấn vào đây để mở chatbot</a>
-    </p>
-  </iframe>
-</div>
-
-> ⚠️ **Lưu ý:** Một số trình duyệt hoặc thiết lập bảo mật sẽ **chặn iframe**. Nếu chatbot không hiển thị, bạn có thể mở trực tiếp ở nút bên dưới:
-
----
-
-### 🚀 Mở Chatbot trực tiếp
-
-<div style="text-align: center; padding: 1rem;">
-  <a href="https://ragchatbotaio.streamlit.app/" 
-     target="_blank" 
-     style="display: inline-block; background: linear-gradient(90deg, #006400, #009900); color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold;">
-    🇻🇳 Mở Chatbot Tiếng Việt
-  </a>
-</div>
-
----
-
 ### 🛠️ Công nghệ sử dụng
 
 | Thành phần | Công cụ |
 |------------|---------|
-| Giao diện  | [Streamlit](https://ragchatbotaio.streamlit.app/) |
+| 🧪 Trải nghiệm Chatbot | [Streamlit](https://ragchatbotaio.streamlit.app/) |
 | NLP model  | [Vicuna-7B](https://huggingface.co/lmsys/vicuna-7b-v1.5) |
 | Embedding tiếng Việt | `bkai-foundation-models/vietnamese-bi-encoder` |
 | Xử lý PDF  | LangChain `PyPDFLoader` |
