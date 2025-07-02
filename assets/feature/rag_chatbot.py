@@ -9,9 +9,11 @@ from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.document_loaders import UnstructuredExcelLoader
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_experimental.text_splitter import SemanticChunker
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface.llms import HuggingFacePipeline
 from langchain import hub
+from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
@@ -44,22 +46,24 @@ st.markdown("""
     margin-bottom: 20px;
   }
   .user-message{
-    background-color: #e3f2fd;
+    background-color: #000000;
+    color: #ffffff;
     border-radius: 18px;
     padding: 12px 16px;
     margin: 8px 0;
     margin-left: 20%;
     text-align: left;
-    border: 1px solid #2196f3;
+    border: 1px solid #333333;
   }
   .assistant-message{
-    background-color: #f1f8e9;
+    background-color: #006400;
+    color: #ffffff;
     border-radius: 18px;
     padding: 12px 16px;
     margin: 8px 0;
     margin-right: 20%;
     text-align: left;
-    border: 1px solid #4caf50;
+    border: 1px solid #228b22;
   }
   .chat-input-container {
     position: sticky;
@@ -335,34 +339,77 @@ def create_rag_chain(all_documents):
     if not all_documents:
         return None, 0
     
-    semantic_splitter = SemanticChunker(
-        embeddings=st.session_state.embeddings,
-        buffer_size=1,
-        breakpoint_threshold_type="percentile",
-        breakpoint_threshold_amount=95,
-        min_chunk_size=500,
-        add_start_index=True
-    )
+    try:
+        # Use a more robust text splitter if SemanticChunker fails
+        try:
+            semantic_splitter = SemanticChunker(
+                embeddings=st.session_state.embeddings,
+                buffer_size=1,
+                breakpoint_threshold_type="percentile",
+                breakpoint_threshold_amount=95,
+                min_chunk_size=500,
+                add_start_index=True
+            )
+            docs = semantic_splitter.split_documents(all_documents)
+        except Exception as e:
+            st.warning(f"SemanticChunker failed, using RecursiveCharacterTextSplitter: {str(e)}")
+            # Fallback to basic text splitter
+            from langchain_text_splitters import RecursiveCharacterTextSplitter
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=1000,
+                chunk_overlap=200,
+                length_function=len
+            )
+            docs = text_splitter.split_documents(all_documents)
+        
+        if not docs:
+            st.error("No document chunks were created. Please check your documents.")
+            return None, 0
+        
+        # FAISS implementation with error handling
+        try:
+            vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
+            retriever = vector_db.as_retriever(search_kwargs={"k": min(4, len(docs))})
+        except Exception as e:
+            st.error(f"Error creating vector database: {str(e)}")
+            return None, 0
 
-    docs = semantic_splitter.split_documents(all_documents)
-    
-    # FAISS implementation
-    vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
-    retriever = vector_db.as_retriever(search_kwargs={"k": 4})
+        # Use a simple prompt template instead of hub.pull
+        try:
+            prompt = hub.pull("rlm/rag-prompt")
+        except Exception as e:
+            st.warning("Using fallback prompt template")
+            from langchain.prompts import PromptTemplate
+            prompt_template = """Use the following pieces of context to answer the question at the end.
+            If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
-    prompt = hub.pull("rlm/rag-prompt")
+            Context: {context}
 
-    def format_docs(docs):
-        return "\n\n".join(doc.page_content for doc in docs)
-    
-    rag_chain = (
-        {"context": retriever | format_docs, "question": RunnablePassthrough()}
-        | prompt
-        | st.session_state.llm
-        | StrOutputParser()
-    )
+            Question: {question}
 
-    return rag_chain, len(docs)
+            Answer:"""
+            prompt = PromptTemplate(
+                template=prompt_template,
+                input_variables=["context", "question"]
+            )
+
+        def format_docs(docs):
+            if not docs:
+                return "No relevant documents found."
+            return "\n\n".join(doc.page_content for doc in docs)
+        
+        rag_chain = (
+            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            | prompt
+            | st.session_state.llm
+            | StrOutputParser()
+        )
+
+        return rag_chain, len(docs)
+        
+    except Exception as e:
+        st.error(f"Error creating RAG chain: {str(e)}")
+        return None, 0
 
 def load_pdfs_from_github(repo_url):
     pdf_files = get_github_pdf_files(repo_url)
@@ -452,13 +499,13 @@ def display_chat_message(message, is_user=True):
     if is_user:
         st.markdown(f"""
         <div class="user-message">
-            <strong>You:</strong> {message}
+            <strong style="color: #ffffff;">You:</strong> <span style="color: #ffffff;">{message}</span>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
         <div class="assistant-message">
-            <strong>AI Assistant:</strong> {message}
+            <strong style="color: #ffffff;">AI Assistant:</strong> <span style="color: #ffffff;">{message}</span>
         </div>
         """, unsafe_allow_html=True)
 
@@ -471,11 +518,44 @@ def display_thinking_indicator():
 
 def process_user_query(question):
     try:
+        if not st.session_state.rag_chain:
+            return "Sorry, no documents are loaded. Please upload or load documents first."
+        
+        # Validate question
+        if not question or len(question.strip()) < 2:
+            return "Please ask a more specific question."
+        
+        # Invoke the RAG chain with error handling
         output = st.session_state.rag_chain.invoke(question)
-        answer = output.split('Answer:')[1].strip() if 'Answer:' in output else output.strip()
+        
+        # Handle different output formats
+        if isinstance(output, str):
+            # If output contains "Answer:", extract the part after it
+            if 'Answer:' in output:
+                answer_parts = output.split('Answer:')
+                if len(answer_parts) > 1:
+                    answer = answer_parts[-1].strip()
+                else:
+                    answer = output.strip()
+            else:
+                answer = output.strip()
+        else:
+            # If output is not a string, convert it
+            answer = str(output).strip()
+        
+        # Ensure we have a meaningful answer
+        if not answer or len(answer) < 5:
+            return "I found some information in the documents, but I couldn't generate a clear answer. Please try rephrasing your question."
+        
         return answer
+        
+    except IndexError as e:
+        st.error(f"Index error in processing: {str(e)}")
+        return "I encountered an issue while searching through the documents. This might be due to the document processing. Please try asking a different question or reload the documents."
+    
     except Exception as e:
-        return f"Sorry, an error occurred while processing your question: {str(e)}"
+        st.error(f"Unexpected error: {str(e)}")
+        return "I'm sorry, I encountered an unexpected error while processing your question. Please try again with a different question."
 
 def main():
     # Header
