@@ -10,20 +10,26 @@ tags:
 draft: false
 ---
 
-{{< pdf src="https://ragchatbotaio.streamlit.app/" title="Week_1_Buoi_5.pdf" height="700px" >}}
+## 🤖 Trợ Lý AI Tiếng Việt
 
 <div style="display: flex; justify-content: center; padding: 2rem;">
   <iframe src="https://ragchatbotaio.streamlit.app/" 
           width="100%" 
           height="800" 
-          style="max-width: 1200px; border: none; border-radius: 12px; box-shadow: 0 0 12px rgba(0,0,0,0.15);">
-  </iframe>
-
-  <iframe src="https://google.com/" 
-          width="100%" 
-          height="800" 
-          style="max-width: 1200px; border: none; border-radius: 12px; box-shadow: 0 0 12px rgba(0,0,0,0.15);">
+          style="max-width: 1200px; border: 2px solid #ddd; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"
+          frameborder="0"
+          allowfullscreen>
+    <p>Trình duyệt của bạn không hỗ trợ iframe. 
+       <a href="https://ragchatbotaio.streamlit.app/" target="_blank">Nhấn vào đây để mở chatbot</a>
+    </p>
   </iframe>
 </div>
 
-# end
+### Hoặc mở trực tiếp:
+<div style="text-align: center; padding: 1rem;">
+  <a href="https://ragchatbotaio.streamlit.app/" 
+     target="_blank" 
+     style="display: inline-block; background: linear-gradient(90deg, #ff0000, #ffff00); color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold;">
+    🇻🇳 Mở Chatbot Tiếng Việt
+  </a>
+</div>
