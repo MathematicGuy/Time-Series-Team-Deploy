@@ -21,7 +21,7 @@ Chào mừng bạn đến với chatbot AI thông minh của nhóm, được hu�
 - Với nội dung lớp AIO từ Tuần 1 đến giờ: Bạn chọn phần Git Respository, tại đó nhóm có đặt link mặc định đến blog kiến thức tổng hợp của lớp và bạn có thể đặt câu hỏi để Trợ lý AI có thể giúp bạn ôn lại kiến thức liên quan AIO
 ---
 
-### 🧠 Cách hoạt động
+### 🧠 Cách thức hoạt động
 Chatbot được xây dựng bằng:
 - **Streamlit** để tạo giao diện đơn giản, dễ dùng
 - **Langchain + HuggingFace** để hiểu ngữ cảnh và tạo câu trả lời
