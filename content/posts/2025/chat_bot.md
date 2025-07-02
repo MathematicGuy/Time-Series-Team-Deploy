@@ -1,10 +1,11 @@
 ---
-title: "Chatbot"
+title: "Tuần 4 - Trợ lý AI đã xuất hiện"
 date: 2025-06-28T13:03:07+07:00
 description: Trợ lý AI tiếng Việt hỗ trợ hỏi đáp từ tài liệu PDF bằng công nghệ RAG kết hợp mô hình Vicuna-7B, được xây dựng bằng Streamlit và LangChain.
 image: images/nasa-Ed2AELHKYBw-unsplash.jpg
 caption: Photo by Nasa on Unsplash
-categories: ["Công nghệ", "AI"]
+categories:
+  - feature
 tags: ["chatbot", "streamlit", "PDF", "hỗ trợ"]
 draft: false
 ---
@@ -61,7 +62,7 @@ Chatbot được xây dựng bằng:
 
 | Thành phần | Công cụ |
 |------------|---------|
-| Giao diện  | [Streamlit](https://streamlit.io) |
+| Giao diện  | [Streamlit](https://ragchatbotaio.streamlit.app/) |
 | NLP model  | [Vicuna-7B](https://huggingface.co/lmsys/vicuna-7b-v1.5) |
 | Embedding tiếng Việt | `bkai-foundation-models/vietnamese-bi-encoder` |
 | Xử lý PDF  | LangChain `PyPDFLoader` |
