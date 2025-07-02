@@ -963,6 +963,29 @@ def main():
         st.divider()
         st.subheader("🇻🇳 Mô Hình Tiếng Việt")
         st.info("Sử dụng mô hình embedding 'bkai-foundation-models/vietnamese-bi-encoder' được tối ưu cho tiếng Việt.")
+        
+        # Debug section
+        st.divider()
+        st.subheader("🔧 Debug & Kiểm Tra")
+        
+        if st.button("🔍 Kiểm Tra Hệ Thống"):
+            st.write("**Trạng thái Hệ Thống:**")
+            st.write(f"- Models loaded: {st.session_state.models_loaded}")
+            st.write(f"- Embeddings: {'✅' if st.session_state.embeddings else '❌'}")
+            st.write(f"- LLM: {'✅' if st.session_state.llm else '❌'}")
+            st.write(f"- Documents loaded: {st.session_state.documents_loaded}")
+            st.write(f"- RAG chain: {'✅' if st.session_state.rag_chain else '❌'}")
+            st.write(f"- HF API Key: {'✅' if st.session_state.hf_api_key else '❌'}")
+            
+            if hasattr(st.session_state, 'documents_text'):
+                st.write(f"- Documents text length: {len(st.session_state.documents_text):,} characters")
+            else:
+                st.write("- Documents text: ❌ Chưa có")
+        
+        if st.session_state.documents_loaded and st.button("📄 Xem Mẫu Nội Dung"):
+            if hasattr(st.session_state, 'documents_text') and st.session_state.documents_text:
+                preview = st.session_state.documents_text[:500] + "..." if len(st.session_state.documents_text) > 500 else st.session_state.documents_text
+                st.text_area("Mẫu nội dung tài liệu:", preview, height=200)
 
     # Tải mô hình nếu chưa được tải
     if not st.session_state.models_loaded:
