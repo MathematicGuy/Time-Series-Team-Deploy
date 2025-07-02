@@ -310,7 +310,7 @@ def simple_text_generation(question, context):
     
     except Exception as e:
         st.error(f"Lỗi trong simple_text_generation: {str(e)}")
-        return f"Xin lỗi, tôi gặp lỗi khi tìm kiếm: {str(e)}. Vui lòng thử lại." chủ đề khác được đề cập trong tài liệu."
+        return f"Xin lỗi, tôi gặp lỗi khi tìm kiếm: {str(e)}. Vui lòng thử lại."
     
     except Exception as e:
         return f"Xin lỗi, tôi gặp lỗi khi xử lý: {str(e)}"
