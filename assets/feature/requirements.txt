@@ -1,6 +1,4 @@
 streamlit
-torch
-transformers
 langchain-community
 langchain-huggingface
 langchain-experimental
@@ -14,5 +12,3 @@ python-docx
 openpyxl
 unstructured[local-inference]
 sentence-transformers
-numpy
-pandas
