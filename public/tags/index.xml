@@ -2,17 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Time Series Team Hub</title>
-    <link>http://localhost:1313/Time-Series-Team-Hub/tags/</link>
+    <link>http://localhost:43779/Time-Series-Team-Hub/tags/</link>
     <description>Recent content in Tags on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 28 Jun 2025 13:03:07 +0700</lastBuildDate>
-    <atom:link href="http://localhost:1313/Time-Series-Team-Hub/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:43779/Time-Series-Team-Hub/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Feature</title>
-      <link>http://localhost:1313/Time-Series-Team-Hub/tags/feature/</link>
+      <title>Chatbot</title>
+      <link>http://localhost:43779/Time-Series-Team-Hub/tags/chatbot/</link>
       <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:1313/Time-Series-Team-Hub/tags/feature/</guid>
+      <guid>http://localhost:43779/Time-Series-Team-Hub/tags/chatbot/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hỗ Trợ</title>
+      <link>http://localhost:43779/Time-Series-Team-Hub/tags/h%E1%BB%97-tr%E1%BB%A3/</link>
+      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:43779/Time-Series-Team-Hub/tags/h%E1%BB%97-tr%E1%BB%A3/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PDF</title>
+      <link>http://localhost:43779/Time-Series-Team-Hub/tags/pdf/</link>
+      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:43779/Time-Series-Team-Hub/tags/pdf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Streamlit</title>
+      <link>http://localhost:43779/Time-Series-Team-Hub/tags/streamlit/</link>
+      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:43779/Time-Series-Team-Hub/tags/streamlit/</guid>
       <description></description>
     </item>
   </channel>

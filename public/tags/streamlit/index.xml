@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Streamlit on Time Series Team Hub</title>
+    <link>http://localhost:43779/Time-Series-Team-Hub/tags/streamlit/</link>
+    <description>Recent content in Streamlit on Time Series Team Hub</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 Jun 2025 13:03:07 +0700</lastBuildDate>
+    <atom:link href="http://localhost:43779/Time-Series-Team-Hub/tags/streamlit/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Chatbot</title>
+      <link>http://localhost:43779/Time-Series-Team-Hub/posts/2025/chat_bot/</link>
+      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:43779/Time-Series-Team-Hub/posts/2025/chat_bot/</guid>
+      <description>&lt;h2 id=&#34;-trợ-lý-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
