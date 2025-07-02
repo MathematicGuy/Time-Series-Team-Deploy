@@ -138,12 +138,22 @@ st.markdown("""
     font-size: 12px;
   }
   .vietnam-flag {
-    background: linear-gradient(to bottom, #ff0000 50%, #ffff00 50%);
-    width: 30px;
-    height: 20px;
+    background: #da020e;
+    width: 40px;
+    height: 28px;
     display: inline-block;
     margin-right: 10px;
     border-radius: 3px;
+    position: relative;
+  }
+  .vietnam-flag::after {
+    content: "⭐";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffcd00;
+    font-size: 16px;
   }
   .api-key-section {
     background-color: #fff3cd;
