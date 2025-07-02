@@ -9,8 +9,8 @@ from langchain_community.document_loaders import UnstructuredExcelLoader
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_openai import ChatOpenAI
-from langchain import hub
+from langchain_community.llms import OpenAI
+from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 import time
@@ -212,15 +212,28 @@ def create_rag_chain(documents, openai_api_key):
     vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
     retriever = vector_db.as_retriever(search_kwargs={"k": 3})
     
-    # Create LLM
-    llm = ChatOpenAI(
+    # Create LLM with environment variable for API key
+    os.environ["OPENAI_API_KEY"] = openai_api_key
+    llm = OpenAI(
         temperature=0.7,
-        model_name="gpt-3.5-turbo",
+        model_name="gpt-3.5-turbo-instruct",  # Use completion model instead of chat
         openai_api_key=openai_api_key
     )
     
-    # Create RAG chain
-    prompt = hub.pull("rlm/rag-prompt")
+    # Create custom prompt template
+    prompt_template = """Use the following pieces of context to answer the question at the end. 
+    If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+    Context: {context}
+
+    Question: {question}
+    
+    Answer:"""
+    
+    prompt = PromptTemplate(
+        template=prompt_template,
+        input_variables=["context", "question"]
+    )
     
     def format_docs(docs):
         return "\n\n".join(doc.page_content for doc in docs)
