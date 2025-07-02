@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import torch
 import requests
 import shutil
 from pathlib import Path
@@ -11,12 +10,11 @@ from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface.llms import HuggingFacePipeline
+from langchain_community.llms import HuggingFaceEndpoint
 from langchain import hub
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import time
 import tempfile
 import urllib.parse
@@ -147,6 +145,13 @@ st.markdown("""
     margin-right: 10px;
     border-radius: 3px;
   }
+  .api-key-section {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -173,51 +178,142 @@ if 'processing_query' not in st.session_state:
     st.session_state.processing_query = False
 if 'query_input' not in st.session_state:
     st.session_state.query_input = ""
+if 'hf_api_key' not in st.session_state:
+    st.session_state.hf_api_key = ""
 
 @st.cache_resource
 def load_embeddings():
     """Tải mô hình embedding tiếng Việt"""
     return HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 
-@st.cache_resource
-def load_llm():
-    """Tải mô hình ngôn ngữ nhẹ phù hợp cho triển khai"""
+def load_llm_with_api(api_key):
+    """Tải mô hình ngôn ngữ thông qua Hugging Face API"""
     try:
-        st.info("🔄 Đang tải mô hình AI tối ưu cho CPU...")
-        
-        # Sử dụng mô hình nhẹ hoạt động tốt trên CPU
-        MODEL_NAME = "microsoft/DialoGPT-small"
-        
-        # Tải mà không cần quantization
-        tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-        model = AutoModelForCausalLM.from_pretrained(
-            MODEL_NAME,
-            torch_dtype=torch.float32,
-            low_cpu_mem_usage=True
-        )
-        
-        # Đảm bảo có pad token
-        if tokenizer.pad_token is None:
-            tokenizer.pad_token = tokenizer.eos_token
+        if not api_key:
+            return None
             
-        # Tạo pipeline cho CPU
-        model_pipeline = pipeline(
-            "text-generation",
-            model=model,
-            tokenizer=tokenizer,
-            max_new_tokens=128,
+        # Sử dụng Hugging Face Inference API thay vì tải model local
+        llm = HuggingFaceEndpoint(
+            repo_id="microsoft/DialoGPT-medium",
+            huggingfacehub_api_token=api_key,
             temperature=0.7,
-            do_sample=True,
-            pad_token_id=tokenizer.eos_token_id,
-            device=-1  # Ép buộc sử dụng CPU
+            max_new_tokens=200,
+            repetition_penalty=1.1
         )
-        
-        return HuggingFacePipeline(pipeline=model_pipeline)
+        return llm
         
     except Exception as e:
         st.error(f"Lỗi khi tải mô hình: {str(e)}")
-        st.error("Vui lòng thử triển khai cục bộ hoặc kiểm tra cài đặt môi trường.")
         return None
+
+def simple_text_generation(question, context):
+    """Fallback function sử dụng rule-based approach với debugging"""
+    try:
+        st.info(f"🔍 Đang tìm kiếm trong {len(context):,} ký tự văn bản")
+        
+        # Kiểm tra context
+        if not context or len(context.strip()) < 10:
+            return "Nội dung tài liệu không đủ để trả lời câu hỏi."
+        
+        # Tìm kiếm từ khóa trong context
+        question_lower = question.lower()
+        context_lower = context.lower()
+        
+        # Chia context thành câu
+        sentences = []
+        # Thử nhiều cách chia câu
+        for delimiter in ['. ', '.\n', '! ', '?\n', '? ']:
+            if delimiter in context:
+                sentences.extend(context.split(delimiter))
+        
+        # Nếu không có câu nào, chia theo đoạn
+        if not sentences:
+            sentences = context.split('\n')
+        
+        # Lọc câu rỗng
+        sentences = [s.strip() for s in sentences if len(s.strip()) > 20]
+        
+        st.info(f"📝 Đã tìm thấy {len(sentences)} câu/đoạn để tìm kiếm")
+        
+        if not sentences:
+            return "Không thể phân tích cấu trúc tài liệu. Có thể tài liệu bị lỗi format."
+        
+        # Từ dừng tiếng Việt mở rộng
+        vietnamese_stopwords = {
+            'là', 'của', 'và', 'với', 'cho', 'từ', 'về', 'theo', 'trong', 'nào', 'gì', 'sao', 
+            'thế', 'như', 'có', 'không', 'được', 'này', 'đó', 'những', 'các', 'một', 'hai', 
+            'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín', 'mười', 'the', 'and', 'or', 
+            'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'what', 'how', 'when', 
+            'where', 'why', 'who', 'which', 'that', 'this', 'these', 'those', 'will', 'would',
+            'could', 'should', 'may', 'might', 'can', 'must', 'shall'
+        }
+        
+        # Trích xuất từ khóa từ câu hỏi
+        question_words = []
+        for word in question_lower.split():
+            clean_word = word.strip('.,!?()[]{}":;').lower()
+            if len(clean_word) > 2 and clean_word not in vietnamese_stopwords:
+                question_words.append(clean_word)
+        
+        st.info(f"🔑 Từ khóa tìm kiếm: {', '.join(question_words)}")
+        
+        if not question_words:
+            return "Không thể xác định từ khóa từ câu hỏi. Vui lòng đặt câu hỏi cụ thể hơn."
+        
+        # Tìm câu liên quan
+        relevant_sentences = []
+        for sentence in sentences:
+            sentence_lower = sentence.lower()
+            score = 0
+            
+            # Tính điểm dựa trên số từ khóa xuất hiện
+            for word in question_words:
+                if word in sentence_lower:
+                    # Từ xuất hiện chính xác
+                    score += 2
+                    # Bonus nếu từ xuất hiện nhiều lần
+                    score += sentence_lower.count(word) - 1
+            
+            # Bonus cho câu chứa nhiều từ khóa
+            if score > 0:
+                word_coverage = sum(1 for word in question_words if word in sentence_lower)
+                coverage_bonus = (word_coverage / len(question_words)) * 2
+                score += coverage_bonus
+                
+                relevant_sentences.append((sentence.strip(), score))
+        
+        st.info(f"📊 Tìm thấy {len(relevant_sentences)} câu liên quan")
+        
+        if relevant_sentences:
+            # Sắp xếp theo điểm relevance và lấy top 5
+            relevant_sentences.sort(key=lambda x: x[1], reverse=True)
+            top_sentences = [sent[0] for sent in relevant_sentences[:5]]
+            
+            # Hiển thị thông tin debug
+            st.info(f"🎯 Top câu có điểm cao nhất: {relevant_sentences[0][1]:.1f}")
+            
+            answer = "Dựa trên tài liệu, tôi tìm thấy thông tin sau:\n\n"
+            for i, sentence in enumerate(top_sentences, 1):
+                if sentence.strip():
+                    # Làm sạch câu
+                    clean_sentence = sentence.strip()
+                    if not clean_sentence.endswith(('.', '!', '?')):
+                        clean_sentence += '.'
+                    answer += f"{i}. {clean_sentence}\n\n"
+            
+            return answer.strip()
+        else:
+            # Fallback: trả về một phần ngẫu nhiên của text
+            st.warning("🔍 Không tìm thấy câu liên quan trực tiếp, hiển thị nội dung tổng quát")
+            preview_text = context[:1000] + "..." if len(context) > 1000 else context
+            return f"Tôi không thể tìm thấy thông tin cụ thể liên quan đến câu hỏi '{question}' trong tài liệu. Tuy nhiên, đây là một phần nội dung tài liệu:\n\n{preview_text}\n\nVui lòng thử diễn đạt lại câu hỏi hoặc hỏi về các chủ đề khác được đề cập trong tài liệu."
+    
+    except Exception as e:
+        st.error(f"Lỗi trong simple_text_generation: {str(e)}")
+        return f"Xin lỗi, tôi gặp lỗi khi tìm kiếm: {str(e)}. Vui lòng thử lại." chủ đề khác được đề cập trong tài liệu."
+    
+    except Exception as e:
+        return f"Xin lỗi, tôi gặp lỗi khi xử lý: {str(e)}"
 
 def extract_text_from_uploaded_file(file):
     """Trích xuất văn bản từ file được tải lên dựa trên loại file"""
@@ -351,22 +447,45 @@ def download_pdf_from_url(url, filename, temp_dir):
 def create_rag_chain(all_documents):
     """Tạo chuỗi RAG từ tài liệu"""
     if not all_documents:
+        st.error("Không có tài liệu nào để xử lý")
         return None, 0
     
     try:
+        st.info(f"🔄 Đang xử lý {len(all_documents)} tài liệu...")
+        
+        # Kiểm tra nội dung tài liệu
+        total_text = ""
+        for doc in all_documents:
+            if hasattr(doc, 'page_content'):
+                total_text += doc.page_content + "\n"
+        
+        if len(total_text.strip()) < 50:
+            st.error("Nội dung tài liệu quá ngắn hoặc không thể đọc được")
+            return None, 0
+        
+        st.success(f"✅ Đã đọc {len(total_text):,} ký tự từ tài liệu")
+        
+        # Lưu toàn bộ text vào session state để fallback
+        st.session_state.documents_text = total_text
+        
         # Sử dụng text splitter mạnh mẽ hơn nếu SemanticChunker thất bại
         try:
-            semantic_splitter = SemanticChunker(
-                embeddings=st.session_state.embeddings,
-                buffer_size=1,
-                breakpoint_threshold_type="percentile",
-                breakpoint_threshold_amount=95,
-                min_chunk_size=500,
-                add_start_index=True
-            )
-            docs = semantic_splitter.split_documents(all_documents)
+            if st.session_state.embeddings:
+                semantic_splitter = SemanticChunker(
+                    embeddings=st.session_state.embeddings,
+                    buffer_size=1,
+                    breakpoint_threshold_type="percentile",
+                    breakpoint_threshold_amount=95,
+                    min_chunk_size=500,
+                    add_start_index=True
+                )
+                docs = semantic_splitter.split_documents(all_documents)
+                st.info(f"✅ Sử dụng SemanticChunker: {len(docs)} chunks")
+            else:
+                raise Exception("No embeddings available")
         except Exception as e:
-            st.warning(f"SemanticChunker thất bại, sử dụng RecursiveCharacterTextSplitter: {str(e)}")
+            st.warning(f"SemanticChunker thất bại: {str(e)}")
+            st.info("🔄 Chuyển sang RecursiveCharacterTextSplitter...")
             # Dự phòng với text splitter cơ bản
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=1000,
@@ -374,54 +493,110 @@ def create_rag_chain(all_documents):
                 length_function=len
             )
             docs = text_splitter.split_documents(all_documents)
+            st.info(f"✅ Sử dụng RecursiveCharacterTextSplitter: {len(docs)} chunks")
         
         if not docs:
-            st.error("Không có đoạn tài liệu nào được tạo. Vui lòng kiểm tra tài liệu của bạn.")
-            return None, 0
+            st.error("Không có đoạn tài liệu nào được tạo")
+            # Tạo simple RAG chain với toàn bộ text
+            def simple_rag_chain_text(question):
+                return simple_text_generation(question, total_text)
+            return simple_rag_chain_text, 1
         
-        # Triển khai FAISS với xử lý lỗi
-        try:
-            vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
-            retriever = vector_db.as_retriever(search_kwargs={"k": min(4, len(docs))})
-        except Exception as e:
-            st.error(f"Lỗi khi tạo cơ sở dữ liệu vector: {str(e)}")
-            return None, 0
+        # Triển khai FAISS với xử lý lỗi (chỉ khi có embeddings)
+        if st.session_state.embeddings:
+            try:
+                vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
+                retriever = vector_db.as_retriever(search_kwargs={"k": min(4, len(docs))})
+                st.success(f"✅ Đã tạo FAISS vector database với {len(docs)} chunks")
+            except Exception as e:
+                st.error(f"Lỗi khi tạo FAISS vector database: {str(e)}")
+                st.info("🔄 Chuyển sang chế độ tìm kiếm text đơn giản...")
+                # Fallback to simple text search
+                def simple_rag_chain_docs(question):
+                    combined_text = "\n\n".join([doc.page_content for doc in docs])
+                    return simple_text_generation(question, combined_text)
+                return simple_rag_chain_docs, len(docs)
+        else:
+            st.info("🔍 Không có embeddings, sử dụng tìm kiếm text đơn giản")
+            def simple_rag_chain_docs(question):
+                combined_text = "\n\n".join([doc.page_content for doc in docs])
+                return simple_text_generation(question, combined_text)
+            return simple_rag_chain_docs, len(docs)
 
-        # Sử dụng template prompt đơn giản thay vì hub.pull
-        try:
-            prompt = hub.pull("rlm/rag-prompt")
-        except Exception as e:
-            st.warning("Sử dụng template prompt dự phòng")
-            prompt_template = """Sử dụng những đoạn ngữ cảnh sau để trả lời câu hỏi ở cuối.
-            Nếu bạn không biết câu trả lời, chỉ cần nói rằng bạn không biết, đừng cố bịa ra câu trả lời.
+        # Kiểm tra xem có LLM không
+        if st.session_state.llm:
+            st.info("🤖 Sử dụng AI model từ Hugging Face")
+            # Sử dụng template prompt đơn giản thay vì hub.pull
+            try:
+                prompt = hub.pull("rlm/rag-prompt")
+                st.success("✅ Đã tải prompt template từ hub")
+            except Exception as e:
+                st.warning(f"Không thể tải prompt từ hub: {str(e)}")
+                st.info("🔄 Sử dụng prompt template cục bộ...")
+                prompt_template = """Sử dụng những đoạn ngữ cảnh sau để trả lời câu hỏi ở cuối.
+                Nếu bạn không biết câu trả lời, chỉ cần nói rằng bạn không biết, đừng cố bịa ra câu trả lời.
+                Trả lời bằng tiếng Việt.
 
-            Ngữ cảnh: {context}
+                Ngữ cảnh: {context}
 
-            Câu hỏi: {question}
+                Câu hỏi: {question}
 
-            Trả lời:"""
-            prompt = PromptTemplate(
-                template=prompt_template,
-                input_variables=["context", "question"]
-            )
+                Trả lời:"""
+                prompt = PromptTemplate(
+                    template=prompt_template,
+                    input_variables=["context", "question"]
+                )
 
-        def format_docs(docs):
-            if not docs:
-                return "Không tìm thấy tài liệu liên quan."
-            return "\n\n".join(doc.page_content for doc in docs)
-        
-        rag_chain = (
-            {"context": retriever | format_docs, "question": RunnablePassthrough()}
-            | prompt
-            | st.session_state.llm
-            | StrOutputParser()
-        )
+            def format_docs(docs):
+                if not docs:
+                    return "Không tìm thấy tài liệu liên quan."
+                return "\n\n".join(doc.page_content for doc in docs)
+            
+            try:
+                rag_chain = (
+                    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+                    | prompt
+                    | st.session_state.llm
+                    | StrOutputParser()
+                )
+                st.success("✅ Đã tạo AI RAG chain")
+            except Exception as e:
+                st.error(f"Lỗi khi tạo AI RAG chain: {str(e)}")
+                st.info("🔄 Chuyển sang simple RAG chain...")
+                def simple_rag_chain_with_retriever(question):
+                    try:
+                        relevant_docs = retriever.get_relevant_documents(question)
+                        context = "\n\n".join(doc.page_content for doc in relevant_docs)
+                        return simple_text_generation(question, context)
+                    except Exception as e:
+                        return simple_text_generation(question, total_text)
+                rag_chain = simple_rag_chain_with_retriever
+        else:
+            st.info("🔍 Sử dụng tìm kiếm từ khóa thông minh")
+            # Fallback: tạo simple RAG chain
+            def simple_rag_chain_with_retriever(question):
+                try:
+                    relevant_docs = retriever.get_relevant_documents(question)
+                    context = "\n\n".join(doc.page_content for doc in relevant_docs)
+                    return simple_text_generation(question, context)
+                except Exception as e:
+                    st.warning(f"Lỗi retriever: {str(e)}, sử dụng toàn bộ text")
+                    return simple_text_generation(question, total_text)
+            
+            rag_chain = simple_rag_chain_with_retriever
 
         return rag_chain, len(docs)
         
     except Exception as e:
-        st.error(f"Lỗi khi tạo chuỗi RAG: {str(e)}")
-        return None, 0
+        st.error(f"Lỗi nghiêm trọng khi tạo chuỗi RAG: {str(e)}")
+        st.info("🔄 Tạo fallback RAG chain...")
+        # Ultimate fallback
+        def emergency_rag_chain(question):
+            if hasattr(st.session_state, 'documents_text') and st.session_state.documents_text:
+                return simple_text_generation(question, st.session_state.documents_text)
+            else:
+                return "Xin lỗi, không thể truy cập nội dung tài liệu. Vui lòng tải lại tài liệu."
+        return emergency_rag_chain, 1
 
 def load_pdfs_from_github(repo_url):
     """Tải file PDF từ GitHub repository"""
@@ -541,8 +716,29 @@ def process_user_query(question):
         if not question or len(question.strip()) < 2:
             return "Vui lòng đặt câu hỏi cụ thể hơn."
         
-        # Gọi chuỗi RAG với xử lý lỗi
-        output = st.session_state.rag_chain.invoke(question)
+        st.info(f"🤔 Đang xử lý câu hỏi: {question}")
+        
+        # Gọi chuỗi RAG với xử lý lỗi chi tiết
+        try:
+            if callable(st.session_state.rag_chain):
+                # Simple RAG chain (fallback)
+                st.info("🔍 Sử dụng simple RAG chain")
+                output = st.session_state.rag_chain(question)
+            else:
+                # LangChain RAG chain
+                st.info("🤖 Sử dụng LangChain RAG chain")
+                output = st.session_state.rag_chain.invoke(question)
+            
+            st.success("✅ Đã nhận được phản hồi từ hệ thống")
+            
+        except Exception as chain_error:
+            st.error(f"Lỗi khi gọi RAG chain: {str(chain_error)}")
+            # Ultimate fallback: sử dụng documents_text nếu có
+            if hasattr(st.session_state, 'documents_text') and st.session_state.documents_text:
+                st.info("🔄 Sử dụng fallback với toàn bộ text")
+                return simple_text_generation(question, st.session_state.documents_text)
+            else:
+                return f"Xin lỗi, gặp lỗi khi xử lý câu hỏi: {str(chain_error)}. Vui lòng thử tải lại tài liệu."
         
         # Xử lý các định dạng đầu ra khác nhau
         if isinstance(output, str):
@@ -569,15 +765,26 @@ def process_user_query(question):
         if not answer or len(answer) < 5:
             return "Tôi đã tìm thấy một số thông tin trong tài liệu, nhưng không thể tạo ra câu trả lời rõ ràng. Vui lòng thử diễn đạt lại câu hỏi của bạn."
         
+        # Làm sạch câu trả lời
+        answer = answer.replace("Human:", "").replace("Assistant:", "").strip()
+        
         return answer
         
     except IndexError as e:
         st.error(f"Lỗi chỉ mục trong xử lý: {str(e)}")
-        return "Tôi gặp sự cố khi tìm kiếm trong tài liệu. Điều này có thể do quá trình xử lý tài liệu. Vui lòng thử đặt câu hỏi khác hoặc tải lại tài liệu."
+        # Thử fallback
+        if hasattr(st.session_state, 'documents_text') and st.session_state.documents_text:
+            return simple_text_generation(question, st.session_state.documents_text)
+        return "Tôi gặp sự cố khi tìm kiếm trong tài liệu. Vui lòng thử tải lại tài liệu."
     
     except Exception as e:
         st.error(f"Lỗi không mong đợi: {str(e)}")
-        return "Tôi xin lỗi, tôi gặp lỗi không mong đợi khi xử lý câu hỏi của bạn. Vui lòng thử lại với câu hỏi khác."
+        st.error(f"Chi tiết lỗi: {type(e).__name__}")
+        # Thử fallback cuối cùng
+        if hasattr(st.session_state, 'documents_text') and st.session_state.documents_text:
+            st.info("🔄 Thử sử dụng fallback search...")
+            return simple_text_generation(question, st.session_state.documents_text)
+        return "Tôi xin lỗi, gặp lỗi không mong đợi. Vui lòng thử tải lại tài liệu hoặc đặt câu hỏi khác."
 
 def main():
     # Header với cờ Việt Nam
@@ -591,6 +798,23 @@ def main():
 
     with st.sidebar:
         st.header("⚙️ Cấu Hình")
+
+        # API Key Section
+        st.markdown('<div class="api-key-section">', unsafe_allow_html=True)
+        st.subheader("🔑 Hugging Face API Key (Tùy chọn)")
+        hf_api_key = st.text_input(
+            "Nhập Hugging Face API Key để sử dụng AI model:",
+            type="password",
+            value=st.session_state.hf_api_key,
+            help="Để trống để sử dụng chế độ tìm kiếm từ khóa đơn giản"
+        )
+        st.session_state.hf_api_key = hf_api_key
+        
+        if hf_api_key:
+            st.info("🤖 Sẽ sử dụng AI model từ Hugging Face")
+        else:
+            st.info("🔍 Sẽ sử dụng tìm kiếm từ khóa thông minh")
+        st.markdown('</div>', unsafe_allow_html=True)
 
         if st.session_state.models_loaded:
             st.markdown('<span class="status-indicator status-ready"></span>**Mô hình:** Sẵn sàng', unsafe_allow_html=True)
@@ -743,14 +967,35 @@ def main():
     # Tải mô hình nếu chưa được tải
     if not st.session_state.models_loaded:
         with st.spinner("🚀 Đang khởi tạo các mô hình AI..."):
-            st.session_state.embeddings = load_embeddings()
-            st.session_state.llm = load_llm()
-            if st.session_state.llm:
-                st.session_state.models_loaded = True
-        if st.session_state.models_loaded:
-            st.success("✅ Các mô hình đã sẵn sàng!")
-            time.sleep(1)
-            st.rerun()
+            try:
+                st.session_state.embeddings = load_embeddings()
+                st.success("✅ Đã tải embeddings model thành công")
+            except Exception as e:
+                st.error(f"❌ Lỗi khi tải embeddings: {str(e)}")
+                st.warning("⚠️ Sẽ hoạt động ở chế độ đơn giản mà không có embeddings")
+                st.session_state.embeddings = None
+            
+            # Chỉ tải LLM nếu có API key
+            if st.session_state.hf_api_key:
+                try:
+                    st.session_state.llm = load_llm_with_api(st.session_state.hf_api_key)
+                    if st.session_state.llm:
+                        st.success("✅ Đã tải AI model từ Hugging Face!")
+                    else:
+                        st.warning("⚠️ Không thể tải AI model, sẽ sử dụng tìm kiếm từ khóa")
+                        st.session_state.llm = None
+                except Exception as e:
+                    st.error(f"❌ Lỗi khi tải LLM: {str(e)}")
+                    st.session_state.llm = None
+            else:
+                st.session_state.llm = None
+                st.info("🔍 Sử dụng chế độ tìm kiếm từ khóa thông minh")
+            
+            st.session_state.models_loaded = True
+        
+        st.success("✅ Hệ thống đã sẵn sàng!")
+        time.sleep(1)
+        st.rerun()
 
     # Tải tài liệu nếu chưa được tải và nguồn là github hoặc local
     if st.session_state.models_loaded and not st.session_state.documents_loaded and st.session_state.pdf_source in ["github", "local"]:
@@ -772,6 +1017,7 @@ def main():
                     </ul>
                     <p><strong>Tổng số đoạn:</strong> {num_chunks}</p>
                     <p><strong>Kho Vector:</strong> FAISS (Tìm kiếm tương tự nhanh)</p>
+                    <p><strong>Chế độ AI:</strong> {"Hugging Face API" if st.session_state.llm else "Tìm kiếm từ khóa"}</p>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -859,9 +1105,16 @@ def main():
                 <li><strong>📂 Thư Mục Cục Bộ:</strong> Tải file từ đường dẫn thư mục cục bộ</li>
             </ul>
             <br>
+            <p><strong>2 Chế Độ Hoạt Động:</strong></p>
+            <ul style='text-align: left; max-width: 500px; margin: 0 auto;'>
+                <li><strong>🤖 AI Mode:</strong> Với Hugging Face API Key - Trả lời thông minh</li>
+                <li><strong>🔍 Keyword Mode:</strong> Không cần API - Tìm kiếm từ khóa</li>
+            </ul>
+            <br>
             <p><strong>Để bắt đầu:</strong></p>
             <ol style='text-align: left; max-width: 500px; margin: 0 auto;'>
-                <li>Chọn nguồn tài liệu ưa thích trong thanh bên</li>
+                <li>Nhập Hugging Face API Key (tùy chọn) trong thanh bên</li>
+                <li>Chọn nguồn tài liệu ưa thích</li>
                 <li>Tải lên file hoặc cấu hình repository/thư mục</li>
                 <li>Xử lý tài liệu của bạn</li>
                 <li>Bắt đầu đặt câu hỏi!</li>
@@ -878,6 +1131,7 @@ def main():
                 <li>🔄 Nhiều phương thức nhập liệu</li>
                 <li>💬 Giao diện trò chuyện giống ChatGPT</li>
                 <li>🎯 Phản hồi nhận thức ngữ cảnh</li>
+                <li>🔀 Linh hoạt: AI hoặc keyword search</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
