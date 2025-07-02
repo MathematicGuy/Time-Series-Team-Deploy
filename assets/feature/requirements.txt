@@ -1,7 +1,9 @@
 streamlit
+torch
+transformers
 langchain-community
 langchain-huggingface
-langchain-text-splitters
+langchain-experimental
 langchain
 langchain-core
 faiss-cpu
@@ -11,4 +13,3 @@ python-docx
 openpyxl
 unstructured[local-inference]
 sentence-transformers
-openai
