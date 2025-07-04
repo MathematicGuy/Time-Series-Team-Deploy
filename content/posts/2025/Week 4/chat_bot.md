@@ -73,6 +73,7 @@ Hệ thống sử dụng:
 
 ```python
 HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
+```
 
 ---
 
@@ -90,6 +91,7 @@ HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 | Truy vấn ngữ cảnh | RAG pipeline |
 
 ---
+
 📂 *Tài liệu đi kèm:*  
   {{< pdf src="/Time-Series-Team-Hub/pdf/Week_4___Streamlit_RAGChatbot.pdf" title="Week_4_Streamlit_RAGChatbot.pdf" height="700px" >}}
 

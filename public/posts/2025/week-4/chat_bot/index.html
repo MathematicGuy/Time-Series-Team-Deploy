@@ -113,15 +113,17 @@
 
     <div id="content" class="mb-14">
       <h2 id="-trợ-lý-ai-tiếng-việt--pdf-rag-assistant">🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant</h2>
-<p>Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để <strong>trả lời câu hỏi từ tài liệu PDF</strong> bằng tiếng Việt.<br>
-🧪 <a href="https://ragchatbotaio.streamlit.app/">Trải nghiệm Chatbot tại đây</a></p>
+<p>Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để <strong>trả lời câu hỏi từ tài liệu PDF</strong> bằng tiếng Việt.</p>
+<h2 id="-trải-nghiệm-chatbot-tại-đây-streamlit">🧪 Trải nghiệm Chatbot tại đây: <strong><a href="https://ragchatbotaio.streamlit.app/">Streamlit</a></strong></h2>
 <p>👉 <strong>Bạn có thể hỏi:</strong></p>
 <ul>
 <li>
-<p>Với nội dung cho cá nhân: Bạn có thể tải lên một văn bản hoặc đường dẫn tiếng việt và đặt câu hỏi xung quanh tài liệu đó, Trợ lý AI sẽ giúp bạn đưa ra thông tin liên quan
-📚 <strong>Sinh viên, học viên</strong>: Tải tài liệu học hoặc chọn link kiến thức tổng hợp từ lớp AIO để ôn tập.
-🧑‍💼 <strong>Người đi làm</strong>: Upload văn bản nội bộ như hợp đồng, báo cáo,&hellip; và đặt câu hỏi để trích xuất thông tin nhanh.
-👨‍🏫 <strong>Giảng viên</strong>: Chuẩn bị nội dung tài liệu và để chatbot giúp trả lời cho người học dựa trên nội dung đó.</p>
+<p>Với nội dung cho cá nhân: Bạn có thể tải lên một văn bản hoặc đường dẫn tiếng việt và đặt câu hỏi xung quanh tài liệu đó, Trợ lý AI sẽ giúp bạn đưa ra thông tin liên quan</p>
+<ul>
+<li>📚 <strong>Sinh viên, học viên</strong>: Tải tài liệu học hoặc chọn link kiến thức tổng hợp từ lớp AIO để ôn tập.</li>
+<li>🧑‍💼 <strong>Người đi làm</strong>: Upload văn bản nội bộ như hợp đồng, báo cáo,&hellip; và đặt câu hỏi để trích xuất thông tin nhanh.</li>
+<li>👨‍🏫 <strong>Giảng viên</strong>: Chuẩn bị nội dung tài liệu và để chatbot giúp trả lời cho người học dựa trên nội dung đó.</li>
+</ul>
 </li>
 <li>
 <p>Với nội dung lớp AIO từ Tuần 1 đến giờ: Bạn chọn phần Git Respository, tại đó nhóm có đặt link mặc định đến blog kiến thức tổng hợp của lớp và bạn có thể đặt câu hỏi để Trợ lý AI có thể giúp bạn ôn lại kiến thức liên quan AIO</p>
@@ -173,25 +175,53 @@
 <h3 id="-embedding-tối-ưu-cho-tiếng-việt">🔤 Embedding tối ưu cho tiếng Việt</h3>
 <p>Hệ thống sử dụng:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>HuggingFaceEmbeddings(model_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;bkai-foundation-models/vietnamese-bi-encoder&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">---</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">### 🛠️ Công nghệ sử dụng</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Thành phần <span style="color:#f92672">|</span> Công cụ <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|------------|---------|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">🧪</span> Trải nghiệm Chatbot <span style="color:#f92672">|</span> [Streamlit](https:<span style="color:#f92672">//</span>ragchatbotaio<span style="color:#f92672">.</span>streamlit<span style="color:#f92672">.</span>app<span style="color:#f92672">/</span>) <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Code <span style="color:#f92672">|</span> [Google Colab](https:<span style="color:#f92672">//</span>colab<span style="color:#f92672">.</span>research<span style="color:#f92672">.</span>google<span style="color:#f92672">.</span>com<span style="color:#f92672">/</span>drive<span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>RIqEgrFcSYTO6rlUj1jLoUuJFrtpZy4X<span style="color:#960050;background-color:#1e0010">?</span>usp<span style="color:#f92672">=</span>sharing) <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> NLP model  <span style="color:#f92672">|</span> [Vicuna<span style="color:#f92672">-</span><span style="color:#ae81ff">7</span>B](https:<span style="color:#f92672">//</span>huggingface<span style="color:#f92672">.</span>co<span style="color:#f92672">/</span>lmsys<span style="color:#f92672">/</span>vicuna<span style="color:#f92672">-</span><span style="color:#ae81ff">7</span>b<span style="color:#f92672">-</span>v1<span style="color:#ae81ff">.5</span>) <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Embedding tiếng Việt <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">`</span>bkai<span style="color:#f92672">-</span>foundation<span style="color:#f92672">-</span>models<span style="color:#f92672">/</span>vietnamese<span style="color:#f92672">-</span>bi<span style="color:#f92672">-</span>encoder<span style="color:#960050;background-color:#1e0010">`</span> <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Xử lý PDF  <span style="color:#f92672">|</span> LangChain <span style="color:#960050;background-color:#1e0010">`</span>PyPDFLoader<span style="color:#960050;background-color:#1e0010">`</span> <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Semantic Split <span style="color:#f92672">|</span> LangChain <span style="color:#960050;background-color:#1e0010">`</span>SemanticChunker<span style="color:#960050;background-color:#1e0010">`</span> <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Truy xuất văn bản <span style="color:#f92672">|</span> ChromaDB <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> Truy vấn ngữ cảnh <span style="color:#f92672">|</span> RAG pipeline <span style="color:#f92672">|</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">📂</span> <span style="color:#f92672">*</span>Tài liệu đi kèm:<span style="color:#f92672">*</span>  
-</span></span><span style="display:flex;"><span>  <details>
+</span></span></code></pre></div><hr>
+<h3 id="-công-nghệ-sử-dụng">🛠️ Công nghệ sử dụng</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Thành phần</th>
+          <th>Công cụ</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>🧪 Trải nghiệm Chatbot</td>
+          <td><a href="https://ragchatbotaio.streamlit.app/">Streamlit</a></td>
+      </tr>
+      <tr>
+          <td>Code</td>
+          <td><a href="https://colab.research.google.com/drive/1RIqEgrFcSYTO6rlUj1jLoUuJFrtpZy4X?usp=sharing">Google Colab</a></td>
+      </tr>
+      <tr>
+          <td>NLP model</td>
+          <td><a href="https://huggingface.co/lmsys/vicuna-7b-v1.5">Vicuna-7B</a></td>
+      </tr>
+      <tr>
+          <td>Embedding tiếng Việt</td>
+          <td><code>bkai-foundation-models/vietnamese-bi-encoder</code></td>
+      </tr>
+      <tr>
+          <td>Xử lý PDF</td>
+          <td>LangChain <code>PyPDFLoader</code></td>
+      </tr>
+      <tr>
+          <td>Semantic Split</td>
+          <td>LangChain <code>SemanticChunker</code></td>
+      </tr>
+      <tr>
+          <td>Truy xuất văn bản</td>
+          <td>ChromaDB</td>
+      </tr>
+      <tr>
+          <td>Truy vấn ngữ cảnh</td>
+          <td>RAG pipeline</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p>📂 <em>Tài liệu đi kèm:</em><br>
+<details>
   	<summary> Week_4_Streamlit_RAGChatbot.pdf </summary>
   	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
   		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
@@ -215,8 +245,10 @@
   		</iframe>
   	</div>
   </details>
+</p>
+<hr>
+<p>🧠 <em>Repository managed by <a href="https://github.com/Jennifer1907/Time-Series-Team-Hub">Time Series Team Hub</a></em></p>
 
-</span></span></code></pre></div>
 
     <ul id="taxonomy" class="not-prose flex items-center space-x-4 flex-nowrap whitespace-nowrap overflow-x-auto">
 
