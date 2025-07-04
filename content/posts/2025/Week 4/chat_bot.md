@@ -2,10 +2,10 @@
 title: "Tuần 4 - Trợ lý AI đã xuất hiện"
 date: 2025-06-28T13:03:07+07:00
 description: Trợ lý AI tiếng Việt hỗ trợ hỏi đáp từ tài liệu PDF bằng công nghệ RAG kết hợp mô hình Vicuna-7B, được xây dựng bằng Streamlit và LangChain.
-image: ![alt text](image.png)
-caption: Photo by Nasa on Unsplash
+image: images/RAGChatbot.png
+caption: 
 categories:
-  - feature
+  - minutes
 tags:
   - feature
 draft: false
@@ -14,7 +14,9 @@ draft: false
 ## 🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant
 
 Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để **trả lời câu hỏi từ tài liệu PDF** bằng tiếng Việt.  
-🧪 [Trải nghiệm Chatbot tại đây](https://ragchatbotaio.streamlit.app/)
+<p align="center">
+  <strong>🧪 <a href="https://ragchatbotaio.streamlit.app/">Trải nghiệm Chatbot tại đây</a></strong>
+</p>
 
 👉 **Bạn có thể hỏi:**
 - Với nội dung cho cá nhân: Bạn có thể tải lên một văn bản hoặc đường dẫn tiếng việt và đặt câu hỏi xung quanh tài liệu đó, Trợ lý AI sẽ giúp bạn đưa ra thông tin liên quan

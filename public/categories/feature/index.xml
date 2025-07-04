@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Feature on Time Series Team Hub</title>
-    <link>http://localhost:41181/Time-Series-Team-Hub/categories/feature/</link>
+    <link>http://localhost:1313/Time-Series-Team-Hub/categories/feature/</link>
     <description>Recent content in Feature on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 28 Jun 2025 13:03:07 +0700</lastBuildDate>
-    <atom:link href="http://localhost:41181/Time-Series-Team-Hub/categories/feature/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/Time-Series-Team-Hub/categories/feature/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tuần 4 - Trợ lý AI đã xuất hiện</title>
-      <link>http://localhost:41181/Time-Series-Team-Hub/posts/2025/chat_bot/</link>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/2025/week-4/chat_bot/</link>
       <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:41181/Time-Series-Team-Hub/posts/2025/chat_bot/</guid>
-      <description>&lt;h2 id=&#34;-trợ-lý-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;/p&gt;</description>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/2025/week-4/chat_bot/</guid>
+      <description>&lt;h2 id=&#34;-trợ-lý-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;br&gt;&#xA;🧪 &lt;a href=&#34;https://ragchatbotaio.streamlit.app/&#34;&gt;Trải nghiệm Chatbot tại đây&lt;/a&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
