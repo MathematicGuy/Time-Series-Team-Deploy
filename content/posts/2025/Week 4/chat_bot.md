@@ -15,9 +15,7 @@ draft: false
 
 Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để **trả lời câu hỏi từ tài liệu PDF** bằng tiếng Việt.
 
-<p align="center">
-  <strong>🧪 <a href="https://ragchatbotaio.streamlit.app/" target="_blank" rel="noopener noreferrer">Trải nghiệm Chatbot tại đây</a></strong>
-</p>
+## 🧪 Trải nghiệm Chatbot tại đây: **[Streamlit](https://ragchatbotaio.streamlit.app/)** 
 
 👉 **Bạn có thể hỏi:**
 - Với nội dung cho cá nhân: Bạn có thể tải lên một văn bản hoặc đường dẫn tiếng việt và đặt câu hỏi xung quanh tài liệu đó, Trợ lý AI sẽ giúp bạn đưa ra thông tin liên quan
