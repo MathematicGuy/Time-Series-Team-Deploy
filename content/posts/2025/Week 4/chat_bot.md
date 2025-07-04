@@ -13,16 +13,21 @@ draft: false
 
 ## 🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant
 
-Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để **trả lời câu hỏi từ tài liệu PDF** bằng tiếng Việt.  
+Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để **trả lời câu hỏi từ tài liệu PDF** bằng tiếng Việt.
+
 <p align="center">
-  <strong>🧪 <a href="https://ragchatbotaio.streamlit.app/">Trải nghiệm Chatbot tại đây</a></strong>
+  <a href="https://ragchatbotaio.streamlit.app/" style="text-decoration: none; font-size: 1.75em;">
+    🧪 <strong>Trải nghiệm Chatbot tại đây</strong>
+  </a>
 </p>
+
+
 
 👉 **Bạn có thể hỏi:**
 - Với nội dung cho cá nhân: Bạn có thể tải lên một văn bản hoặc đường dẫn tiếng việt và đặt câu hỏi xung quanh tài liệu đó, Trợ lý AI sẽ giúp bạn đưa ra thông tin liên quan
-📚 **Sinh viên, học viên**: Tải tài liệu học hoặc chọn link kiến thức tổng hợp từ lớp AIO để ôn tập.
-🧑‍💼 **Người đi làm**: Upload văn bản nội bộ như hợp đồng, báo cáo,... và đặt câu hỏi để trích xuất thông tin nhanh.
-👨‍🏫 **Giảng viên**: Chuẩn bị nội dung tài liệu và để chatbot giúp trả lời cho người học dựa trên nội dung đó.
+    - 📚 **Sinh viên, học viên**: Tải tài liệu học hoặc chọn link kiến thức tổng hợp từ lớp AIO để ôn tập.
+    - 🧑‍💼 **Người đi làm**: Upload văn bản nội bộ như hợp đồng, báo cáo,... và đặt câu hỏi để trích xuất thông tin nhanh.
+    - 👨‍🏫 **Giảng viên**: Chuẩn bị nội dung tài liệu và để chatbot giúp trả lời cho người học dựa trên nội dung đó.
 
 - Với nội dung lớp AIO từ Tuần 1 đến giờ: Bạn chọn phần Git Respository, tại đó nhóm có đặt link mặc định đến blog kiến thức tổng hợp của lớp và bạn có thể đặt câu hỏi để Trợ lý AI có thể giúp bạn ôn lại kiến thức liên quan AIO
 ---
@@ -90,6 +95,10 @@ HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 | Truy xuất văn bản | ChromaDB |
 | Truy vấn ngữ cảnh | RAG pipeline |
 
-
+---
 📂 *Tài liệu đi kèm:*  
   {{< pdf src="/Time-Series-Team-Hub/pdf/Week_4___Streamlit_RAGChatbot.pdf" title="Week_4_Streamlit_RAGChatbot.pdf" height="700px" >}}
+
+---
+
+🧠 *Repository managed by [Time Series Team Hub](https://github.com/Jennifer1907/Time-Series-Team-Hub)*
