@@ -94,7 +94,7 @@ HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 
 📂 *Tài liệu đi kèm:*  
   {{< pdf src="/Time-Series-Team-Hub/pdf/Week_4___Streamlit_RAGChatbot.pdf" title="Week_4_Streamlit_RAGChatbot.pdf" height="700px" >}}
-  {{< pdf src="/Time-Series-Team-Hub/pdf/Week_4_RAGChatbotSlide.pdf" title="Week_4_ChatbotSlide.pdf" height="700px" >}}
+  {{< pdf src="/Time-Series-Team-Hub/pdf/\Week_4___RAGChatbotSlide.pdf" title="Week_4_ChatbotSlide.pdf" height="700px" >}}
   {{< pdf src="/Time-Series-Team-Hub/pdf/Week_4_ChatbotSlide.pptx" title="Week_4_ChatbotSlide.pptx" height="700px" >}}
 
 
