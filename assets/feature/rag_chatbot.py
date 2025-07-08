@@ -780,7 +780,7 @@ def main():
                 print("\n---load from folder---\n")
 
             if st.session_state.rag_chain:
-                # st.session_state.rag_chain = rag_chain #? Lỗi CHÍNH 2 đặt sai biến. phải ngược lại mới đúng.
+                # st.session_state.rag_chain = rag_chain #? Lỗi CHÍNH đặt sai biến. phải ngược lại mới đúng.
                 st.session_state.documents_loaded = True
 
                 st.markdown(f"""
