@@ -87,7 +87,7 @@ HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 ### 🛠️ Công nghệ sử dụng
 
 | Thành phần             | Công cụ                                                                                               |
-| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| ---------------------- | ------------------------------------ |
 | 🧪 Trải nghiệm Chatbot | [Streamlit](https://ragchatbotaio.streamlit.app/)                                                     |
 | Code                   | [Google Colab](https://colab.research.google.com/drive/1RIqEgrFcSYTO6rlUj1jLoUuJFrtpZy4X?usp=sharing) |
 | NLP model              | [Vicuna-7B](https://huggingface.co/lmsys/vicuna-7b-v1.5)                                              |
