@@ -89,7 +89,7 @@ _(Buổi học chính – Dr. Đình Vinh)_
 
 ---
 
-## 🗂 **Tài liệu đi kèm**
+📂 *Tài liệu đi kèm*
 
 {{< pdf src="/Time-Series-Team-Hub/pdf/W3D3+4_OOP.pdf" title="W3D3+4_OOP" height="700px" >}}
 {{< pdf src="/Time-Series-Team-Hub/pdf/W3D5_SQL.pdf" title="W3D5_SQL" height="700px" >}}
