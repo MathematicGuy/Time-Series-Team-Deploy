@@ -68,7 +68,7 @@ Trong tuần học thứ 2 đưa chúng ta đến với những kiến thức c�
 
 ---
 
-📂 *Tài liệu đi kèm:*
+📂 _Tài liệu đi kèm:_
 {{< pdf src="/Time-Series-Team-Hub/pdf/W2D3+4_Python_List.pdf" title="W2D3+4_Python_List" height="700px" >}}
 {{< pdf src="/Time-Series-Team-Hub/pdf/W2D5_ERD_and_Database_Normalization.pdf" title="W2D5_ERD_and_Database_Normalization" height="700px" >}}
 {{< pdf src="/Time-Series-Team-Hub/pdf/W2D6_Extend_Đằng_sau_Swap.pdf" title="W2D6_Extend_Đằng_sau_Swap" height="700px" >}}
