@@ -713,10 +713,10 @@ def main():
         st.divider()
         st.subheader("🇻🇳 Mô Hình Tiếng Việt")
         st.markdown("""
-        <div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+        <div style="background-color: #800020; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
             <div style="display: flex; align-items: center; margin-bottom: 10px;">
                 <div class="vietnam-flag" style="margin-right: 15px;"></div>
-                <strong>Vietnamese AI Technology</strong>
+                <strong>AIO VN</strong>
             </div>
             <p style="margin: 0; font-size: 14px;">
                 ✨ Sử dụng mô hình embedding 'bkai-foundation-models/vietnamese-bi-encoder'<br>
@@ -853,7 +853,7 @@ def main():
                 last_question = st.session_state.chat_history[-1]["content"]
                 # answer = process_user_query(last_question)
                 answer = st.session_state.rag_chain(last_question)  
-                
+
                 st.session_state.chat_history.append({
                     "content": answer,
                     "is_user": False
