@@ -19,7 +19,7 @@ from langchain_community.document_loaders import PyPDFLoader, TextLoader # PDF P
 from langchain.chains import ConversationalRetrievalChain # Deprecated
 from langchain_experimental.text_splitter import SemanticChunker # module for chunking text
 
-from langchain_chroma import Chroma # AI-native vector databases (ai-native mean built for handle large-scale AI workloads efficiently)
+from langchain.vectorstores import Chroma # AI-native vector databases (ai-native mean built for handle large-scale AI workloads efficiently)
 from langchain_text_splitters import RecursiveCharacterTextSplitter # recursively divide text, then merge them together if merge_size < chunk_size
 from langchain_core.runnables import RunnablePassthrough # Use for testing (make 'example' easy to execute and experiment with)
 from langchain_core.output_parsers import StrOutputParser # format LLM's output text into (list, dict or any custom structure we can work with)
