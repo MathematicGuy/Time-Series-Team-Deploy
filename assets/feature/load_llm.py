@@ -10,11 +10,10 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_huggingface.llms import HuggingFacePipeline
 
 # Lấy token HF từ biến môi trường (không cần cache)
+@st.cache_resource
 def get_hg_token():
-    token = os.getenv("HF_TOKEN")
-    if not token:
-        st.warning("Chưa thiết lập biến môi trường HF_TOKEN, một số model private có thể không load được!")
-    return token
+    with open('token.txt', 'r') as f:
+        return f.read().strip()
 
 # Khởi tạo session state
 if 'llm' not in st.session_state:
