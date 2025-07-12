@@ -56,24 +56,20 @@ nf4_config = BitsAndBytesConfig(
 
 @st.cache_resource
 def load_llm():
-    # MODEL_NAME= "lmsys/vicuna-7b-v1.5"
-    MODEL_NAME = "google/gemma-2b-it"
+    MODEL_NAME = "distilgpt2"  # hoặc mô hình nhỏ khác
 
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
-        quantization_config=nf4_config, # add config
-        torch_dtype=torch.bfloat16, # save memory using float16
-        # low_cpu_mem_usage=True,
-        token=get_hg_token(),
-    ).to("cuda")
+        torch_dtype=torch.float32  # chạy được trên CPU
+    )
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model_pipeline = pipeline(
         'text-generation',
         model=model,
         tokenizer=tokenizer,
-        max_new_tokens=1024, # output token
-        device_map="auto" # auto allocate GPU if available
+        max_new_tokens=256,
+        device=-1  # CPU
     )
 
     return HuggingFacePipeline(pipeline=model_pipeline)
