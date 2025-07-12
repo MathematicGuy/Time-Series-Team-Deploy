@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head><script src="/Time-Series-Team-Hub/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=Time-Series-Team-Hub/livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL | Time Series Team Hub</title>
+
+<meta name="description" content="Chào mừng đến với blog Tuần 1 của team Time Series.">
+    <link rel="stylesheet" href="/Time-Series-Team-Hub/css/main.css">
+
+<link rel="icon" type="image/svg+xml" href="http://localhost:1313/Time-Series-Team-Hub/favicon.svg"> 
+<link rel="icon" type="image/x-icon" href="http://localhost:1313/Time-Series-Team-Hub/favicon.ico"> 
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/Time-Series-Team-Hub/favicon.png"> 
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/Time-Series-Team-Hub/favicon-32.png"> 
+<link rel="icon" type="image/png" sizes="64x64" href="http://localhost:1313/Time-Series-Team-Hub/favicon-64.png"> 
+
+</head>
+<body>
+  <header class="py-6 border-b"><div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 flex flex-col">
+	<div class="flex items-center">
+		<div class="flex items-center">
+			<button class="flex items-center space-x-2 rounded-full border py-1 pr-[5px] pl-3 group bg-zinc-100 hover:bg-zinc-200 toggle-button" data-target="menu-bar">
+				<svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path>
+				</svg>
+				<span class="bg-blue-500 fill-white rounded-full p-1.5">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="group-hover:animate-spin bi bi-egg-fried fill-white" viewBox="0 0 16 16">
+						<path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+						<path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z"></path>
+					</svg>
+				</span>
+			</button>
+			<div class="relative rounded-full py-1.5 px-6 bg-zinc-100 hover:bg-zinc-200 text-xl font-bold uppercase mx-2">
+				<h2><a class="before:content-[''] before:z-10 before:top-0 before:right-0 before:left-0 before:bottom-0 before:absolute before:pointer-events-auto" href="http://localhost:1313/Time-Series-Team-Hub/">Time Series Team Hub</a></h2>
+			</div>
+		</div>
+		<div class="flex items-center ml-auto">
+			<button class="flex items-center rounded-full p-3 bg-zinc-100 hover:bg-zinc-200 toggle-button" data-target="search-bar">
+				<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+					<path id="path1" class="transition-all ease-linear" d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+					<path id="path2" class="transition-all ease-linear hidden" d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+  <nav id="menu-bar" class="block mt-3 close">
+    <ul class="flex items-center flex flex-nowrap whitespace-nowrap overflow-x-auto space-x-4">
+    <li class="my-2">
+      <a class="rounded-full border px-6 py-2 bg-zinc-100 hover:bg-zinc-200" href="/Time-Series-Team-Hub/">Home</a>
+    </li>
+    <li class="my-2">
+      <a class="rounded-full border px-6 py-2 bg-zinc-100 hover:bg-zinc-200" href="/Time-Series-Team-Hub/about/">About</a>
+    </li>
+    </ul>
+  </nav>
+<div id="search-bar" class="block mt-3 close">
+	<form id="search" class="flex items-stretch">
+		<input class="w-full block px-6 py-2 rounded-l-full focus:outline-none border border-zinc-200" type="text" placeholder="Search...">
+		<button class="flex items-center px-7 py-2.5 rounded-r-full border border-zinc-200 ">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="group-hover:animate-pulse" viewBox="0 0 16 16">
+				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+			</svg>
+		</button>
+	</form>
+</div>
+</div></header>
+  <main class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8"><div id="breadcrumb" class="max-w-7xl mx-auto py-8">
+	<ul class="flex space-x-4 text-sm text-zinc-500">
+		<li class="after:content-['❯'] after:ml-4 after:opacity-30 last:after:content-none uppercase">
+			<a href="http://localhost:1313/Time-Series-Team-Hub/">Time Series Team Hub</a>
+		</li>
+		<li class="after:content-['❯'] after:ml-4 after:opacity-30 last:after:content-none uppercase">
+			<a href="http://localhost:1313/Time-Series-Team-Hub/posts/">Posts</a>
+		</li>
+	</ul>
+</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+
+  <article class="md:col-span-2 prose lg:prose-lg">
+
+    <header class="not-prose">
+      
+      <h1 id="title" class="text-4xl font-bold leading-normal">Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL</h1>
+
+      <div id="lead" class="my-6">
+
+        <p class="font-bold">Chào mừng đến với blog Tuần 1 của team Time Series. </p>
+
+      </div>
+      
+      <div id="writer" class="flex items-center space-x-4"><ul class="flex items-center space-x-4 flex-nowrap whitespace-nowrap overflow-x-auto">
+          
+          <li class="font-semibold my-2"></li>
+          
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2"><time datetime="2025-06-28T13:03:07&#43;07:00">June 28, 2025</time>
+          </li>
+
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2">
+            3 min read
+          </li>
+
+        </ul>
+
+      </div>
+      
+    </header>
+
+    <figure id="featureimage" class="rounded-xl aspect-video">
+            <img class="rounded-lg" src="http://localhost:1313/Time-Series-Team-Hub/images/nasa-Ed2AELHKYBw-unsplash_hu_25544815d9c619de.jpg" alt="" width="750" height="422">
+        <figcaption class="text-center italic text-xs">Photo by Nasa on Unsplash</figcaption>
+
+    </figure>
+
+    <div id="content" class="mb-14">
+      <p>🎉 <strong>Chào mừng đến với blog Tuần 1 của team Time Series!</strong></p>
+<p>Tuần học đầu tiên đã chính thức bắt đầu với nhiều kiến thức nền tảng cực kỳ quan trọng cho lập trình và khoa học dữ liệu. Bên cạnh tóm tắt kiến thức chính của tuần 1, các bạn có thể tìm thấy tại blog của team Time Series đơn giản hóa kiến thức, minh họa bằng những ví dụ thực tế được áp dụng, không những thế chúng mình còn mở rộng và chứng minh lại kiến thức toán bằng phép toán siêu cơ bản. Hãy dành thời gian đọc hết post từ Buổi 1 đến Buổi số 5 nhé!</p>
+<hr>
+<h2 id="-nội-dung-chính-và-điểm-nổi-bật">📅 <strong>Nội dung chính và điểm nổi bật</strong></h2>
+<h3 id="-buổi-học-số-1---buổi-warm-up-skills-for-programmers">✅ <strong>Buổi học số 1 - Buổi Warm-up: Skills for Programmers</strong></h3>
+<ul>
+<li><strong>Instructor:</strong> Dr. Nguyễn Đình Vinh</li>
+<li><strong>Nội dung:</strong>
+<ul>
+<li>Kỹ năng tìm kiếm tài liệu hiệu quả cho lập trình viên</li>
+<li>Hướng dẫn sử dụng Google Colab và ChatGPT trong lập trình</li>
+<li>Giới thiệu nhanh về LaTeX trong viết kỹ thuật</li>
+<li>Ôn tập Python cơ bản: biến, hàm, kiểu dữ liệu</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="-buổi-học-số-2---basic-python-1">✅ <strong>Buổi học số 2 - Basic Python (1)</strong></h3>
+<ul>
+<li><strong>Instructor:</strong> Dr. Đinh Quang Vinh</li>
+<li><strong>Nội dung:</strong>
+<ul>
+<li>Biểu diễn dữ liệu: int, float, str, list, dict, tuple, set</li>
+<li>Cấu trúc điều kiện: <code>if</code>, <code>elif</code>, <code>else</code></li>
+<li>Hàm có sẵn và định nghĩa hàm mới</li>
+<li><strong>🧠 Ứng dụng cụ thể trong AI và kinh doanh</strong>: phân tích dữ liệu người dùng, đánh giá hành vi tiêu dùng</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="-buổi-học-số-3---sql---buổi-1">✅ <strong>Buổi học số 3 - SQL - Buổi 1</strong></h3>
+<ul>
+<li><strong>Instructor:</strong> Dr. Nguyễn Đình Vinh</li>
+<li><strong>Nội dung:</strong>
+<ul>
+<li>Tổng quan về SQL và ứng dụng trong phân tích dữ liệu</li>
+<li>Viết câu truy vấn dữ liệu cơ bản</li>
+<li><strong>📌 Điểm nổi bật:</strong>
+<ul>
+<li>Ứng dụng SQL vào <strong>business use-cases</strong></li>
+<li><strong>Nguyên tắc ACID trong cơ sở dữ liệu</strong></li>
+<li>Chuẩn hóa CSDL: <strong>1NF, 2NF, 3NF</strong></li>
+<li><strong>💡 Ví dụ trực quan:</strong> Cơ sở dữ liệu quản lý khách hàng đạt chuẩn 3NF</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="-buổi-học-số-4---basic-python-2">✅ <strong>Buổi học số 4 - Basic Python (2)</strong></h3>
+<ul>
+<li><strong>Instructor:</strong> Dr. Đinh Quang Vinh</li>
+<li><strong>Nội dung:</strong>
+<ul>
+<li>Vòng lặp <code>for</code>, <code>while</code> trong Python</li>
+<li>Xử lý file (<code>.txt</code>, <code>.csv</code>) với Python</li>
+<li><strong>🧮 Ứng dụng trong Toán học mở rộng:</strong>
+<ul>
+<li><strong>Gregory-Leibniz Series</strong> (Tính π)</li>
+<li><strong>Nilakantha Series</strong></li>
+<li><strong>Phương pháp Newton-Raphson</strong> (Tìm căn bậc 2, nghiệm phương trình)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="-buổi-học-số-5---coding-methodology">✅ <strong>Buổi học số 5 - Coding Methodology</strong></h3>
+<ul>
+<li><strong>Instructor:</strong> Dr. Thái Hà</li>
+<li><strong>Nội dung:</strong>
+<ul>
+<li>Lộ trình học chuyên sâu Data Science</li>
+<li><strong>Clean Code</strong>: nguyên tắc đặt tên, tổ chức hàm, chia module</li>
+<li>Phong cách lập trình Python hiện đại và dễ bảo trì</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-tổng-kết-nổi-bật">📌 <strong>Tổng kết nổi bật</strong></h2>
+<ul>
+<li>🔍 Tích hợp kỹ năng lập trình Python và SQL từ cơ bản đến ứng dụng thực tế</li>
+<li>🧠 Làm rõ các khái niệm chuẩn hóa dữ liệu, vòng lặp, hàm và đọc ghi file</li>
+<li>💼 Gắn lý thuyết với <strong>ví dụ business cụ thể</strong></li>
+<li>🔬 Kết hợp công cụ hiện đại như <strong>Colab</strong> và <strong>ChatGPT</strong> để tăng hiệu suất học tập</li>
+</ul>
+<hr>
+<p>📂 <em>Tài liệu đi kèm:</em><br>
+<details>
+  	<summary> Week_1_Buoi_1.pdf </summary>
+  	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+  		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+  			<span class="font-semibold text-sm">📄 Week_1_Buoi_1.pdf </span>
+  			<div class="flex space-x-2">
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_1.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+  					Open in New Tab
+  				</a>
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_1.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+  					Download
+  				</a>
+  			</div>
+  		</div>
+  		<iframe 
+  			src="/Time-Series-Team-Hub/pdf/Week_1_Buoi_1.pdf" 
+  			width="100%" 
+  			height="700px"
+  			class="border-0"
+  			title="Week_1_Buoi_1.pdf">
+  			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_1.pdf">Download the PDF</a>.</p>
+  		</iframe>
+  	</div>
+  </details>
+
+<details>
+  	<summary> Week_1_Buoi_2.pdf </summary>
+  	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+  		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+  			<span class="font-semibold text-sm">📄 Week_1_Buoi_2.pdf </span>
+  			<div class="flex space-x-2">
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_2.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+  					Open in New Tab
+  				</a>
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_2.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+  					Download
+  				</a>
+  			</div>
+  		</div>
+  		<iframe 
+  			src="/Time-Series-Team-Hub/pdf/Week_1_Buoi_2.pdf" 
+  			width="100%" 
+  			height="700px"
+  			class="border-0"
+  			title="Week_1_Buoi_2.pdf">
+  			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_2.pdf">Download the PDF</a>.</p>
+  		</iframe>
+  	</div>
+  </details>
+
+<details>
+  	<summary> Week_1_Buoi_3.pdf </summary>
+  	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+  		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+  			<span class="font-semibold text-sm">📄 Week_1_Buoi_3.pdf </span>
+  			<div class="flex space-x-2">
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_3.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+  					Open in New Tab
+  				</a>
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_3.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+  					Download
+  				</a>
+  			</div>
+  		</div>
+  		<iframe 
+  			src="/Time-Series-Team-Hub/pdf/Week_1_Buoi_3.pdf" 
+  			width="100%" 
+  			height="700px"
+  			class="border-0"
+  			title="Week_1_Buoi_3.pdf">
+  			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_3.pdf">Download the PDF</a>.</p>
+  		</iframe>
+  	</div>
+  </details>
+
+<details>
+  	<summary> Week_1_Buoi_4.pdf </summary>
+  	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+  		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+  			<span class="font-semibold text-sm">📄 Week_1_Buoi_4.pdf </span>
+  			<div class="flex space-x-2">
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_4.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+  					Open in New Tab
+  				</a>
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_4.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+  					Download
+  				</a>
+  			</div>
+  		</div>
+  		<iframe 
+  			src="/Time-Series-Team-Hub/pdf/Week_1_Buoi_4.pdf" 
+  			width="100%" 
+  			height="700px"
+  			class="border-0"
+  			title="Week_1_Buoi_4.pdf">
+  			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_4.pdf">Download the PDF</a>.</p>
+  		</iframe>
+  	</div>
+  </details>
+
+<details>
+  	<summary> Week_1_Buoi_5.pdf </summary>
+  	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+  		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+  			<span class="font-semibold text-sm">📄 Week_1_Buoi_5.pdf </span>
+  			<div class="flex space-x-2">
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_5.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+  					Open in New Tab
+  				</a>
+  				<a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_5.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+  					Download
+  				</a>
+  			</div>
+  		</div>
+  		<iframe 
+  			src="/Time-Series-Team-Hub/pdf/Week_1_Buoi_5.pdf" 
+  			width="100%" 
+  			height="700px"
+  			class="border-0"
+  			title="Week_1_Buoi_5.pdf">
+  			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/Week_1_Buoi_5.pdf">Download the PDF</a>.</p>
+  		</iframe>
+  	</div>
+  </details>
+</p>
+<hr>
+<p>🧠 <em>Repository managed by <a href="https://github.com/Jennifer1907/Time-Series-Team-Hub">Time Series Team Hub</a></em></p>
+
+</div>
+
+    <footer id="content-footer" class="not-prose">
+
+      <div id="related-post" class="">
+
+        <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Recommended for You</h2>
+      </div>
+
+    </footer>
+
+  </article>
+
+  
+  <aside class="md:col-span-1"><div class="lg:sticky lg:top-8">
+
+	
+
+	<div class="space-y-6">
+
+		<h2 class="font-bold text-xl mb-8">Recent Post</h2>
+
+		<article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-1/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/nasa-Ed2AELHKYBw-unsplash_hu_1a918ae992f9d2a7.jpg" alt="Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-2/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/brent-cox-ydGRmobx5jA-unsplash_hu_15a96ce260027332.jpg" alt="Tuần 2 – Bộ ba Data Structure, Git và Database" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Tuần 2 – Bộ ba Data Structure, Git và Database</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-3/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/daniele-colucci-OtXJhYjbKeg-unsplash_hu_80af46dca1175f28.jpg" alt="Tuần 3 – Cặp đôi OOP và Data Structure" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Tuần 3 – Cặp đôi OOP và Data Structure</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-4/chat_bot/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/RAGChatbot_hu_7565b158998795a1.png" alt="Tuần 4 - Trợ lý AI đã xuất hiện" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Tuần 4 - Trợ lý AI đã xuất hiện</h3>
+	</div>
+</article>
+		
+	</div>
+
+</div>
+</aside>
+
+</div>
+  
+</main>
+  <footer class="bg-zinc-100 py-10 md:py-14"><div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+
+  <div class="flex flex-wrap space-y-6 mb-4">
+
+    <div class="w-full md:w-3/5 flex flex-col space-y-4 md:pr-8 lg:pr-10">
+
+      <a class="flex items-center group" href="http://localhost:1313/Time-Series-Team-Hub/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="mr-2 group-hover:animate-spin" viewBox="0 0 16 16">
+          <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z"/>
+        </svg>
+        
+        <span class="text-2xl font-semibold uppercase">Time Series Team Hub</span>
+      </a>
+
+      <p class="font-semibold">
+        Write with love. Minimalism design.<br>
+      </p>
+    </div>
+
+    <div class="self-center flex flex-col w-full md:w-2/5">
+
+<ul id="social-media" class="flex items-center space-x-4">
+	
+	<li>
+		<a class="w-12 h-12 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center p-2" href="https://github.com/Jennifer1907" target="_blank" rel="noopener noreferrer">
+			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+				  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+			</svg>
+		</a>
+	</li>
+	<li>
+    <a class="w-12 h-12 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center p-2" href="https://www.linkedin.com/in/ha-jennifer-nguyen/" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+    </a>
+	</li>
+</ul>
+
+    </div>
+    
+  </div>
+
+  <div class="my-8">
+    <ul class="flex items-center space-x-4">
+      
+        <li><a class="decoration-auto hover:underline font-semibold" href="/Time-Series-Team-Hub/">Home</a></li>
+      
+        <li><a class="decoration-auto hover:underline font-semibold" href="/Time-Series-Team-Hub/about/">About</a></li>
+      
+    </ul>
+  </div>
+
+  <div class="border-t pt-4">
+
+    <p class="text-sm">Copyright © 2025. All rights reserved.</p>
+
+  </div>
+  
+</div>
+</footer>
+      <script src="/Time-Series-Team-Hub/js/insertoggle.js"></script>
+</body>
+</html>
