@@ -11,7 +11,7 @@ tags:
 draft: false
 ---
 
-## 🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant
+## 🤖 Trợ Lý Gạo AI Tiếng Việt — PDF RAG Assistant
 
 Chào mừng bạn đến với chatbot Gạo AI thông minh của nhóm, được huấn luyện để **trả lời câu hỏi từ tài liệu PDF** bằng tiếng Việt.
 
@@ -89,7 +89,7 @@ HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 
 | Thành phần             | Công cụ                                                                                               |
 | ---------------------- | ------------------------------------ |
-| 🧪 Trải nghiệm Chatbot | [Streamlit](https://ragchatbotaio.streamlit.app/) (Under Construction)                                                     |
+| 🧪 Trải nghiệm Gạo AI  | [Streamlit](https://ragchatbotaio.streamlit.app/) (Under Construction)                                                     |
 | Code                   | [Google Colab](https://colab.research.google.com/drive/1RIqEgrFcSYTO6rlUj1jLoUuJFrtpZy4X?usp=sharing) |
 | NLP model              | [Vicuna-7B](https://huggingface.co/lmsys/vicuna-7b-v1.5)                                              |
 | Embedding tiếng Việt   | `bkai-foundation-models/vietnamese-bi-encoder`                                                        |
