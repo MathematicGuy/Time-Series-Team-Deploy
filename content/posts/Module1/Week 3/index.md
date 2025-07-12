@@ -91,10 +91,11 @@ _(Buổi học chính – Dr. Đình Vinh)_
 
 ## 🗂 **Tài liệu đi kèm**
 
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi3+4_OOP.pdf" title="Week_3_Buoi_T3%2BT4_OOP.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week2_Buoi5_ERD_Database_Normalization" title="Week_3_Buoi_T5.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi6_Advanced_Data_Structure_Tuple_Set_And_Dictionary.pdf" title="Week_3_Buoi_T6.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi6_Đằng_sau_Swap.pdf" title="Đằng_sau_Swap" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi3+4_OOP.pdf" title="Week3_OPP.pdf" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi3_SQL1.pdf" title="Week3_SQL.pdf" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi6_Advanced_Data_Structure_TUPLE_SET_and_DICTIONARY.pdf" title="Week3_DataStructureTuple.pdf" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/Week_3_Buoi_6_Tree_Data_Structure.pdf" title="Week3_DataStructureTree.pdf" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi6_Đằng_sau_Swap.pdf" title="Week3_Swap" height="700px" >}}
 
 
 ---
