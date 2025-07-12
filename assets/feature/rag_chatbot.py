@@ -556,7 +556,7 @@ def main():
         <div class="vietnam-flag"></div>
         <h1>🇻🇳 Trợ Lý AI Tiếng Việt</h1>
         <p>Hệ thống hỏi đáp thông minh với tài liệu PDF, Word, Excel bằng tiếng Việt</p>
-        <p style="font-size: 14px; margin-top: 10px;">🌟 Powered by Vietnamese AI Technology - No API Key Required! 🌟</p>
+        <p style="font-size: 14px; margin-top: 10px;">🌟 Powered by AIO VN - No API Key Required! 🌟</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -851,8 +851,14 @@ def main():
                 st.session_state.processing_query = False
             else:
                 last_question = st.session_state.chat_history[-1]["content"]
+                context_docs = st.session_state.retriever.invoke(last_question)
+            
+                inputs = {
+                "context": context_docs,
+                "question": last_question
+                }
                 # answer = process_user_query(last_question)
-                answer = st.session_state.rag_chain(last_question)  
+                answer = st.session_state.rag_chain.invoke(inputs)  
 
                 st.session_state.chat_history.append({
                     "content": answer,

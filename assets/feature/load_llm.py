@@ -12,7 +12,7 @@ from langchain_huggingface.llms import HuggingFacePipeline
 # Lấy token HF từ biến môi trường (không cần cache)
 @st.cache_resource
 def get_hg_token():
-    with open('token.txt', 'r') as f:
+    with open('token.txt', 'r') as f: #update token khi run vì token huggingface bị expire
         return f.read().strip()
 
 # Khởi tạo session state
