@@ -922,7 +922,17 @@ def main():
                 st.session_state.processing_query = False
             else:
                 last_question = st.session_state.chat_history[-1]["content"]
-                answer = process_user_query(last_question)
+                #answer = process_user_query(last_question)
+                try:
+                    if callable(st.session_state.rag_chain) and not hasattr(st.session_state.rag_chain, 'invoke'):
+                        # Function mode (simple text search)
+                        answer = st.session_state.rag_chain(last_question)
+                    else:
+                        # LangChain mode - sử dụng prompt MCQ
+                        answer = st.session_state.rag_chain.invoke(last_question)
+                except Exception as e:
+                    # Fallback
+                    answer = process_user_query(last_question)
 
                 st.session_state.chat_history.append({
                     "content": answer,
