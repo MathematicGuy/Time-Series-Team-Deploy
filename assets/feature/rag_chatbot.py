@@ -266,8 +266,12 @@ def create_rag_chain(all_documents):
         if st.session_state.embeddings:
             try:
                 vector_db = FAISS.from_documents(documents=docs, embedding=st.session_state.embeddings)
-                retriever = vector_db.as_retriever(search_kwargs={"k": 5})  # Sửa tham số
-                st.session_state.retriever = retriever 
+                retriever = vector_db.as_retriever(search_type="similarity_score_threshold",
+                                                search_kwargs={
+                                                                    "score_threshold": 0.8,
+                                                                    "k": 3
+                                                                })  # Sửa tham số
+                st.session_state.retriever = retriever
                 st.success(f"✅ Đã tạo FAISS vector database với {len(docs)} chunks")
             except Exception as e:
                 st.error(f"Lỗi khi tạo FAISS vector database: {str(e)}")
