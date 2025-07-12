@@ -852,8 +852,8 @@ def main():
             else:
                 last_question = st.session_state.chat_history[-1]["content"]
                 # answer = process_user_query(last_question)
-                answer = st.session_state.rag_chain.invoke(last_question)
-
+                answer = st.session_state.rag_chain(last_question)  
+                
                 st.session_state.chat_history.append({
                     "content": answer,
                     "is_user": False
