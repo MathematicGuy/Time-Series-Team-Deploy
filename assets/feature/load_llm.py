@@ -12,7 +12,8 @@ from langchain_huggingface.llms import HuggingFacePipeline
 # Lấy token HF từ biến môi trường (không cần cache)
 @st.cache_resource
 def get_hg_token():
-    return os.getenv("HF_TOKEN")
+    with open('token.txt', 'r') as f:
+        return f.read().strip()
 
 # Khởi tạo session state
 if 'llm' not in st.session_state:
