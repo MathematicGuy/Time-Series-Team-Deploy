@@ -15,7 +15,11 @@ draft: false
 
 Chào mừng bạn đến với chatbot Gạo AI thông minh của nhóm, được huấn luyện để **trả lời câu hỏi từ tài liệu PDF** bằng tiếng Việt.
 
-## 🧪 Trải nghiệm Chatbot tại đây: **[Streamlit](https://ragchatbotaio.streamlit.app/)** (Under Construction)    
+## 🧪 Trải nghiệm Gạo AI tại đây: **[Streamlit](https://gaochatbot.streamlit.app/)** 
+
+Vì streamlit deploy cloud không hỗ trợ một số thư viện nên dẫn đến một số hạn chế nếu bạn trải nghiệm tại web nên để có thể sử dụng tối đa chức năng của Gạo AI bạn có thể sử dụng code sau: [Github](https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/feature_chatbot)
+- **💻 Với Gạo AI đọc và tóm tắt tài liệu**: Sử dụng file rag_chatbot.py
+- **🔗 Với Gạo AI đọc tài liệu và thiết kế câu hỏi ôn tập**: Sử dụng file rag_chatbot2.py
 
 👉 **Bạn có thể hỏi:**
 
@@ -89,7 +93,7 @@ HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
 
 | Thành phần             | Công cụ                                                                                               |
 | ---------------------- | ------------------------------------ |
-| 🧪 Trải nghiệm Gạo AI  | [Streamlit](https://ragchatbotaio.streamlit.app/) (Under Construction)                                                     |
+| 🧪 Trải nghiệm Gạo AI  | [Streamlit](https://gaochatbot.streamlit.app/)             |
 | Code                   | [Google Colab](https://colab.research.google.com/drive/1RIqEgrFcSYTO6rlUj1jLoUuJFrtpZy4X?usp=sharing) |
 | NLP model              | [Vicuna-7B](https://huggingface.co/lmsys/vicuna-7b-v1.5)                                              |
 | Embedding tiếng Việt   | `bkai-foundation-models/vietnamese-bi-encoder`                                                        |
