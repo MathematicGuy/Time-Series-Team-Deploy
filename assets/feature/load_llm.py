@@ -2,6 +2,9 @@ import streamlit as st
 import tempfile
 import os
 import torch
+from dotenv import load_dotenv  # ✅ Load biến môi trường
+
+load_dotenv()
 
 from transformers import (
     AutoTokenizer,
@@ -29,7 +32,7 @@ import json
 # Đọc HuggingFace token từ file
 @st.cache_resource
 def get_hg_token():
-    return "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"
+    return os.getenv("HF_TOKEN")
 
 # Khởi tạo session state
 if 'llm' not in st.session_state:
