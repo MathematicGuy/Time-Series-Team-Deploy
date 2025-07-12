@@ -55,4 +55,4 @@ if not st.session_state.get("models_loaded", False):
     st.session_state.llm = load_llm()
     st.session_state.models_loaded = True
     st.success("Models đã sẵn sàng!")
-    st.experimental_rerun()
+    st.rerun()
