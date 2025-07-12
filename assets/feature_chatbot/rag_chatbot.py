@@ -857,7 +857,13 @@ def main():
             else:
                 last_question = st.session_state.chat_history[-1]["content"]
                 # answer = process_user_query(last_question)
-                answer = st.session_state.rag_chain.invoke(last_question)
+                try:
+                    if callable(st.session_state.rag_chain) and not hasattr(st.session_state.rag_chain, 'invoke'):
+                        answer = st.session_state.rag_chain(last_question)
+                    else:
+                        answer = st.session_state.rag_chain.invoke(last_question)
+                except Exception as e:
+                    answer = f"Lỗi khi xử lý câu hỏi: {str(e)}"
 
                 st.session_state.chat_history.append({
                     "content": answer,
