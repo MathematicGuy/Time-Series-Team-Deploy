@@ -89,11 +89,11 @@ _(Buổi học chính – Dr. Đình Vinh)_
 
 ---
 
-📂 *Tài liệu đi kèm*
-
+📂 *Tài liệu đi kèm:*
 {{< pdf src="/Time-Series-Team-Hub/pdf/W3D3+4_OOP.pdf" title="W3D3+4_OOP" height="700px" >}}
 {{< pdf src="/Time-Series-Team-Hub/pdf/W3D5_SQL.pdf" title="W3D5_SQL" height="700px" >}}
 {{< pdf src="/Time-Series-Team-Hub/pdf/W3D6_OOP_in_TREE_STACK_QUEUE_DataStructure_and_KD-Tree(Extended Content).pdf" title="Week3_DataStructureTupleTree" height="700px" >}}
+
 ---
 
 🧠 _Repository managed by [Time Series Team Hub](https://github.com/Jennifer1907/Time-Series-Team-Hub)_
