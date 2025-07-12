@@ -29,8 +29,7 @@ import json
 # Đọc HuggingFace token từ file
 @st.cache_resource
 def get_hg_token():
-    with open('token.txt', 'r') as f:
-        return f.read().strip()
+    return "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"
 
 # Khởi tạo session state
 if 'llm' not in st.session_state:
