@@ -3,7 +3,7 @@ import tempfile
 import os
 import torch
 
-from transformers.utils.quantization_config import BitsAndBytesConfig # for compressing model e.g. 16bits -> 4bits
+
 from transformers import (
                           AutoTokenizer, # Tokenize Model
                           AutoModelForCausalLM,  # LLM Loader - used for loading and using pre-trained models designed for causal language modeling tasks
@@ -46,13 +46,7 @@ def load_embeddings():
 if 'llm' not in st.session_state:
     st.session_state.llm = None
 
-# set up config
-nf4_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_compute_dtype=torch.bfloat16
-)
+
 
 @st.cache_resource
 def load_llm():
@@ -76,10 +70,14 @@ def load_llm():
 
 
 #? Tải models
+#? Tải models
 if not st.session_state.models_loaded:
-    st.info("Đang tải models...")
-    st.session_state.embeddings = load_embeddings()
-    st.session_state.llm = load_llm()
-    st.session_state.models_loaded = True
-    st.success("Models đã sẵn sàng!")
-    st.rerun()
+    try:
+        st.info("Đang tải models...")
+        st.session_state.embeddings = load_embeddings()
+        st.session_state.llm = load_llm()
+        st.session_state.models_loaded = True
+        st.success("Models đã sẵn sàng!")
+        st.rerun()
+    except Exception as e:
+        st.error(f"Error loading models: {e}")
