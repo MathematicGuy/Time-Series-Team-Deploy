@@ -1,57 +1,41 @@
 import streamlit as st
-import tempfile
 import os
 import torch
-from dotenv import load_dotenv  # ✅ Load biến môi trường
+from dotenv import load_dotenv  # Load biến môi trường
 
 load_dotenv()
 
-from transformers import (
-    AutoTokenizer,
-    AutoModelForCausalLM,
-    pipeline
-)
-
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_huggingface.llms import HuggingFacePipeline
 
-from langchain.memory import ConversationBufferMemory  # Deprecated
-from langchain_community.chat_message_histories import ChatMessageHistory  # Deprecated
-from langchain_community.document_loaders import PyPDFLoader, TextLoader
-from langchain.chains import ConversationalRetrievalChain  # Deprecated
-from langchain_experimental.text_splitter import SemanticChunker
-
-from langchain.vectorstores import Chroma
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
-from langchain import hub
-from langchain_core.prompts import PromptTemplate
-import json
-
-# Đọc HuggingFace token từ file
-@st.cache_resource
+# Lấy token HF từ biến môi trường (không cần cache)
 def get_hg_token():
-    return os.getenv("HF_TOKEN")
+    token = os.getenv("HF_TOKEN")
+    if not token:
+        st.warning("Chưa thiết lập biến môi trường HF_TOKEN, một số model private có thể không load được!")
+    return token
 
 # Khởi tạo session state
 if 'llm' not in st.session_state:
     st.session_state.llm = None
 
-# ✅ Load LLM mà KHÔNG dùng quantization_config
 @st.cache_resource
 def load_llm():
-    MODEL_NAME = "google/gemma-2b-it"
+    # Thay đổi model nếu google/gemma-2b không tồn tại hoặc private
+    MODEL_NAME = "mistralai/Mistral-7B-Instruct-v0.1"
 
+    token = get_hg_token()
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
-        torch_dtype=torch.float16,  # optional
-        token=get_hg_token(),
-    ).to("cuda" if torch.cuda.is_available() else "cpu")
+        use_auth_token=token,
+        torch_dtype=torch.float16,
+        device_map="auto"  # để tự động chọn GPU/CPU
+    )
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_auth_token=token)
 
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model_pipeline = pipeline(
-        'text-generation',
+        "text-generation",
         model=model,
         tokenizer=tokenizer,
         max_new_tokens=1024,
@@ -62,13 +46,14 @@ def load_llm():
 
 @st.cache_resource
 def load_embeddings():
-    return HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder")
+    # Tên model embedding nên kiểm tra có public không, đổi nếu cần
+    return HuggingFaceEmbeddings(model_name="bkai-foundation-models/vietnamese-bi-encoder", 
+                                 model_kwargs={"use_auth_token": get_hg_token()})
 
-# Tải models nếu chưa có
 if not st.session_state.get("models_loaded", False):
     st.info("Đang tải models...")
     st.session_state.embeddings = load_embeddings()
     st.session_state.llm = load_llm()
     st.session_state.models_loaded = True
     st.success("Models đã sẵn sàng!")
-    st.rerun()
+    st.experimental_rerun()
