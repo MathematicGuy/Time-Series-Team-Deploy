@@ -88,11 +88,11 @@ Tuần học đầu tiên đã chính thức bắt đầu với nhiều kiến t
 ---
 
 📂 _Tài liệu đi kèm:_
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week1_Buoi1_Research_Guide.pdf" title="Week_1_Buoi_1.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week1_Buoi2_Introduction_To_Python.pdf" title="Week_1_Buoi_2.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week1_Buoi3_Database_Introduction.pdf" title="Week_1_Buoi_3.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week1_Buoi4_Common_Python_Errors.pdf" title="Week_1_Buoi_4.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week1_Buoi5_Knowledge_Skill_For_DataScience.pdf" title="Week_1_Buoi_5.pdf" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W1D2_Research_and_Programming_Basics.pdf" title="W1D2_Research_and_Programming_Basics" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W1D3_Introduction_to_Python.pdf" title="W1D3_Introduction_to_Python" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W1D4_Introduction_to_Database.pdf" title="W1D4_Introduction_to_Database" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W1D5_Common_Python_Errors.pdf" title="W1D5_Common_Python_Errors" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W1D6_Skills_for_DataScience_and_Programming_Priniple.pdf" title="W1D6_Skills_for_DataScience_and_Programming_Priniple" height="700px" >}}
 
 ---
 

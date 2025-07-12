@@ -91,13 +91,9 @@ _(Buổi học chính – Dr. Đình Vinh)_
 
 ## 🗂 **Tài liệu đi kèm**
 
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi3+4_OOP.pdf" title="Week3_OPP.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi3_SQL1.pdf" title="Week3_SQL.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi6_Advanced_Data_Structure_TUPLE_SET_and_DICTIONARY.pdf" title="Week3_DataStructureTuple.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week_3_Buoi_6_Tree_Data_Structure.pdf" title="Week3_DataStructureTree.pdf" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/Week3_Buoi6_Đằng_sau_Swap.pdf" title="Week3_Swap" height="700px" >}}
-
-
+{{< pdf src="/Time-Series-Team-Hub/pdf/W3D3+4_OOP.pdf" title="W3D3+4_OOP" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W3D5_SQL.pdf" title="W3D5_SQL" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W3D6_OOP_in_TREE_STACK_QUEUE_DataStructure_and_KD-Tree(Extended Content).pdf" title="Week3_DataStructureTupleTree" height="700px" >}}
 ---
 
 🧠 _Repository managed by [Time Series Team Hub](https://github.com/Jennifer1907/Time-Series-Team-Hub)_
