@@ -50,7 +50,7 @@ if 'llm' not in st.session_state:
 
 @st.cache_resource
 def load_llm():
-    MODEL_NAME = "distilgpt2"  # hoặc mô hình nhỏ khác
+    MODEL_NAME = "microsoft/DialoGPT-small"  # hoặc mô hình nhỏ khác
 
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
