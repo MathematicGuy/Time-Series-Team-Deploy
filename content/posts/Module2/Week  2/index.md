@@ -1,8 +1,8 @@
 ---
-title: "Tuần 3 – Cặp đôi OOP và Data Structure"
+title: "Tuần 4: Xác Suất, Cơ Sở Dữ Liệu và Những Pha Bayes “Khét Lẹt”!"
 date: 2025-06-28T13:03:07+07:00
-# slug: /tuan-3/
-description: Tuần học thứ 3 đã mang đến những kiến thức cực kỳ quan trọng cho cả lập trình căn bản và ứng dụng thực tiễn
+# slug: /tuan-4/
+description: Tuần học thứ 4 đã tiếp tục mở rộng hiểu biết về Xác Suất
 image: images/daniele-colucci-OtXJhYjbKeg-unsplash.jpg
 caption: Photo by Nasa on Unsplash
 categories:
@@ -11,89 +11,80 @@ tags:
 draft: false
 ---
 
-🎉 **Chào mừng đến với blog Tuần 3 của team Time Series!**
+🎉 Chào mừng đến với blog Tuần 4 của team Time Series!
 
-Tuần học thứ 3 đã mang đến những kiến thức cực kỳ quan trọng cho cả lập trình căn bản và ứng dụng thực tiễn trong khoa học dữ liệu như: **Object-Oriented Programming (OOP)**, **Data Structure nâng cao**, và **SQL nâng cao**. Chúng mình đã học không chỉ qua các buổi giảng chính thức từ giảng viên, mà còn qua buổi phụ đạo cùng trợ giảng – nơi các bạn được thảo luận và trực tiếp triển khai trên bài tập được giao. Hãy dành thời gian đọc hết post nhé!
+Tuần học thứ 4 đã tiếp tục mở rộng hiểu biết về Xác Suất – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong MongoDB và thuật toán Naive Bayes Classifier. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!
 
----
+🗓 Lịch trình học và nội dung chính
 
-## 📅 **Lịch trình học và nội dung chính**
+🧑‍🏫 Thứ 3 – Ngày 08/07/2025
 
-### 🧑‍🏫 **Thứ 3 – Ngày 17/06/2025**
+(Buổi warm-up – TA Quốc Thái)
+Chủ đề: Cơ bản về Xác Suất
 
-_(Buổi học phụ đạo – TA Đăng Nhã)_
-**Chủ đề:** Cơ bản về OOP
+- Tính marginal probability và joint probability
+- Bayes theorem
+- Naive Bayes Classification (tư duy và áp dụng thực tiễn)
 
-- Giới thiệu về Lập trình Hướng đối tượng (OOP)
-- Khái niệm Object và Class
-- Kỹ thuật kế thừa (Inheritance)
-- Cài đặt ví dụ minh họa trực tiếp bằng Python
+👨‍🎓 Thứ 4 – Ngày 09/07/2025
 
----
+(Buổi học chính – Dr. Quang Vinh)
+Chủ đề: Xác Suất cơ bản cho AI
 
-### 👨‍🏫 **Thứ 4 – Ngày 18/06/2025**
+- Các khái niệm nền tảng: biến ngẫu nhiên, biến rời rạc, luật tổng, luật nhân
+- Bayes Theorem trong AI
+- Minh họa bằng bài toán AI định danh
 
-_(Buổi học chính – Dr. Đinh Quang Vinh)_
-**Chủ đề:** OOP nâng cao
+🧑‍🎓 Thứ 5 – Ngày 10/07/2025
 
-- So sánh giữa OOP và lập trình truyền thống
-- Giới thiệu về Delegation, Inheritance sử dụng Python
-- Ứng dụng OOP để tạo custom class trong PyTorch
+(Buổi học nâng cao – Dr. Đình Vinh)
+Chủ đề: NoSQL – MongoDB (phần 2)
 
----
+- Aggregation pipeline trong MongoDB
+- Index và Partial Index
+- Kết nối MongoDB với Python (PyMongo), demo trực tiếp
 
-### 🧑‍🏫 **Thứ 5 – Ngày 19/06/2025**
+👨‍🎓 Thứ 6 – Ngày 11/07/2025
 
-_(Buổi học nâng cao – Dr. Đình Vinh)_
-**Chủ đề:** SQL nâng cao
+(Buổi học chính – Dr. Quang Vinh)
+Chủ đề: Naive Bayes Classifier
 
-- Subquery, Procedure và Trigger
-- Thực hành phân tích dữ liệu với SQL thực tế
+- Naive Bayes cho dữ liệu rời rạc (categorical)
+- Naive Bayes cho dữ liệu liên tục (Gaussian Naive Bayes)
+- Bài toán ứng dụng trong AI: Play Tennis, Traffic Prediction, Iris Classification
 
----
+👨‍🎓 Chủ nhật – Ngày 13/07/2025
 
-### 👨‍🏫 **Thứ 6 – Ngày 20/06/2025**
+(Buổi ứng dụng thực hành – MSc. Quốc Thái)
+Chủ đề: Xác Suất và Naive Bayes trong thực tế
 
-_(Buổi học chính – Dr. Đình Vinh)_
-**Chủ đề:** Kết hợp OOP + Data Structure
+- Ôn lại khái niệm then chốt trong Xác Suất và Bayes
+- Hướng dẫn tự tay giải bài: Play Tennis, Traffic Data, Iris Dataset
+- Áp dụng Gaussian Likelihood trong dự đoán AI
 
-- Nối kiến thức OOP với các cấu trúc dữ liệu nâng cao
-- Tập trung thảo luận chuyên sâu về: **Queue, Stack và Tree**
+📌 Tổng hợp kiến thức & điểm nhấn
 
----
+✅ Xác Suất cơ bản & Bayes
 
-## 📌 **Tổng hợp nội dung & điểm nổi bật**
+- Nắm được marginal, joint và conditional probability
+- Bayes Theorem: cốt lõi cho nhiều bài toán AI
+- Phân biệt MAP và MLE, áp dụng lược bỏ mẫu số
 
-### ✅ **Lập trình Hướng đối tượng (OOP)**
+✅ MongoDB & PyMongo
 
-- Hình dung được mục đích và cách lập trình hướng đối tượng hoạt động
-- Thực hành xây dựng **object**, **class**, và **kế thừa**. **trừu tượng** trong **kế thừa**
-- Áp dụng kỹ thuật **delegation** để chia trách nhiệm trong class
-- Tạo **custom class trong PyTorch**, làm nền tảng cho mô hình hóa AI
+- Aggregation pipeline (match, group, sort, project,...)
+- Tối ưu tìm kiếm với index và partial index
+- Kết nối MongoDB với Python, đọc ghi collection bằng code
 
----
+✅ Naive Bayes Classifier
 
-### ✅ **SQL nâng cao**
+- Cách tính likelihood trong biến rời rạc và Gaussian cho biến liên tục
+- Địa chỉ bài toán Play Tennis, Traffic Delay, Iris Classification
+- Cách xử lý underflow khi nhân nhiều xác suất bằng log likelihood
 
-- Viết và tối ưu các câu lệnh **join**, **subquery**, **common table expression**
-- Hiểu rõ và áp dụng **stored procedure** và **trigger**
-- Thực hành bài toán phân tích dữ liệu bằng SQL thực tiễn
+📂 Tài liệu đi kèm:
+{{< pdf src="/Time-Series-Team-Hub/pdf/W4D3_Probability.pdf" title="W4D3_Probability" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W4D4_MongoDB_IndexAggregation.pdf" title="W4D4_MongoDB" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/W4D6_NaiveBayesClassifier_3Exercises.pdf" title="W4D6_NaiveBayes" height="700px" >}}
 
----
-
-### ✅ **Cấu trúc dữ liệu nâng cao**
-
-- Xây dựng và thao tác với **Queue**, **Stack** và **Tree**
-- Kết hợp tư duy OOP khi triển khai các cấu trúc này bằng Python
-- Gắn lý thuyết với các ứng dụng trong quản lý bộ nhớ và thuật toán
-
----
-
-📂 _Tài liệu đi kèm:_
-{{< pdf src="/Time-Series-Team-Hub/pdf/W3D3+4_OOP.pdf" title="W3D3+4_OOP" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/W3D5_SQL.pdf" title="W3D5_SQL" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/W3D6_OOP_in_TREE_STACK_QUEUE_DataStructure_and_KD-Tree(Extended Content).pdf" title="Week3_DataStructureTupleTree" height="700px" >}}
-
----
-
-🧠 _Repository managed by [Time Series Team Hub](https://github.com/Jennifer1907/Time-Series-Team-Hub)_
+🧠 Repository managed by Time Series Team Hub
