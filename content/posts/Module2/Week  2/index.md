@@ -3,7 +3,7 @@ title: "Tuần 4: Xác Suất, Cơ Sở Dữ Liệu và Những Pha Bayes “Kh�
 date: 2025-06-28T13:03:07+07:00
 # slug: /tuan-4/
 description: Tuần học thứ 4 đã tiếp tục mở rộng hiểu biết về Xác Suất
-image: images/daniele-colucci-OtXJhYjbKeg-unsplash.jpg
+image: images/desktop-wallpaper-space-and-earth-nasa-widescreen-united-states-horizon-from-space-nasa.jpg
 caption: Photo by Nasa on Unsplash
 categories:
   - minutes
@@ -11,80 +11,106 @@ tags:
 draft: false
 ---
 
-🎉 Chào mừng đến với blog Tuần 4 của team Time Series!
+🎉 **Chào mừng đến với blog Tuần 4 của team Time Series!**
 
-Tuần học thứ 4 đã tiếp tục mở rộng hiểu biết về Xác Suất – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong MongoDB và thuật toán Naive Bayes Classifier. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!
+Tuần học thứ 4 đã tiếp tục mở rộng hiểu biết về **Xác Suất** – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong **MongoDB** và thuật toán **Naive Bayes Classifier**. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!
 
-🗓 Lịch trình học và nội dung chính
+---
 
-🧑‍🏫 Thứ 3 – Ngày 08/07/2025
+## 📅 **Lịch trình học và nội dung chính**
 
-(Buổi warm-up – TA Quốc Thái)
-Chủ đề: Cơ bản về Xác Suất
+### 🧑‍🏫 **Thứ 3 – Ngày 08/07/2025**
 
-- Tính marginal probability và joint probability
-- Bayes theorem
+_(Buổi warm-up – TA Quốc Thái)_
+
+**Chủ đề:** Cơ bản về Xác Suất
+
+- Tính marginal probability và joint probability  
+- Bayes theorem  
 - Naive Bayes Classification (tư duy và áp dụng thực tiễn)
 
-👨‍🎓 Thứ 4 – Ngày 09/07/2025
+---
 
-(Buổi học chính – Dr. Quang Vinh)
-Chủ đề: Xác Suất cơ bản cho AI
+### 👨‍🎓 **Thứ 4 – Ngày 09/07/2025**
 
-- Các khái niệm nền tảng: biến ngẫu nhiên, biến rời rạc, luật tổng, luật nhân
-- Bayes Theorem trong AI
+_(Buổi học chính – Dr. Quang Vinh)_
+
+**Chủ đề:** Xác Suất cơ bản cho AI
+
+- Các khái niệm nền tảng: biến ngẫu nhiên, biến rời rạc, luật tổng, luật nhân  
+- Bayes Theorem trong AI  
 - Minh họa bằng bài toán AI định danh
 
-🧑‍🎓 Thứ 5 – Ngày 10/07/2025
+---
 
-(Buổi học nâng cao – Dr. Đình Vinh)
-Chủ đề: NoSQL – MongoDB (phần 2)
+### 🧑‍🎓 **Thứ 5 – Ngày 10/07/2025**
 
-- Aggregation pipeline trong MongoDB
-- Index và Partial Index
+_(Buổi học nâng cao – Dr. Đình Vinh)_
+
+**Chủ đề:** NoSQL – MongoDB (phần 2)
+
+- Aggregation pipeline trong MongoDB  
+- Index và Partial Index  
 - Kết nối MongoDB với Python (PyMongo), demo trực tiếp
 
-👨‍🎓 Thứ 6 – Ngày 11/07/2025
+---
 
-(Buổi học chính – Dr. Quang Vinh)
-Chủ đề: Naive Bayes Classifier
+### 👨‍🎓 **Thứ 6 – Ngày 11/07/2025**
 
-- Naive Bayes cho dữ liệu rời rạc (categorical)
-- Naive Bayes cho dữ liệu liên tục (Gaussian Naive Bayes)
+_(Buổi học chính – Dr. Quang Vinh)_
+
+**Chủ đề:** Naive Bayes Classifier
+
+- Naive Bayes cho dữ liệu rời rạc (categorical)  
+- Naive Bayes cho dữ liệu liên tục (Gaussian Naive Bayes)  
 - Bài toán ứng dụng trong AI: Play Tennis, Traffic Prediction, Iris Classification
 
-👨‍🎓 Chủ nhật – Ngày 13/07/2025
+---
 
-(Buổi ứng dụng thực hành – MSc. Quốc Thái)
-Chủ đề: Xác Suất và Naive Bayes trong thực tế
+### 👨‍🎓 **Chủ nhật – Ngày 13/07/2025**
 
-- Ôn lại khái niệm then chốt trong Xác Suất và Bayes
-- Hướng dẫn tự tay giải bài: Play Tennis, Traffic Data, Iris Dataset
+_(Buổi ứng dụng thực hành – MSc. Quốc Thái)_
+
+**Chủ đề:** Xác Suất và Naive Bayes trong thực tế
+
+- Ôn lại khái niệm then chốt trong Xác Suất và Bayes  
+- Hướng dẫn tự tay giải bài: Play Tennis, Traffic Data, Iris Dataset  
 - Áp dụng Gaussian Likelihood trong dự đoán AI
 
-📌 Tổng hợp kiến thức & điểm nhấn
+---
 
-✅ Xác Suất cơ bản & Bayes
+## 📌 **Tổng hợp kiến thức & điểm nhấn**
 
-- Nắm được marginal, joint và conditional probability
-- Bayes Theorem: cốt lõi cho nhiều bài toán AI
+### ✅ **Xác Suất cơ bản & Bayes**
+
+- Nắm được marginal, joint và conditional probability  
+- Bayes Theorem: cốt lõi cho nhiều bài toán AI  
 - Phân biệt MAP và MLE, áp dụng lược bỏ mẫu số
 
-✅ MongoDB & PyMongo
+---
 
-- Aggregation pipeline (match, group, sort, project,...)
-- Tối ưu tìm kiếm với index và partial index
+### ✅ **MongoDB & PyMongo**
+
+- Aggregation pipeline (match, group, sort, project, ...)  
+- Tối ưu tìm kiếm với index và partial index  
 - Kết nối MongoDB với Python, đọc ghi collection bằng code
 
-✅ Naive Bayes Classifier
+---
 
-- Cách tính likelihood trong biến rời rạc và Gaussian cho biến liên tục
-- Địa chỉ bài toán Play Tennis, Traffic Delay, Iris Classification
-- Cách xử lý underflow khi nhân nhiều xác suất bằng log likelihood
+### ✅ **Naive Bayes Classifier**
 
-📂 Tài liệu đi kèm:
-{{< pdf src="/Time-Series-Team-Hub/pdf/W4D3_Probability.pdf" title="W4D3_Probability" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/W4D4_MongoDB_IndexAggregation.pdf" title="W4D4_MongoDB" height="700px" >}}
+- Cách tính likelihood trong biến rời rạc và Gaussian cho biến liên tục  
+- Giải bài toán Play Tennis, Traffic Delay, Iris Classification  
+- Xử lý underflow khi nhân nhiều xác suất bằng log likelihood
+
+---
+
+📂 _Tài liệu đi kèm:_  
+{{< pdf src="/Time-Series-Team-Hub/pdf/W4D3_Probability.pdf" title="W4D3_Probability" height="700px" >}}  
+{{< pdf src="/Time-Series-Team-Hub/pdf/W4D4_MongoDB_IndexAggregation.pdf" title="W4D4_MongoDB" height="700px" >}}  
 {{< pdf src="/Time-Series-Team-Hub/pdf/W4D6_NaiveBayesClassifier_3Exercises.pdf" title="W4D6_NaiveBayes" height="700px" >}}
 
-🧠 Repository managed by Time Series Team Hub
+---
+
+🧠 _Repository managed by [Time Series Team Hub](https://github.com/Jennifer1907/Time-Series-Team-Hub)_
+
