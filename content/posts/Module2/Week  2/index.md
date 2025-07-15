@@ -13,7 +13,7 @@ draft: false
 
 🎉 **Chào mừng đến với blog Tuần 2 của team Time Series!**
 
-Tuần học thứ 4 đã tiếp tục mở rộng hiểu biết về **Xác Suất** – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong **MongoDB** và thuật toán **Naive Bayes Classifier**. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!
+Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về **Xác Suất** – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong **MongoDB** và thuật toán **Naive Bayes Classifier**. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!
 
 ---
 
