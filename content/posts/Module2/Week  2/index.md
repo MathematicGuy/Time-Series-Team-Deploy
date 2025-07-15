@@ -108,8 +108,8 @@ _(Buổi ứng dụng thực hành – MSc. Quốc Thái)_
 📂 _Tài liệu đi kèm:_  
 {{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D3+4_Probability.pdf" title="M2W2D3+4_Probability" height="700px" >}}  
 {{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D5_Database_NoSQL(2).pdf" title="M2W2D5_Database_NoSQL(2)" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D6_NaiveBayesClassification.pdf" title="M2W2D6_NaiveBayesClassification" height="700px" >}}  
-{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D8_Probability_Exercise.pdf" title="M2W2D8_Probability_Exercise" height="700px" >}}  
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D6_NaiveBayesClassification.pdf" title="M2W2D6_NaiveBayesClassification" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D8_Probability_Exercise.pdf" title="M2W2D8_Probability_Exercise" height="700px" >}}
 
 
 
