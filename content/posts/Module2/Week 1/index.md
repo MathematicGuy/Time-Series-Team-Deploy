@@ -113,10 +113,10 @@ _(Buổi ôn tập và thực hành – MSc. Quốc Thái)_
 ---
 
 📂 _Tài liệu đi kèm:_  
-{{< pdf src="/Time-Series-Team-Hub/assets/pdf/M2W1D3+4_Numpy.pdf" title="M2W1D3+4_Numpy" height="700px" >}}  
-{{< pdf src="/Time-Series-Team-Hub/assets/pdf/M2W1D5_Database_NoSQL(1).pdf" title="M2W1D5_Database_NoSQL(1)" height="700px" >}}  
-{{< pdf src="/Time-Series-Team-Hub/assets/pdf/M2W1D6_CosineSimilarity.pdf" title="M2W1D6_CosineSimilarity" height="700px" >}}  
-{{< pdf src="/Time-Series-Team-Hub/assets/pdf/M2W1D7_Logic_ProblemSolving.pdf" title="M2W1D7_Logic_ProblemSolving" height="700px" >}}  
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W1D3+4_Numpy.pdf" title="M2W1D3+4_Numpy" height="700px" >}}  
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W1D5_Database_NoSQL(1).pdf" title="M2W1D5_Database_NoSQL(1)" height="700px" >}}  
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W1D6_CosineSimilarity.pdf" title="M2W1D6_CosineSimilarity" height="700px" >}}  
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W1D7_Logic_ProblemSolving.pdf" title="M2W1D7_Logic_ProblemSolving" height="700px" >}}  
 
 ---
 
