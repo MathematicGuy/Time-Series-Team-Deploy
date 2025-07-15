@@ -2,7 +2,7 @@
 title: "Module 2 - Tuần 1: Đại Số Tuyến Tính, Numpy và Những Cú Lướt MongoDB Đầu Tiên!"
 date: 2025-07-06T13:03:07+07:00
 description: Tuần đầu tiên của Module 2 mở màn bằng những nền tảng cực kỳ thiết yếu: từ list Python đến biểu diễn vector trong Numpy, đến MongoDB cho AI – một tuần học đậm chất nền tảng và thực chiến!
-
+image: images/MAA101x.jpg
 caption: Illustration by Time Series Team
 categories:
   - minutes
