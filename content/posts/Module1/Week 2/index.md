@@ -69,10 +69,10 @@ Trong tuần học thứ 2 đưa chúng ta đến với những kiến thức c�
 ---
 
 📂 _Tài liệu đi kèm:_
-{{< pdf src="/Time-Series-Team-Hub/pdf/W2D3+4_Python_List.pdf" title="W2D3+4_Python_List" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/W2D5_ERD_and_Database_Normalization.pdf" title="W2D5_ERD_and_Database_Normalization" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/W2D6_Extend_Đằng_sau_Swap.pdf" title="W2D6_Extend_Đằng_sau_Swap" height="700px" >}}
-{{< pdf src="/Time-Series-Team-Hub/pdf/W2D7_Git_And_Github_For_Version_Control.pdf" title="W2D7_Git_And_Github_For_Version_Control" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M1W2D3+4_Python_List.pdf" title="W2D3+4_Python_List" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M1W2D5_ERD_and_Database_Normalization.pdf" title="W2D5_ERD_and_Database_Normalization" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M1W2D6_Extend_Đằng_sau_Swap.pdf" title="W2D6_Extend_Đằng_sau_Swap" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M1W2D7_Git_And_Github_For_Version_Control.pdf" title="W2D7_Git_And_Github_For_Version_Control" height="700px" >}}
 
 
 - [📄 Code_sample](https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/content/posts/2025/Week%202/Code_sample)
