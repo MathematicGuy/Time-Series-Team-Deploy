@@ -6,14 +6,35 @@
     <description>Recent content on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 28 Jun 2025 20:37:29 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 21 Jul 2025 13:03:07 +0700</lastBuildDate>
     <atom:link href="http://localhost:1313/Time-Series-Team-Hub/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Module 2 - Tuần 3: Thống kê, Firebase và trải nhiệm xử lý ảnh đầu tiên sử dụng thống kê</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-3/</link>
+      <pubDate>Mon, 21 Jul 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-3/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 3 đã tiếp tục&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-lịch-trình-học-và-nội-dung-chính&#34;&gt;📅 &lt;strong&gt;Lịch trình học và nội dung chính&lt;/strong&gt;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;-thứ-3--ngày-15072025&#34;&gt;🧑‍🏫 &lt;strong&gt;Thứ 3 – Ngày 15/07/2025&lt;/strong&gt;&lt;/h3&gt;&#xA;&lt;p&gt;&lt;em&gt;(Buổi warm-up – TA Quốc Thái)&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 2 - Tuần 1: Đại Số Tuyến Tính, Numpy và Những Cú Lướt MongoDB Đầu Tiên!</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-1/</link>
+      <pubDate>Sun, 06 Jul 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-1/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 1 của team Time Series – Module 2!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần đầu tiên của Module 2 đã khởi động mạnh mẽ với những kiến thức nền tảng không thể thiếu cho hành trình học AI. Từ việc làm quen với &lt;strong&gt;Numpy&lt;/strong&gt; để xử lý và biểu diễn dữ liệu, đến những bước đầu khám phá &lt;strong&gt;MongoDB&lt;/strong&gt; và tư duy giải quyết vấn đề bằng logic – tất cả đều hướng tới việc xây dựng nền móng vững chắc cho các ứng dụng AI thực tiễn trong tương lai.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>About</title>
       <link>http://localhost:1313/Time-Series-Team-Hub/about/</link>
       <pubDate>Sat, 28 Jun 2025 20:37:29 +0700</pubDate>
       <guid>http://localhost:1313/Time-Series-Team-Hub/about/</guid>
       <description>&lt;h1 id=&#34;chào-mừng-đến-với-team-hub&#34;&gt;Chào mừng đến với Team Hub!&lt;/h1&gt;&#xA;&lt;p&gt;Hub này là nơi lưu trữ trung tâm cho tất cả bài blog, dự án, và cuộc họp nhóm. Các nội dung sẽ được sắp xếp trong các thư mục riêng biệt, mỗi thư mục sẽ phục vụ cho một mục đích cụ thể.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 2 - Tuần 2: Xác Suất, Cơ Sở Dữ Liệu và Những Pha Bayes “Khét Lẹt”!</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week--2/</link>
+      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week--2/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 2 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về &lt;strong&gt;Xác Suất&lt;/strong&gt; – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong &lt;strong&gt;MongoDB&lt;/strong&gt; và thuật toán &lt;strong&gt;Naive Bayes Classifier&lt;/strong&gt;. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL</title>
@@ -37,11 +58,11 @@
       <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 3 đã mang đến những kiến thức cực kỳ quan trọng cho cả lập trình căn bản và ứng dụng thực tiễn trong khoa học dữ liệu như: &lt;strong&gt;Object-Oriented Programming (OOP)&lt;/strong&gt;, &lt;strong&gt;Data Structure nâng cao&lt;/strong&gt;, và &lt;strong&gt;SQL nâng cao&lt;/strong&gt;. Chúng mình đã học không chỉ qua các buổi giảng chính thức từ giảng viên, mà còn qua buổi phụ đạo cùng trợ giảng – nơi các bạn được thảo luận và trực tiếp triển khai trên bài tập được giao. Hãy dành thời gian đọc hết post nhé!&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Tuần 4 - Trợ lý AI đã xuất hiện</title>
+      <title>Tuần 4 - Trợ lý Gạo AI đã xuất hiện</title>
       <link>http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-4/chat_bot/</link>
       <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
       <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-4/chat_bot/</guid>
-      <description>&lt;h2 id=&#34;-trợ-lý-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;-trợ-lý-gạo-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý Gạo AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot Gạo AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
