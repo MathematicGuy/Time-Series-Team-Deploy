@@ -1,6 +1,6 @@
 ---
 title: "Module 2 - Tuần 3: Thống kê, Firebase và trải nhiệm xử lý ảnh đầu tiên sử dụng thống kê"
-date: 2025-07-19T13:03:07+07:00
+date: 2025-07-21T13:03:07+07:00
 # slug: /module-2-tuan-4/
 description: Tuần học thứ 3 bắt đầu với Thống kê và áp dụng của nó trong xử lý ảnh
 image: images/furina_HE.png
@@ -108,12 +108,11 @@ _(Buổi ứng dụng thực hành – Dr. Nguyễn Thái Hà)_
 
 📂 _Tài liệu đi kèm:_
 
-{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D6_Basic_Statistical_and_its_Application.pdf" title="M2W2D3+4_Basic_Statistical_and_its_Application" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W3D3+4_Applied_Statistic_in_ComputerVision.pdf" title="M2W3D3+4_Applied_Statistic_in_ComputerVision" height="700px" >}}
 
 {{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D5_Mongo_&_Firebase.pdf" title="M2W2D5_Mongo_&_Firebase" height="700px" >}}
 
-{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D8_CorrelationCoefficient_and_Histogram_Equalization.pdf" title="M2W2D6_CorrelationCoefficient_and_Histogram" height="700px" >}}
-
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D8_CorrelationCoefficient.pdf" title="M2W2D6_CorrelationCoefficient_and_Histogram" height="700px" >}}
 
 {{< pdf src="/Time-Series-Team-Hub/pdf/M2W3D7_PresentationSkills_for_DS&AI.pdf" title="M2W3D7_PresentationSkills_for_DS&AI" height="700px" >}}
 
