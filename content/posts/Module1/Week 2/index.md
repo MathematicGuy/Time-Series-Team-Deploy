@@ -1,5 +1,5 @@
 ---
-title: "Tuần 2 – Bộ ba Data Structure, Git và Database"
+title: "Module 1 - Tuần 2 – Bộ ba Data Structure, Git và Database"
 date: 2025-06-28T13:03:07+07:00
 # slug: /tuan-2/
 description: Trong tuần học thứ 2 đưa chúng ta đến với những kiến thức cực kỳ quan trọng

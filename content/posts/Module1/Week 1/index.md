@@ -1,5 +1,5 @@
 ---
-title: "Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL"
+title: "Module 1 - Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL"
 date: 2025-06-28T13:03:07+07:00
 # slug: /tuan-1/
 description: Chào mừng đến với blog Tuần 1 của team Time Series.

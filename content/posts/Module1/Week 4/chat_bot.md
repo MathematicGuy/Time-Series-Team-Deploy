@@ -1,5 +1,5 @@
 ---
-title: "Tuần 4 - Trợ lý Gạo AI đã xuất hiện"
+title: "Module 1 - Tuần 4 - Trợ lý Gạo AI đã xuất hiện"
 date: 2025-06-28T13:03:07+07:00
 description: Trợ lý AI tiếng Việt hỗ trợ hỏi đáp từ tài liệu PDF bằng công nghệ RAG kết hợp mô hình Vicuna-7B, được xây dựng bằng Streamlit và LangChain.
 image: images/RAGChatbot.png
