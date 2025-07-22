@@ -1,6 +1,6 @@
 ---
 title: "Module 2 - Tuần 3: Thống kê, Firebase và trải nhiệm xử lý ảnh đầu tiên sử dụng thống kê"
-date: 2025-07-21T13:03:07+07:00
+date: 2025-07-19T13:03:07+07:00
 # slug: /module-2-tuan-4/
 description: Tuần học thứ 3 bắt đầu với Thống kê và áp dụng của nó trong xử lý ảnh
 image: images/furina_HE.png
