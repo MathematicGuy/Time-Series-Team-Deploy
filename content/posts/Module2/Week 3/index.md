@@ -112,7 +112,7 @@ _(Buổi ứng dụng thực hành – Dr. Nguyễn Thái Hà)_
 
 {{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D5_Mongo_&_Firebase.pdf" title="M2W2D5_Mongo_&_Firebase" height="700px" >}}
 
-{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D8_CorrelationCoefficient.pdf" title="M2W2D6_CorrelationCoefficient_and_Histogram" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W2D8_Descriptive Statistics_Correlation_to_Correlation_Coefficient.pdf" title="M2W2D8_Descriptive Statistics_Correlation_to_Correlation_Coefficient" height="700px" >}}
 
 {{< pdf src="/Time-Series-Team-Hub/pdf/M2W3D7_PresentationSkills_for_DS&AI.pdf" title="M2W3D7_PresentationSkills_for_DS&AI" height="700px" >}}
 

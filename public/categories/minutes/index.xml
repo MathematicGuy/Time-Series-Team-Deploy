@@ -6,8 +6,15 @@
     <description>Recent content in Minutes on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 06 Jul 2025 13:03:07 +0700</lastBuildDate>
+    <lastBuildDate>Mon, 21 Jul 2025 13:03:07 +0700</lastBuildDate>
     <atom:link href="http://localhost:1313/Time-Series-Team-Hub/categories/minutes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Module 2 - Tuần 3: Thống kê, Firebase và trải nhiệm xử lý ảnh đầu tiên sử dụng thống kê</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-3/</link>
+      <pubDate>Mon, 21 Jul 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-3/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 3 đã tiếp tục&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-lịch-trình-học-và-nội-dung-chính&#34;&gt;📅 &lt;strong&gt;Lịch trình học và nội dung chính&lt;/strong&gt;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;-thứ-3--ngày-15072025&#34;&gt;🧑‍🏫 &lt;strong&gt;Thứ 3 – Ngày 15/07/2025&lt;/strong&gt;&lt;/h3&gt;&#xA;&lt;p&gt;&lt;em&gt;(Buổi warm-up – TA Quốc Thái)&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Module 2 - Tuần 1: Đại Số Tuyến Tính, Numpy và Những Cú Lướt MongoDB Đầu Tiên!</title>
       <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-1/</link>
