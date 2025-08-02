@@ -16,17 +16,19 @@ draft: false
 
 Chào mừng bạn đến với **Dũng Sĩ Diệt SPAM** của Time-Series Team! Đây là một công cụ tiên tiến giúp **phân loại tin nhắn thành spam hoặc ham** với độ chính xác cao và cung cấp **giải thích chi tiết** về cách hệ thống đưa ra quyết định. Hệ thống này không chỉ lọc tin nhắn rác mà còn mang lại sự minh bạch trong quá trình xử lý dữ liệu.
 
----
-
-## 🧪 Trải Nghiệm Hệ thống  
-
-- **Dùng thử ngay**: [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)  
-
 Hệ thống Dũng Sĩ Diệt SPAM sử dụng 3 cấp độ phân loại từ cơ bản đến nâng cao:
 
 🎯 Phân loại tin nhắn cơ bản (HAM vs SPAM)
 🔍 Phân loại với giải thích (Explainable AI)
 🏷️ Phân loại phụ chi tiết (Spam Subcategorization)
+
+---
+
+## 🧪 Trải nghiệm Dũng sĩ diệt spam tại đây: 
+**Dùng thử ngay**: **[Streamlit](https://heroai.streamlit.app/)** 
+
+### 🧪 File Source Code: 
+[Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)  
 
 ### 👉 Đối Tượng Người Dùng  
 - **Người dùng cá nhân**: Kiểm tra tin nhắn hoặc email đáng ngờ để bảo vệ thông tin cá nhân.  
