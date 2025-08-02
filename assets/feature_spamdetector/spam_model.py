@@ -115,34 +115,6 @@ def generate_hard_ham(ham_texts, n=100):
             continue
     return hard_ham
 
-def synonym_replacement(text, n=1):
-    if not WORDNET_AVAILABLE: return text
-    try:
-        if isinstance(text, list): text = ' '.join(str(item) for item in text)
-        elif not isinstance(text, str): text = str(text)
-        if not text or not text.strip(): return text
-        words = text.split()
-        new_words = words.copy()
-        candidates = [w for w in words if wordnet.synsets(w)]
-        if not candidates: return text
-        random.shuffle(candidates)
-        replaced_count = 0
-        for random_word in candidates:
-            try:
-                synonyms = wordnet.synsets(random_word)
-                if synonyms:
-                    synonym = synonyms[0].lemmas()[0].name().replace('_', ' ')
-                    if synonym.lower() != random_word.lower():
-                        new_words = [synonym if w == random_word else w for w in new_words]
-                        replaced_count += 1
-                        if replaced_count >= n: break
-            except:
-                continue
-        return " ".join(new_words)
-    except Exception as e:
-        warnings.warn(f"⚠️ Synonym replacement error: {e}")
-        return str(text) if text else ""
-
 def augment_dataset(messages, labels, aug_ratio=0.2, alpha=0.3):
     augmented_messages, augmented_labels = [], []
     if not isinstance(messages, list): messages = list(messages)
@@ -174,6 +146,7 @@ def augment_dataset(messages, labels, aug_ratio=0.2, alpha=0.3):
         attempts += 1
         if random.random() > 0.8:
             try:
+                # Gọi hàm synonym_replacement toàn cục
                 aug_msg = synonym_replacement(msg, n=1)
                 if (aug_msg != msg and len(aug_msg.strip()) > 0 and len(aug_msg.split()) >= 2):
                     augmented_messages.append(aug_msg)
@@ -339,6 +312,34 @@ class HardExampleGenerator:
                 return generated
         print("✅ Ham đã đủ, không cần sinh thêm.")
         return []
+    
+    def synonym_replacement(self, text, n=1):
+        if not WORDNET_AVAILABLE: return text
+        try:
+            if isinstance(text, list): text = ' '.join(str(item) for item in text)
+            elif not isinstance(text, str): text = str(text)
+            if not text or not text.strip(): return text
+            words = text.split()
+            new_words = words.copy()
+            candidates = [w for w in words if wordnet.synsets(w)]
+            if not candidates: return text
+            random.shuffle(candidates)
+            replaced_count = 0
+            for random_word in candidates:
+                try:
+                    synonyms = wordnet.synsets(random_word)
+                    if synonyms:
+                        synonym = synonyms[0].lemmas()[0].name().replace('_', ' ')
+                        if synonym.lower() != random_word.lower():
+                            new_words = [synonym if w == random_word else w for w in new_words]
+                            replaced_count += 1
+                            if replaced_count >= n: break
+                except:
+                    continue
+            return " ".join(new_words)
+        except Exception as e:
+            warnings.warn(f"⚠️ Synonym replacement error: {e}")
+            return str(text) if text else ""
 
     def generate_synonym_replacement(self, messages, labels, aug_ratio=0.2):
         MAX_AUG = int(len(messages) * aug_ratio)
