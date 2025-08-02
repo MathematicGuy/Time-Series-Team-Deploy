@@ -85,7 +85,7 @@ Quy trình:
 | Phân loại tiểu mục        | Semi-supervised Learning                                                                              |  
 
 ---
-https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view
+
 📂 _Tài liệu đi kèm:_
 {{< pdf src="C:\Users\hangu\OneDrive\Documents\0. Personal documents\0.6 ML AI\0. Research survey\Time Series Team Hub\assets\pdf\M2W4D1_Spam_Detector.pdf" title="Week_4_Spam_Detector" height="700px" >}}
 
