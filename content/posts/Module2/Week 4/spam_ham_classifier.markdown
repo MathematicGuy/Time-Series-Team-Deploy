@@ -78,7 +78,7 @@ Quy trình:
 | Giao diện                 | [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)                                             |  
 | Mã nguồn                  | [GitHub](https://colab.research.google.com/drive/1D5b1KCycJ6io_O8U1vMgbuKwgNFwIL6F?usp=sharing)    |  
 | Mô hình NLP               | [BERT](https://huggingface.co/bert-base-multilingual-cased)                                         |  
-| Slide giới thiệu              | [Slide](https://www.canva.com/design/DAGu3xJo4fw/uqDpahtbi9PA36ZJqvJcWg/edit?utm_content=DAGu3xJo4fw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                                         | 
+| Slide giới thiệu              | [Slide]([[https://www.canva.com/design/DAGu3xJo4fw/uqDpahtbi9PA36ZJqvJcWg/edit?utm_content=DAGu3xJo4fw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton]](https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view))                                         | 
 | Embedding                 | `multilingual-e5-base`                                                                              |  
 | Tìm kiếm tương đồng       | FAISS                                                                                               |  
 | Giải thích AI             | Masking-based Saliency                                                                              |  
