@@ -74,7 +74,6 @@ Quy trình:
 
 | **Thành Phần**            | **Công Cụ**                                                                                           |  
 |---------------------------|-------------------------------------------------------------------------------------------------------|  
-| Giao diện                 | [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)    |  
 | Mã nguồn                  | [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)       |  
 | Mô hình NLP               | [BERT](https://huggingface.co/bert-base-multilingual-cased)                                           |  
 | Slide giới thiệu          | [Slide](https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view)                         | 
