@@ -345,7 +345,7 @@ class SpamClassifier:
         # Compute saliency weight
         if explain:
             saliency_scores = self._compute_saliency_scores(query_text, k)
-            saliency_weight = np.mean(saliency_scores)
+            saliency_weight = float(np.mean(saliency_scores))  # Convert to Python float
             tokens = self.tokenizer.tokenize(query_text)
         else:
             saliency_weight = self._compute_quick_saliency(query_text)
@@ -357,8 +357,8 @@ class SpamClassifier:
         neighbor_info = []
         
         for i in range(k):
-            neighbor_idx = indices[0][i]
-            similarity = float(scores[0][i])
+            neighbor_idx = int(indices[0][i])  # Convert to Python int
+            similarity = float(scores[0][i])  # Convert to Python float
             neighbor_label = self.train_metadata[neighbor_idx]["label"]
             neighbor_message = self.train_metadata[neighbor_idx]["message"]
             
@@ -367,8 +367,8 @@ class SpamClassifier:
             vote_scores[neighbor_label] += weight
             
             neighbor_info.append({
-                "score": similarity,
-                "weight": weight,
+                "score": float(similarity),  # Ensure Python float
+                "weight": float(weight),     # Ensure Python float
                 "label": neighbor_label,
                 "message": neighbor_message[:100] + "..." if len(neighbor_message) > 100 else neighbor_message
             })
@@ -378,15 +378,15 @@ class SpamClassifier:
         
         result = {
             "prediction": predicted_label,
-            "vote_scores": vote_scores,
+            "vote_scores": {k: float(v) for k, v in vote_scores.items()},  # Convert to Python float
             "neighbors": neighbor_info,
-            "saliency_weight": saliency_weight,
-            "alpha": alpha
+            "saliency_weight": float(saliency_weight),  # Ensure Python float
+            "alpha": float(alpha)  # Ensure Python float
         }
         
         if explain:
             result["tokens"] = tokens
-            result["saliency_scores"] = saliency_scores
+            result["saliency_scores"] = [float(x) for x in saliency_scores] if saliency_scores is not None else None
         
         return result
     
@@ -538,20 +538,33 @@ class SpamClassifier:
     
     def classify_message(self, message, k=5, explain=False):
         """Classify a single message"""
-        if not self.model or not self.index:
+        # FIX: Better check for model and index existence
+        if self.model is None or self.index is None:
             raise ValueError("Model not trained. Please train the model first.")
         
-        # Get prediction
-        result = self._classify_with_weighted_knn(
-            message, k=k, alpha=self.best_alpha, explain=explain
-        )
+        # FIX: Validate input
+        if not message or not isinstance(message, str):
+            raise ValueError("Message must be a non-empty string")
         
-        # If spam, classify subcategory
-        if result["prediction"] == "spam":
-            subcategories = self._classify_spam_subcategory([message])
-            result["subcategory"] = subcategories[0] if subcategories else "spam_khac"
+        message = str(message).strip()
+        if not message:
+            raise ValueError("Message cannot be empty after stripping")
         
-        return result
+        try:
+            # Get prediction
+            result = self._classify_with_weighted_knn(
+                message, k=k, alpha=self.best_alpha, explain=explain
+            )
+            
+            # If spam, classify subcategory
+            if result["prediction"] == "spam":
+                subcategories = self._classify_spam_subcategory([message])
+                result["subcategory"] = subcategories[0] if subcategories else "spam_khac"
+            
+            return result
+            
+        except Exception as e:
+            raise RuntimeError(f"Classification failed: {str(e)}")
     
     def save_to_files(self):
         """Save model artifacts to files"""
