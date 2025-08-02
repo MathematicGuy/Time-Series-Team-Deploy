@@ -25,7 +25,7 @@ Hệ thống Dũng Sĩ Diệt SPAM sử dụng 3 cấp độ phân loại từ c
 ---
 
 ## 🧪 Trải nghiệm Dũng sĩ diệt spam tại đây: 
-**Dùng thử ngay**:**[Streamlit](https://heroai.streamlit.app/)** 
+**Dùng thử ngay**: **[Streamlit](https://heroai.streamlit.app/)** 
 
 ### 🧪 File Source Code: 
 [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)  
