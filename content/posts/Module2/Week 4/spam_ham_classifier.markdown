@@ -1,5 +1,5 @@
 ---
-title: "Module 2 - Tuần 4 - Dũng Sĩ Diệt SPAM đã trở lại và lợi hại hơn xưa"  
+title: "Module 2 - Tuần 4 - Dũng sĩ diệt SPAM đã trở lại và lợi hại hơn xưa"  
 date: 2025-08-02T10:00:00+07:00  
 description: Hệ thống phân loại tin nhắn spam/ham nâng cao với khả năng giải thích, được xây dựng bằng Streamlit và các kỹ thuật học máy/học sâu hiện đại.  
 image: images/spam_detector.jpg
@@ -21,7 +21,7 @@ Chào mừng bạn đến với **Dũng Sĩ Diệt SPAM** của Time-Series Team
 ## 🧪 Trải Nghiệm Hệ thống  
 
 - **Dùng thử ngay**: [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)  
-- **Mã nguồn**: [GitHub](https://colab.research.google.com/drive/1D5b1KCycJ6io_O8U1vMgbuKwgNFwIL6F?usp=sharing)  
+- **Mã nguồn**: [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)
 
 Hệ thống Dũng Sĩ Diệt SPAM sử dụng 3 cấp độ phân loại từ cơ bản đến nâng cao:
 
@@ -76,7 +76,7 @@ Quy trình:
 | **Thành Phần**            | **Công Cụ**                                                                                           |  
 |---------------------------|-------------------------------------------------------------------------------------------------------|  
 | Giao diện                 | [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)    |  
-| Mã nguồn                  | [GitHub](https://colab.research.google.com/drive/1D5b1KCycJ6io_O8U1vMgbuKwgNFwIL6F?usp=sharing)       |  
+| Mã nguồn                  | [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)       |  
 | Mô hình NLP               | [BERT](https://huggingface.co/bert-base-multilingual-cased)                                           |  
 | Slide giới thiệu          | [Slide](https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view)                         | 
 | Embedding                 | `multilingual-e5-base`                                                                                |  
