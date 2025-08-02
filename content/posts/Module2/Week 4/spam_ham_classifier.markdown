@@ -75,17 +75,17 @@ Quy trình:
 
 | **Thành Phần**            | **Công Cụ**                                                                                           |  
 |---------------------------|-------------------------------------------------------------------------------------------------------|  
-| Giao diện                 | [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)                                             |  
-| Mã nguồn                  | [GitHub](https://colab.research.google.com/drive/1D5b1KCycJ6io_O8U1vMgbuKwgNFwIL6F?usp=sharing)    |  
-| Mô hình NLP               | [BERT](https://huggingface.co/bert-base-multilingual-cased)                                         |  
-| Slide giới thiệu              | [Slide]([[https://www.canva.com/design/DAGu3xJo4fw/uqDpahtbi9PA36ZJqvJcWg/edit?utm_content=DAGu3xJo4fw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton]](https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view))                                         | 
-| Embedding                 | `multilingual-e5-base`                                                                              |  
-| Tìm kiếm tương đồng       | FAISS                                                                                               |  
-| Giải thích AI             | Masking-based Saliency                                                                              |  
-| Phân loại tiểu mục        | Semi-supervised Learning                                                                            |  
+| Giao diện                 | [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)    |  
+| Mã nguồn                  | [GitHub](https://colab.research.google.com/drive/1D5b1KCycJ6io_O8U1vMgbuKwgNFwIL6F?usp=sharing)       |  
+| Mô hình NLP               | [BERT](https://huggingface.co/bert-base-multilingual-cased)                                           |  
+| Slide giới thiệu          | [Slide](https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view)                         | 
+| Embedding                 | `multilingual-e5-base`                                                                                |  
+| Tìm kiếm tương đồng       | FAISS                                                                                                 |  
+| Giải thích AI             | Masking-based Saliency                                                                                |  
+| Phân loại tiểu mục        | Semi-supervised Learning                                                                              |  
 
 ---
-
+https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view
 📂 _Tài liệu đi kèm:_
 {{< pdf src="C:\Users\hangu\OneDrive\Documents\0. Personal documents\0.6 ML AI\0. Research survey\Time Series Team Hub\assets\pdf\M2W4D1_Spam_Detector.pdf" title="Week_4_Spam_Detector" height="700px" >}}
 
