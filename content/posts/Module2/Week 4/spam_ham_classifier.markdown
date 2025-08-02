@@ -85,6 +85,6 @@ Quy trình:
 ---
 
 📂 _Tài liệu đi kèm:_
-{{< pdf src="/Time Series Team Hub/assets/pdf/M2W4D1_Spam_Detector.pdf" title="Week_4_Spam_Detector" height="700px" >}}
+{{< pdf src="/Time-Series-Team-Hub/pdf/M2W4D1_Spam_Detector.pdf" title="M2W4D1_Spam_Detector" height="700px" >}}
 
 Hãy trải nghiệm hệ thống ngay hôm nay để khám phá cách AI bảo vệ bạn khỏi tin nhắn rác một cách thông minh và minh bạch. 
