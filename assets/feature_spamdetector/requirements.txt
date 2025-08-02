@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+scikit-learn
+torch
+transformers
+faiss-cpu
+tqdm
+nltk
+kagglehub
+gdown
+requests
