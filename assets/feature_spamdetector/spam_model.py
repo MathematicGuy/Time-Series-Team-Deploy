@@ -23,6 +23,20 @@ import nltk
 
 warnings.filterwarnings('ignore')
 
+def convert_numpy_types(obj):
+    """Convert numpy types to Python native types for JSON serialization"""
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {key: convert_numpy_types(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_numpy_types(item) for item in obj]
+    return obj
+
 class SpamClassifier:
     def __init__(self, model_name="intfloat/multilingual-e5-base"):
         self.model_name = model_name
@@ -436,8 +450,8 @@ class SpamClassifier:
         # Generate embeddings
         X_embeddings = self.get_embeddings(messages)
         
-        # Create metadata
-        metadata = [{"index": i, "message": message, "label": label, "label_encoded": y[i]}
+        # Create metadata - FIX: Convert numpy types to Python native types
+        metadata = [{"index": int(i), "message": message, "label": label, "label_encoded": int(y[i])}
                     for i, (message, label) in enumerate(zip(messages, labels))]
         
         if progress_callback:
@@ -479,22 +493,22 @@ class SpamClassifier:
         # Final evaluation
         accuracy_results = self._evaluate_accuracy(X_test_emb, test_metadata)
         
-        # Store model info
-        self.model_info = {
+        # Store model info - FIX: Convert numpy types
+        self.model_info = convert_numpy_types({
             'dataset_size': len(messages),
             'model_name': self.model_name,
             'best_alpha': self.best_alpha,
             'training_date': datetime.now().isoformat(),
             'accuracy_results': accuracy_results
-        }
+        })
         
         if progress_callback:
             progress_callback(1.0, "Training completed!")
         
         return {
-            'best_alpha': self.best_alpha,
-            'accuracy_results': accuracy_results,
-            'class_weights': self.class_weights
+            'best_alpha': float(self.best_alpha),  # Convert to Python float
+            'accuracy_results': convert_numpy_types(accuracy_results),
+            'class_weights': convert_numpy_types(self.class_weights)
         }
     
     def _evaluate_accuracy(self, test_embeddings, test_metadata, k_values=[1, 3, 5]):
@@ -518,7 +532,7 @@ class SpamClassifier:
                     correct += 1
             
             accuracy = correct / total
-            results[k] = accuracy
+            results[k] = float(accuracy)  # Convert to Python float
         
         return results
     
@@ -544,24 +558,23 @@ class SpamClassifier:
         # Save FAISS index
         faiss.write_index(self.index, "faiss_index.bin")
         
-        # Save metadata and weights
+        # Save metadata and weights - FIX: Convert numpy types before saving
         with open("train_metadata.json", "w", encoding="utf-8") as f:
-            json.dump(self.train_metadata, f, ensure_ascii=False, indent=2)
+            json.dump(convert_numpy_types(self.train_metadata), f, ensure_ascii=False, indent=2)
         
         with open("class_weights.json", "w", encoding="utf-8") as f:
-            json.dump(self.class_weights, f, indent=2)
+            json.dump(convert_numpy_types(self.class_weights), f, indent=2)
         
         with open("model_config.json", "w", encoding="utf-8") as f:
-            config = {
+            config = convert_numpy_types({
                 'model_name': self.model_name,
                 'best_alpha': self.best_alpha,
                 'model_info': self.model_info
-            }
+            })
             json.dump(config, f, indent=2)
         
         # Save other artifacts
         artifacts = {
-            'tokenizer': self.tokenizer,
             'device': str(self.device)
         }
         
