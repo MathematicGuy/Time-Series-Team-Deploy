@@ -1,6 +1,6 @@
 ---
-title: "Module 2 - Tuần 5 - Dũng Sĩ Diệt SPAM đã trở lại và lợi hại hơn xưa"  
-date: 2025-07-05T10:00:00+07:00  
+title: "Module 2 - Tuần 4 - Dũng Sĩ Diệt SPAM đã trở lại và lợi hại hơn xưa"  
+date: 2025-08-02T10:00:00+07:00  
 description: Hệ thống phân loại tin nhắn spam/ham nâng cao với khả năng giải thích, được xây dựng bằng Streamlit và các kỹ thuật học máy/học sâu hiện đại.  
 image: images/spam_detector.jpg
 caption:  
