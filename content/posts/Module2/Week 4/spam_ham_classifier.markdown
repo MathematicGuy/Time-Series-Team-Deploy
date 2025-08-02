@@ -20,8 +20,7 @@ Chào mừng bạn đến với **Dũng Sĩ Diệt SPAM** của Time-Series Team
 
 ## 🧪 Trải Nghiệm Hệ thống  
 
-- **Dùng thử ngay**: [Streamlit](https://colab.research.google.com/drive/1j2N8TE4XKwSyH_WkccHSiiqff0NoDz55?usp=sharing)  
-- **Mã nguồn**: [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)
+- **Dùng thử ngay**: [Google Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)  
 
 Hệ thống Dũng Sĩ Diệt SPAM sử dụng 3 cấp độ phân loại từ cơ bản đến nâng cao:
 
