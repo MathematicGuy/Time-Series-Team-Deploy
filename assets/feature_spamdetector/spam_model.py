@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 import random
@@ -7,9 +6,12 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 import faiss
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 import json
+import pickle
+import os
 from datetime import datetime
 from collections import Counter
 import re
@@ -18,712 +20,577 @@ import gdown
 import kagglehub
 from kagglehub import KaggleDatasetAdapter
 import nltk
-import requests
-import os
 
 warnings.filterwarnings('ignore')
 
-# Download required NLTK data
-try:
-    from nltk.corpus import wordnet
-    nltk.download('wordnet', quiet=True)
-    nltk.download('omw-1.4', quiet=True)
-    WORDNET_AVAILABLE = True
-except:
-    print("⚠️ NLTK WordNet not available, synonym replacement disabled")
-    WORDNET_AVAILABLE = False
-
-# Hard Ham Phrase Groups for augmentation
-financial_phrases = [
-    "I got $100 cashback yesterday", "The bank refunded me $200 already",
-    "I earned $150/day last month from freelancing", "Approved for $500 loan finally",
-    "Got quick $300 refund after confirmation", "The store gave me $250 cashback",
-    "My account got $100 instantly after confirming", "I received instant $400 transfer today",
-    "They sent me exclusive $600 grant, lol", "Netflix actually gave me 3 months free"
-]
-promotion_phrases = [
-    "I bought one and got one free, legit deal", "Flash sale 80% off, I already ordered",
-    "Exclusive deal worked for me, saved a lot", "Hot sale 2 hours ago, crazy cheap",
-    "New collection free shipping, I tried it", "Best price ever for members",
-    "Got special coupon, it worked!", "Reserved early and saved 20%",
-    "Only 3 items left when I bought mine", "Order now, it's real not fake"
-]
-lottery_phrases = [
-    "I actually won a $1000 voucher at the mall", "I got a free iPhone from the lucky draw",
-    "Claimed my $500 Amazon voucher legit", "Won a prize, just showed my ticket",
-    "Spun the wheel at the fair and got gifts", "Lucky draw worked for me today",
-    "Redeemed my exclusive prize at the shop", "They reminded me to collect my reward",
-    "Gift unlocked at the event, so fun", "Jackpot giveaway, real not scam"
-]
-scam_alert_phrases = [
-    "I got unusual login alert, but it was me", "Reset my password after warning, fine now",
-    "Got security update mail, confirmed it's real", "Payment failed once, updated and ok now",
-    "Had to verify identity, bank confirmed legit", "Netflix on hold but paid, no issue",
-    "Bank asked to confirm transaction, was me", "Warning mail yesterday, false alarm",
-    "Confirmed within 24h, all safe", "Suspicious access blocked, just me traveling"
-]
-call_to_action_phrases = [
-    "I clicked to confirm and it worked", "Replied YES, bonus legit",
-    "Registered before midnight, no scam", "Tapped link, claimed reward legit",
-    "Signed up today, limited seat real", "Confirmed immediately, nothing shady",
-    "Acted fast, got discount legit", "Verified email, safe and done",
-    "Downloaded app, free points real", "Paid within 12 hours, successful"
-]
-social_engineering_phrases = [
-    "Mom, don't worry I sent you $500 hospital bill already", "Hi mom, phone broke but friend helped",
-    "Boss asked me to buy gift cards for office, already did", "John, I transferred $300, check it",
-    "Cousin stuck abroad, we sent help", "Friend lent me $200 last week, repaid",
-    "Lost wallet but someone returned $150", "Urgent cash request yesterday, sorted now",
-    "Helped pay fine, friend returned", "Sister's surgery done, paid $400 legit"
-]
-obfuscated_phrases = [
-    "Clicked h3re to win fr€e gift, real promo", "Got r3fund n0w!!!", "Fr33 reward worked, tried it",
-    "C@shb@ck real, used today", "Won prize real, not spam", "Cl@imed b0nus myself, safe",
-    "Gift order legit, no scam", "Refund approved @ bank, no issue", "Replied N0W got $$$ legit",
-    "Urg3nt confirm done, real bank"
-]
-hard_ham_phrase_groups = [
-    financial_phrases, promotion_phrases, lottery_phrases,
-    scam_alert_phrases, call_to_action_phrases,
-    social_engineering_phrases, obfuscated_phrases
-]
-
-def generate_hard_ham(ham_texts, n=100):
-    if not ham_texts or n <= 0: return []
-    hard_ham = []
-    for _ in range(n):
+class SpamClassifier:
+    def __init__(self, model_name="intfloat/multilingual-e5-base"):
+        self.model_name = model_name
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+        # Initialize model components
+        self.tokenizer = None
+        self.model = None
+        self.index = None
+        self.train_metadata = None
+        self.class_weights = None
+        self.best_alpha = 0.5
+        self.model_info = {}
+        
+        # Download NLTK data for augmentation
         try:
-            base = random.choice(ham_texts)
-            insert_group = random.choice(hard_ham_phrase_groups)
-            insert = random.choice(insert_group)
-            if random.random() > 0.5:
-                hard_ham.append(f"{base}, btw {insert}.")
-            else:
-                hard_ham.append(f"{insert}. {base}")
-        except Exception as e:
-            warnings.warn(f"⚠️ Error generating hard ham: {e}")
-            continue
-    return hard_ham
-
-def augment_dataset(messages, labels, aug_ratio=0.2, alpha=0.3):
-    augmented_messages, augmented_labels = [], []
-    if not isinstance(messages, list): messages = list(messages)
-    if not isinstance(labels, list): labels = list(labels)
-    clean_messages = [str(msg) if not isinstance(msg, list) else ' '.join(str(item) for item in msg) for msg in messages]
-    messages = clean_messages
-    ham_count = labels.count('ham')
-    spam_count = labels.count('spam')
-    print(f"📊 Original dataset: Ham={ham_count}, Spam={spam_count}")
-
-    if ham_count >= spam_count:
-        ham_messages = [msg for msg, label in zip(messages, labels) if label == 'ham']
-        n_hard_ham = int((ham_count - spam_count) * alpha)
-        if n_hard_ham > 0 and ham_messages:
-            print(f"🎯 Generating {n_hard_ham} hard ham examples...")
-            hard_ham_generated = generate_hard_ham(ham_messages, n=n_hard_ham)
-            if hard_ham_generated:
-                augmented_messages.extend(hard_ham_generated)
-                augmented_labels.extend(['ham'] * len(hard_ham_generated))
-                print(f"✅ Generated {len(hard_ham_generated)} hard ham examples")
+            nltk.download('wordnet', quiet=True)
+            nltk.download('omw-1.4', quiet=True)
+            self.wordnet_available = True
+        except:
+            self.wordnet_available = False
     
-    max_aug_syn = int(len(messages) * aug_ratio)
-    print(f"🎯 Attempting to generate ~{max_aug_syn} synonym replacement examples...")
-    syn_count = 0
-    attempts = 0
-    max_attempts = len(messages) * 2
-    for msg, label in zip(messages, labels):
-        if syn_count >= max_aug_syn or attempts >= max_attempts: break
-        attempts += 1
-        if random.random() > 0.8:
-            try:
-                # Calling global synonym_replacement function
-                aug_msg = synonym_replacement(msg, n=1)
-                if (aug_msg != msg and len(aug_msg.strip()) > 0 and len(aug_msg.split()) >= 2):
-                    augmented_messages.append(aug_msg)
-                    augmented_labels.append(label)
-                    syn_count += 1
-            except Exception as e:
-                warnings.warn(f"⚠️ Error in synonym replacement: {e}")
-                continue
-    print(f"✅ Generated {syn_count} synonym replacement examples")
-    print(f"✅ Total augmented: {len(augmented_messages)} examples")
-    return augmented_messages, augmented_labels
-
-class HardExampleGenerator:
-    def __init__(self, dataset_path, alpha_spam=0.5, alpha_ham=0.3):
-        self.dataset_path = dataset_path
-        self.alpha_spam = alpha_spam
-        self.alpha_ham = alpha_ham
-        self.df = pd.read_csv(dataset_path)
-        self.spam_groups = self._init_spam_phrases()
-        self.ham_groups = self._init_ham_phrases()
-
-    def _init_spam_phrases(self):
-        financial_phrases = [
-            "you get $100 back", "they refund $200 instantly", "limited $50 bonus for early registration",
-            "earn $150/day remote work", "approved for a $500 credit", "quick $300 refund if you confirm",
-            "they give $250 cashback if you check in early", "your account gets $100 instantly after confirmation",
-            "instant $400 transfer if you reply YES today", "exclusive $600 grant approved for you"
-        ]
-        promotion_phrases = [
-            "limited time offer ends tonight", "buy one get one free today only", "exclusive deal just for you",
-            "hot sale up to 80% off", "flash sale starting in 2 hours", "new collection, free shipping worldwide",
-            "best price guaranteed for early birds", "special discount coupon for first 100 buyers",
-            "reserve now and get extra 20% off", "only 3 items left, order now!"
-        ]
-        lottery_phrases = [
-            "congratulations! you’ve won a $1000 gift card", "you are selected to receive a free iPhone",
-            "claim your $500 Amazon voucher now", "winner! reply to confirm your prize",
-            "spin the wheel to win exciting gifts", "lucky draw winner – act fast",
-            "redeem your exclusive prize today", "final reminder: unclaimed reward waiting",
-            "instant gift unlocked, tap to get", "biggest jackpot giveaway this week"
-        ]
-        scam_alert_phrases = [
-            "your account will be suspended unless verified", "unusual login detected, reset password now",
-            "security update required immediately", "urgent: payment failed, update details now",
-            "verify your identity to avoid account closure", "your Netflix subscription is on hold, confirm payment",
-            "important: unauthorized activity detected", "bank alert: confirm transaction or account locked",
-            "last warning: confirm within 24 hours", "emergency: suspicious access blocked, verify"
-        ]
-        call_to_action_phrases = [
-            "click here to confirm", "reply YES to activate bonus", "register before midnight and win",
-            "tap now to claim your reward", "sign up today, limited seats", "confirm immediately to proceed",
-            "act fast, offer expires soon", "verify email to continue", "download the app and get free points",
-            "complete payment within 12 hours"
-        ]
-        social_engineering_phrases = [
-            "hey grandma, i need $500 for hospital bills", "hi mom, send money asap, phone broke",
-            "boss asked me to buy 3 gift cards urgently", "john, can you transfer $300 now, emergency",
-            "it’s me, your cousin, stuck abroad, need help", "friend, please help me with $200 loan",
-            "hi, i lost my wallet, send $150 to this account", "urgent! i can’t talk now, send cash fast",
-            "help me pay this fine, will return tomorrow", "sister, please pay $400 for my surgery"
-        ]
-        obfuscated_phrases = [
-            "Cl!ck h3re t0 w1n fr€e iPh0ne", "G€t y0ur r3fund n0w!!!", "L!mited 0ff3r: Fr33 $$$ r3ward",
-            "C@shb@ck av@il@ble t0d@y", "W!n b!g pr!ze, act f@st", "Cl@im y0ur 100% b0nus",
-            "Fr33 g!ft w!th 0rder", "Up t0 $5000 r3fund @pprov3d", "R3ply N0W t0 r3c3ive $$$",
-            "Urg3nt!!! C0nfirm d3tails 1mm3di@tely"
-        ]
-        return [financial_phrases, promotion_phrases, lottery_phrases,
-                scam_alert_phrases, call_to_action_phrases,
-                social_engineering_phrases, obfuscated_phrases]
-
-    def _init_ham_phrases(self):
-        financial_phrases = [
-            "I got $100 cashback yesterday", "The bank refunded me $200 already",
-            "I earned $150/day last month from freelancing", "Approved for $500 loan finally",
-            "Got quick $300 refund after confirmation", "The store gave me $250 cashback",
-            "My account got $100 instantly after confirming", "I received instant $400 transfer today",
-            "They sent me exclusive $600 grant, lol", "Netflix actually gave me 3 months free"
-        ]
-        promotion_phrases = [
-            "I bought one and got one free, legit deal", "Flash sale 80% off, I already ordered",
-            "Exclusive deal worked for me, saved a lot", "Hot sale 2 hours ago, crazy cheap",
-            "New collection free shipping, I tried it", "Best price ever for members",
-            "Got special coupon, it worked!", "Reserved early and saved 20%",
-            "Only 3 items left when I bought mine", "Order now, it’s real not fake"
-        ]
-        lottery_phrases = [
-            "I actually won a $1000 voucher at the mall", "I got a free iPhone from the lucky draw",
-            "Claimed my $500 Amazon voucher legit", "Won a prize, just showed my ticket",
-            "Spun the wheel at the fair and got gifts", "Lucky draw worked for me today",
-            "Redeemed my exclusive prize at the shop", "They reminded me to collect my reward",
-            "Gift unlocked at the event, so fun", "Jackpot giveaway, real not scam"
-        ]
-        scam_alert_phrases = [
-            "I got unusual login alert, but it was me", "Reset my password after warning, fine now",
-            "Got security update mail, confirmed it’s real", "Payment failed once, updated and ok now",
-            "Had to verify identity, bank confirmed legit", "Netflix on hold but paid, no issue",
-            "Bank asked to confirm transaction, was me", "Warning mail yesterday, false alarm",
-            "Confirmed within 24h, all safe", "Suspicious access blocked, just me traveling"
-        ]
-        call_to_action_phrases = [
-            "I clicked to confirm and it worked", "Replied YES, bonus legit",
-            "Registered before midnight, no scam", "Tapped link, claimed reward legit",
-            "Signed up today, limited seat real", "Confirmed immediately, nothing shady",
-            "Acted fast, got discount legit", "Verified email, safe and done",
-            "Downloaded app, free points real", "Paid within 12 hours, successful"
-        ]
-        social_engineering_phrases = [
-            "Mom, don’t worry I sent you $500 hospital bill already", "Hi mom, phone broke but friend helped",
-            "Boss asked me to buy gift cards for office, already did", "John, I transferred $300, check it",
-            "Cousin stuck abroad, we sent help", "Friend lent me $200 last week, repaid",
-            "Lost wallet but someone returned $150", "Urgent cash request yesterday, sorted now",
-            "Helped pay fine, friend returned", "Sister’s surgery done, paid $400 legit"
-        ]
-        obfuscated_phrases = [
-            "Clicked h3re to win fr€e gift, real promo", "Got r3fund n0w!!!", "Fr33 reward worked, tried it",
-            "C@shb@ck real, used today", "Won prize real, not spam", "Cl@imed b0nus myself, safe",
-            "Gift order legit, no scam", "Refund approved @ bank, no issue", "Replied N0W got $$$ legit",
-            "Urg3nt confirm done, real bank"
-        ]
-        hard_ham_phrase_groups = [
-            financial_phrases, promotion_phrases, lottery_phrases,
-            scam_alert_phrases, call_to_action_phrases,
-            social_engineering_phrases, obfuscated_phrases
-        ]
-        return hard_ham_phrase_groups
+    def _load_model(self):
+        """Load the transformer model and tokenizer"""
+        if self.tokenizer is None or self.model is None:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self.model = AutoModel.from_pretrained(self.model_name)
+            self.model = self.model.to(self.device)
+            self.model.eval()
     
-    def _generate_sentences(self, base_texts, phrase_groups, n):
-        results = []
-        for _ in range(n):
-            if not base_texts or not phrase_groups: break
-            base = random.choice(base_texts)
-            insert = random.choice(random.choice(phrase_groups))
-            sentence = f"{insert}. {base}" if random.random() < 0.5 else f"{base}, btw {insert}."
-            results.append(sentence)
-        return results
-
-    def generate_hard_spam(self, output_path):
-        num_ham = self.df[self.df["Category"] == "ham"].shape[0]
-        num_spam = self.df[self.df["Category"] == "spam"].shape[0]
-        if num_spam >= num_ham:
-            print("✅ Spam đã đủ, không sinh thêm.")
-            return []
-        n_generate = int((num_ham - num_spam) * self.alpha_spam)
-        if n_generate > 0:
-            base_texts = self.df[self.df["Category"] == "ham"]["Message"].sample(n=n_generate, random_state=42).tolist()
-            generated = self._generate_sentences(base_texts, self.spam_groups, n_generate)
-            pd.DataFrame({"Category": ["spam"] * len(generated), "Message": generated}).to_csv(output_path, index=False)
-            print(f"✅ Sinh {len(generated)} hard spam -> {output_path}")
-            return generated
-        return []
-
-    def generate_hard_ham(self, output_path):
-        num_ham = self.df[self.df["Category"] == "ham"].shape[0]
-        num_spam = self.df[self.df["Category"] == "spam"].shape[0]
-        if num_ham >= num_spam:
-            n_generate = int((num_ham - num_spam) * self.alpha_ham)
-            if n_generate > 0:
-                base_texts = self.df[self.df["Category"] == "ham"]["Message"].sample(n=n_generate, random_state=42).tolist()
-                generated = self._generate_sentences(base_texts, self.ham_groups, n_generate)
-                pd.DataFrame({"Category": ["ham"] * len(generated), "Message": generated}).to_csv(output_path, index=False)
-                print(f"✅ Sinh {len(generated)} hard ham -> {output_path}")
-                return generated
-        print("✅ Ham đã đủ, không cần sinh thêm.")
-        return []
-    
-    def synonym_replacement(self, text, n=1):
-        if not WORDNET_AVAILABLE: return text
-        try:
-            if isinstance(text, list): text = ' '.join(str(item) for item in text)
-            elif not isinstance(text, str): text = str(text)
-            if not text or not text.strip(): return text
-            words = text.split()
-            new_words = words.copy()
-            candidates = [w for w in words if wordnet.synsets(w)]
-            if not candidates: return text
-            random.shuffle(candidates)
-            replaced_count = 0
-            for random_word in candidates:
-                try:
-                    synonyms = wordnet.synsets(random_word)
-                    if synonyms:
-                        synonym = synonyms[0].lemmas()[0].name().replace('_', ' ')
-                        if synonym.lower() != random_word.lower():
-                            new_words = [synonym if w == random_word else w for w in new_words]
-                            replaced_count += 1
-                            if replaced_count >= n: break
-                except:
-                    continue
-            return " ".join(new_words)
-        except Exception as e:
-            warnings.warn(f"⚠️ Synonym replacement error: {e}")
-            return str(text) if text else ""
-
-    def generate_synonym_replacement(self, messages, labels, aug_ratio=0.2):
-        MAX_AUG = int(len(messages) * aug_ratio)
-        augmented_messages, augmented_labels = [], []
-        print(f"✅ Synonym Replacement: sinh tối đa {MAX_AUG} câu.")
-        for msg, label in zip(messages, labels):
-            if len(augmented_messages) >= MAX_AUG: break
-            if random.random() > 0.8:
-                # Calling global synonym_replacement function
-                aug_msg = synonym_replacement(msg, n=1)
-                if (aug_msg != msg and len(aug_msg.strip()) > 0 and len(aug_msg.split()) >= 2):
-                    augmented_messages.append(aug_msg)
-                    augmented_labels.append(label)
-                    syn_count += 1
-            except Exception as e:
-                warnings.warn(f"⚠️ Error in synonym replacement: {e}")
-                continue
-    print(f"✅ Generated {syn_count} synonym replacement examples")
-    print(f"✅ Total augmented: {len(augmented_messages)} examples")
-    return augmented_messages, augmented_labels
-
-def load_data_from_kaggle():
-    df = kagglehub.load_dataset(
-        KaggleDatasetAdapter.PANDAS,
-        "victorhoward2/vietnamese-spam-post-in-social-network",
-        "vi_dataset.csv"
-    )
-    print(f"Successfully loaded Kaggle dataset with {len(df)} records")
-    return df
-
-def load_data_from_gdrive(file_id="1N7rk-kfnDFIGMeX0ROVTjKh71gcgx-7R"):
-    output_path = f"gdrive_dataset_{file_id}.csv"
-    gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
-    df_base = pd.read_csv(output_path)
-    
-    hard_spam_out = "hard_spam_generated_auto.csv"
-    hard_ham_out = "hard_ham_generated_auto.csv"
-    gen = HardExampleGenerator(output_path, alpha_spam=1.0, alpha_ham=0.2)
-    gen.generate_hard_spam(hard_spam_out)
-    gen.generate_hard_ham(hard_ham_out)
-
-    messages = df_base['Message'].tolist()
-    labels = df_base['Category'].tolist()
-    augmented_msgs, augmented_lbls = gen.generate_synonym_replacement(messages, labels, aug_ratio=0.2)
-
-    df_hard_spam = pd.read_csv(hard_spam_out)
-    df_hard_ham = pd.read_csv(hard_ham_out)
-
-    df_synonym = pd.DataFrame({"Category": augmented_lbls, "Message": augmented_msgs})
-    df_augmented = pd.concat([df_base, df_hard_spam, df_hard_ham, df_synonym], ignore_index=True)
-    print(f"✅ Tổng số mẫu sau augmentation: {df_augmented.shape[0]}")
-    
-    return df_augmented
-
-def preprocess_dataframe(df):
-    print("Preprocessing dataframe...")
-    text_column = None
-    label_column = None
-    text_candidates = ['message', 'text', 'content', 'email', 'post', 'comment', "texts_vi"]
-    for col in df.columns:
-        if col.lower() in text_candidates or 'text' in col.lower() or 'message' in col.lower():
-            text_column = col
-            break
-    if text_column is None: text_column = df.columns[0]
-
-    label_candidates = ['label', 'class', 'category', 'type']
-    for col in df.columns:
-        if col.lower() in label_candidates or 'label' in col.lower():
-            label_column = col
-            break
-    if label_column is None: label_column = df.columns[1] if len(df.columns) > 1 else df.columns[0]
-    
-    df[text_column] = df[text_column].astype(str).fillna('')
-    df = df[df[text_column].str.strip() != '']
-
-    df[label_column] = df[label_column].astype(str).str.lower()
-    label_mapping = {
-        '0': 'ham', '1': 'spam',
-        'ham': 'ham', 'spam': 'spam',
-        'normal': 'ham', 'spam': 'spam',
-        'legitimate': 'ham', 'phishing': 'spam',
-        'not_spam': 'ham', 'is_spam': 'spam'
-    }
-    df[label_column] = df[label_column].map(label_mapping).fillna(df[label_column])
-    label_counts = df[label_column].value_counts()
-    print(f"Label distribution: {label_counts.to_dict()}")
-
-    messages = df[text_column].tolist()
-    labels = df[label_column].tolist()
-    return messages, labels
-
-def load_dataset(source='kaggle'):
-    if source == 'kaggle':
-        df = load_data_from_kaggle()
-    elif source == 'gdrive':
-        df = load_data_from_gdrive()
-    else:
-        raise ValueError("Source must be 'kaggle' or 'gdrive'")
-    
-    if df is None:
-        raise Exception(f"Failed to load data from {source}")
-
-    return preprocess_dataframe(df)
-
-model_name = "intfloat/multilingual-e5-base"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModel.from_pretrained(model_name)
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = model.to(device)
-model.eval()
-
-def average_pool(last_hidden_states, attention_mask):
-    last_hidden = last_hidden_states.masked_fill(
-        ~attention_mask[..., None].bool(), 0.0
-    )
-    return last_hidden.sum(dim=1) / attention_mask.sum(dim=1)[..., None]
-
-def get_embeddings(texts, model, tokenizer, device, batch_size=32):
-    embeddings = []
-    for i in tqdm(range(0, len(texts), batch_size), desc="Generating embeddings"):
-        batch_texts = texts[i:i+batch_size]
-        batch_texts_with_prefix = [f"passage: {text}" for text in batch_texts]
-        batch_dict = tokenizer(batch_texts_with_prefix, max_length=512, padding=True, truncation=True, return_tensors="pt")
-        batch_dict = {k: v.to(device) for k, v in batch_dict.items()}
-
-        with torch.no_grad():
-            outputs = model(**batch_dict)
-            batch_embeddings = average_pool(outputs.last_hidden_state, batch_dict["attention_mask"])
-            batch_embeddings = F.normalize(batch_embeddings, p=2, dim=1)
-            embeddings.append(batch_embeddings.cpu().numpy())
-    return np.vstack(embeddings)
-
-def calculate_class_weights(labels):
-    label_counts = Counter(labels)
-    total_samples = len(labels)
-    num_classes = len(label_counts)
-
-    class_weights = {}
-    for label, count in label_counts.items():
-        class_weights[label] = total_samples / (num_classes * count)
-    return class_weights
-
-def compute_saliency_scores(query_text, model, tokenizer, device, index, train_metadata, k=10):
-    tokens = tokenizer.tokenize(query_text)
-    if len(tokens) <= 1: return np.array([1.0])
-
-    query_with_prefix = f"query: {query_text}"
-    batch_dict = tokenizer([query_with_prefix], max_length=512, padding=True, truncation=True, return_tensors="pt")
-    batch_dict = {k: v.to(device) for k, v in batch_dict.items()}
-
-    with torch.no_grad():
-        outputs = model(**batch_dict)
-        original_embedding = average_pool(outputs.last_hidden_state, batch_dict["attention_mask"])
-        original_embedding = F.normalize(original_embedding, p=2, dim=1)
-        original_embedding = original_embedding.cpu().numpy().astype("float32")
-
-    original_scores, original_indices = index.search(original_embedding, k)
-    original_spam_score = sum(s for s, idx in zip(original_scores[0], original_indices[0])
-                              if train_metadata[idx]["label"] == "spam")
-
-    saliencies = []
-    for i, token in enumerate(tokens):
-        token_mask = tokens.copy()
-        token_mask[i] = tokenizer.pad_token
-        masked_text = tokenizer.convert_tokens_to_string(token_mask)
-        masked_query = f"query: {masked_text}"
-        masked_batch_dict = tokenizer([masked_query], max_length=512, padding=True, truncation=True, return_tensors="pt")
-        masked_batch_dict = {k: v.to(device) for k, v in masked_batch_dict.items()}
-
-        with torch.no_grad():
-            outputs = model(**masked_batch_dict)
-            masked_embedding = average_pool(outputs.last_hidden_state, masked_batch_dict["attention_mask"])
-            masked_embedding = F.normalize(masked_embedding, p=2, dim=1)
-            masked_embedding = masked_embedding.cpu().numpy().astype("float32")
-
-        masked_scores, masked_indices = index.search(masked_embedding, k)
-        masked_spam_score = sum(s for s, idx in zip(masked_scores[0], masked_indices[0])
-                                if train_metadata[idx]["label"] == "spam")
-        saliency = original_spam_score - masked_spam_score
-        saliencies.append(saliency)
-
-    arr = np.array(saliencies)
-    if len(arr) > 1:
-        arr = (arr - arr.min()) / (np.ptp(arr) + 1e-12)
-    else:
-        arr = np.array([1.0])
-    return arr
-
-def classify_with_weighted_knn(query_text, model, tokenizer, device, index, train_metadata, class_weights, k=10, alpha=0.5, explain=False):
-    query_with_prefix = f"query: {query_text}"
-    batch_dict = tokenizer([query_with_prefix], max_length=512, padding=True, truncation=True, return_tensors="pt")
-    batch_dict = {k: v.to(device) for k, v in batch_dict.items()}
-    
-    with torch.no_grad():
-        outputs = model(**batch_dict)
-        query_embedding = average_pool(outputs.last_hidden_state, batch_dict["attention_mask"])
-        query_embedding = F.normalize(query_embedding, p=2, dim=1)
-        query_embedding = query_embedding.cpu().numpy().astype("float32")
-
-    scores, indices = index.search(query_embedding, k)
-    
-    saliency_scores, tokens = None, None
-    if explain:
-        saliency_scores = compute_saliency_scores(query_text, model, tokenizer, device, index, train_metadata, k)
-        saliency_weight = np.mean(saliency_scores)
-        tokens = tokenizer.tokenize(query_text)
-    else:
-        saliency_weight = 0.5
-    vote_scores = {"ham": 0.0, "spam": 0.0}
-    neighbor_info = []
-
-    for i in range(k):
-        neighbor_idx = indices[0][i]
-        similarity = float(scores[0][i])
-        neighbor_label = train_metadata[neighbor_idx]["label"]
-        neighbor_message = train_metadata[neighbor_idx]["message"]
-        
-        weight = (1 - alpha) * similarity * class_weights[neighbor_label] + alpha * saliency_weight
-        vote_scores[neighbor_label] += weight
-        
-        neighbor_info.append({
-            "score": similarity,
-            "weight": weight,
-            "label": neighbor_label,
-            "message": neighbor_message
-        })
-
-    predicted_label = max(vote_scores, key=vote_scores.get)
-
-    result = {
-        "prediction": predicted_label,
-        "vote_scores": vote_scores,
-        "neighbors": neighbor_info,
-        "saliency_weight": saliency_weight,
-        "alpha": alpha
-    }
-
-    if explain:
-        result["tokens"] = tokens
-        result["saliency_scores"] = saliency_scores
-
-    return result
-
-def optimize_alpha_parameter(test_embeddings, test_labels, test_metadata, index, train_metadata, class_weights, k=10):
-    print("Optimizing alpha parameter...")
-    alpha_values = np.arange(0.0, 1.1, 0.1)
-    best_alpha = 0.0
-    best_accuracy = 0.0
-    alpha_results = []
-    
-    for alpha in tqdm(alpha_values, desc="Testing alpha values"):
-        correct = 0
-        total = len(test_embeddings)
-        
-        for i in range(total):
-            query_text = test_metadata[i]["message"]
-            true_label = test_metadata[i]["label"]
-            
-            result = classify_with_weighted_knn(
-                query_text, model, tokenizer, device, index, train_metadata,
-                class_weights, k=k, alpha=alpha, explain=False
-            )
-            
-            if result["prediction"] == true_label:
-                correct += 1
-        
-        accuracy = correct / total
-        alpha_results.append((alpha, accuracy))
-        
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
-            best_alpha = alpha
-        
-        print(f"Alpha: {alpha:.1f}, Accuracy: {accuracy:.4f}")
-
-    print(f"\nBest alpha: {best_alpha:.1f} with accuracy: {best_accuracy:.4f}")
-    return best_alpha, alpha_results
-
-def classify_spam_subcategory(spam_texts, model, tokenizer, device):
-    if not spam_texts: return []
-    
-    reference_texts = {
-        'spam_quangcao': "khuyến mãi giảm giá sale ưu đãi mua ngay giá rẻ miễn phí quà tặng voucher coupon giải thưởng trúng thưởng cơ hội trúng promotional discount sale offer prize win money gift free deal bargain cheap special limited",
-        'spam_hethong': "thông báo cảnh báo tài khoản bảo mật xác nhận cập nhật hệ thống đăng nhập mật khẩu bị khóa hết hạn gia hạn notification alert account security confirm update system login password locked expired renewal verify suspended warning"
-    }
-
-    reference_embeddings = {}
-    for category, ref_text in reference_texts.items():
-        ref_emb = get_embeddings([ref_text], model, tokenizer, device)[0]
-        reference_embeddings[category] = ref_emb
-
-    spam_embeddings = get_embeddings(spam_texts, model, tokenizer, device)
-    
-    subcategories = []
-    for i, (text, text_embedding) in enumerate(zip(spam_texts, spam_embeddings)):
-        bert_scores = {}
-        for category, ref_emb in reference_embeddings.items():
-            similarity = np.dot(text_embedding, ref_emb) / (np.linalg.norm(text_embedding) * np.linalg.norm(ref_emb))
-            bert_scores[category] = similarity
-
-        if max(bert_scores.values()) < 0.3:
-            best_category = 'spam_khac'
+    def load_dataset(self, source='kaggle', file_id=None):
+        """Load dataset from Kaggle or Google Drive"""
+        if source == 'kaggle':
+            return self._load_data_from_kaggle()
+        elif source == 'gdrive':
+            if file_id is None:
+                file_id = "1N7rk-kfnDFIGMeX0ROVTjKh71gcgx-7R"
+            return self._load_data_from_gdrive(file_id)
         else:
-            best_category = max(bert_scores, key=bert_scores.get)
-        subcategories.append(best_category)
-    return subcategories
-
-def run_enhanced_pipeline(messages, labels, test_size=0.2, use_augmentation=True):
-    print("=== Enhanced Spam Classification Pipeline ===")
-    le = LabelEncoder()
-    y = le.fit_transform(labels)
+            raise ValueError("Source must be 'kaggle' or 'gdrive'")
     
-    if use_augmentation:
-        try:
-            augmented_messages, augmented_labels = augment_dataset(messages, labels)
-            if augmented_messages:
-                original_count = len(messages)
-                messages = messages + augmented_messages
-                labels = labels + augmented_labels
-                print(f"📈 Dataset size: {original_count} → {len(messages)} (+{len(augmented_messages)})")
-                y = le.fit_transform(labels)
+    def _load_data_from_kaggle(self):
+        """Load Vietnamese spam dataset from Kaggle"""
+        df = kagglehub.load_dataset(
+            KaggleDatasetAdapter.PANDAS,
+            "victorhoward2/vietnamese-spam-post-in-social-network",
+            "vi_dataset.csv"
+        )
+        return self._preprocess_dataframe(df)
+    
+    def _load_data_from_gdrive(self, file_id):
+        """Load dataset from Google Drive"""
+        output_path = f"gdrive_dataset_{file_id}.csv"
+        gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
+        df = pd.read_csv(output_path)
+        return self._preprocess_dataframe(df)
+    
+    def _preprocess_dataframe(self, df):
+        """Preprocess the loaded dataframe to extract messages and labels"""
+        # Try to identify text and label columns
+        text_column = None
+        label_column = None
+        
+        # Common text column names
+        text_candidates = ['message', 'text', 'content', 'email', 'post', 'comment', "texts_vi"]
+        for col in df.columns:
+            if col.lower() in text_candidates or 'text' in col.lower() or 'message' in col.lower():
+                text_column = col
+                break
+        
+        # Common label column names
+        label_candidates = ['label', 'class', 'category', 'type']
+        for col in df.columns:
+            if col.lower() in label_candidates or 'label' in col.lower():
+                label_column = col
+                break
+        
+        # If not found, use first two columns
+        if text_column is None:
+            text_column = df.columns[0]
+        if label_column is None:
+            label_column = df.columns[1] if len(df.columns) > 1 else df.columns[0]
+        
+        # Clean text data
+        df[text_column] = df[text_column].astype(str).fillna('')
+        df = df[df[text_column].str.strip() != '']
+        
+        # Clean labels - convert to ham/spam format
+        df[label_column] = df[label_column].astype(str).str.lower()
+        
+        # Map various label formats to ham/spam
+        label_mapping = {
+            '0': 'ham', '1': 'spam',
+            'ham': 'ham', 'spam': 'spam',
+            'normal': 'ham', 'spam': 'spam',
+            'legitimate': 'ham', 'phishing': 'spam',
+            'not_spam': 'ham', 'is_spam': 'spam'
+        }
+        
+        df[label_column] = df[label_column].map(label_mapping).fillna(df[label_column])
+        
+        messages = df[text_column].tolist()
+        labels = df[label_column].tolist()
+        
+        return messages, labels
+    
+    def _average_pool(self, last_hidden_states, attention_mask):
+        """Average pooling for embeddings"""
+        last_hidden = last_hidden_states.masked_fill(
+            ~attention_mask[..., None].bool(), 0.0
+        )
+        return last_hidden.sum(dim=1) / attention_mask.sum(dim=1)[..., None]
+    
+    def get_embeddings(self, texts, batch_size=32):
+        """Generate embeddings for texts"""
+        self._load_model()
+        embeddings = []
+        
+        for i in tqdm(range(0, len(texts), batch_size), desc="Generating embeddings"):
+            batch_texts = texts[i:i+batch_size]
+            batch_texts_with_prefix = [f"passage: {text}" for text in batch_texts]
+            
+            batch_dict = self.tokenizer(
+                batch_texts_with_prefix, 
+                max_length=512, 
+                padding=True, 
+                truncation=True, 
+                return_tensors="pt"
+            )
+            batch_dict = {k: v.to(self.device) for k, v in batch_dict.items()}
+            
+            with torch.no_grad():
+                outputs = self.model(**batch_dict)
+                batch_embeddings = self._average_pool(
+                    outputs.last_hidden_state, 
+                    batch_dict["attention_mask"]
+                )
+                batch_embeddings = F.normalize(batch_embeddings, p=2, dim=1)
+                embeddings.append(batch_embeddings.cpu().numpy())
+        
+        return np.vstack(embeddings)
+    
+    def _calculate_class_weights(self, labels):
+        """Calculate class weights for handling imbalanced data"""
+        label_counts = Counter(labels)
+        total_samples = len(labels)
+        num_classes = len(label_counts)
+        
+        class_weights = {}
+        for label, count in label_counts.items():
+            class_weights[label] = total_samples / (num_classes * count)
+        
+        return class_weights
+    
+    def _optimize_alpha_parameter(self, test_embeddings, test_metadata, k=10):
+        """Find optimal alpha value for best accuracy"""
+        alpha_values = np.arange(0.0, 1.1, 0.1)
+        best_alpha = 0.0
+        best_accuracy = 0.0
+        
+        for alpha in alpha_values:
+            correct = 0
+            total = len(test_embeddings)
+            
+            for i in range(total):
+                query_embedding = test_embeddings[i:i+1].astype("float32")
+                true_label = test_metadata[i]["label"]
+                query_text = test_metadata[i]["message"]
+                
+                result = self._classify_with_weighted_knn(
+                    query_text, query_embedding, k=k, alpha=alpha, explain=False
+                )
+                
+                if result["prediction"] == true_label:
+                    correct += 1
+            
+            accuracy = correct / total
+            if accuracy > best_accuracy:
+                best_accuracy = accuracy
+                best_alpha = alpha
+        
+        return best_alpha
+    
+    def _compute_quick_saliency(self, text):
+        """Enhanced saliency computation for subtle spam detection"""
+        words = text.lower().split()
+        text_lower = text.lower()
+        
+        basic_spam_keywords = [
+            'free', 'click', 'urgent', 'limited', 'offer', 'discount', 'sale', 'win', 'prize',
+            'money', 'cash', 'earn', 'guaranteed', 'act now', 'call now', 'congratulations',
+            'miễn phí', 'khuyến mãi', 'giảm giá', 'ưu đãi', 'thắng', 'giải thưởng', 'tiền',
+            'kiếm tiền', 'đảm bảo', 'hành động ngay', 'chúc mừng', 'cơ hội', 'quà tặng'
+        ]
+        
+        social_engineering_keywords = [
+            'mom', 'boss', 'hr', 'manager', 'security update', 'unusual login',
+            'hospital bill', 'emergency', 'help buy', 'reimburse', 'gift cards',
+            'mẹ', 'sếp', 'nhân sự', 'cập nhật bảo mật', 'đăng nhập bất thường',
+            'viện phí', 'khẩn cấp', 'giúp mua', 'hoàn tiền'
+        ]
+        
+        urgency_patterns = [
+            'today', 'tomorrow', 'this week', 'before friday', 'reply yes',
+            'hôm nay', 'ngày mai', 'tuần này', 'trước thứ sáu', 'trả lời có'
+        ]
+        
+        money_patterns = [
+            r'\$\d+', r'\d+\$', r'\d+\s*dollar', r'\d+\s*usd',
+            r'\d+\s*triệu', r'\d+\s*nghìn', r'\d+\s*đồng'
+        ]
+        
+        # Calculate scores
+        basic_spam_score = sum(1 for word in words if any(keyword in word for keyword in basic_spam_keywords))
+        social_eng_score = sum(2 for keyword in social_engineering_keywords if keyword in text_lower)
+        urgency_score = sum(1.5 for pattern in urgency_patterns if pattern in text_lower)
+        
+        # Money pattern detection
+        money_score = 0
+        for pattern in money_patterns:
+            if re.search(pattern, text_lower):
+                money_score += 2
+        
+        # Combined saliency score
+        total_score = (basic_spam_score + social_eng_score + urgency_score + money_score)
+        saliency = min(1.0, max(0.1, total_score / max(len(words), 1) + 0.2))
+        
+        return saliency
+    
+    def _compute_saliency_scores(self, query_text, k=10):
+        """Compute saliency scores for explainability"""
+        self._load_model()
+        tokens = self.tokenizer.tokenize(query_text)
+        
+        if len(tokens) <= 1:
+            return np.array([1.0])
+        
+        # Get original embedding and spam score
+        query_with_prefix = f"query: {query_text}"
+        batch_dict = self.tokenizer([query_with_prefix], max_length=512, padding=True, truncation=True, return_tensors="pt")
+        batch_dict = {k: v.to(self.device) for k, v in batch_dict.items()}
+        
+        with torch.no_grad():
+            outputs = self.model(**batch_dict)
+            original_embedding = self._average_pool(outputs.last_hidden_state, batch_dict["attention_mask"])
+            original_embedding = F.normalize(original_embedding, p=2, dim=1)
+            original_embedding = original_embedding.cpu().numpy().astype("float32")
+        
+        original_scores, original_indices = self.index.search(original_embedding, k)
+        original_spam_score = sum(s for s, idx in zip(original_scores[0], original_indices[0])
+                                 if self.train_metadata[idx]["label"] == "spam")
+        
+        saliencies = []
+        
+        # Compute saliency for each token
+        for i, token in enumerate(tokens):
+            token_mask = tokens.copy()
+            token_mask[i] = self.tokenizer.pad_token
+            masked_text = self.tokenizer.convert_tokens_to_string(token_mask)
+            
+            masked_query = f"query: {masked_text}"
+            masked_batch_dict = self.tokenizer([masked_query], max_length=512, padding=True, truncation=True, return_tensors="pt")
+            masked_batch_dict = {k: v.to(self.device) for k, v in masked_batch_dict.items()}
+            
+            with torch.no_grad():
+                outputs = self.model(**masked_batch_dict)
+                masked_embedding = self._average_pool(outputs.last_hidden_state, masked_batch_dict["attention_mask"])
+                masked_embedding = F.normalize(masked_embedding, p=2, dim=1)
+                masked_embedding = masked_embedding.cpu().numpy().astype("float32")
+            
+            masked_scores, masked_indices = self.index.search(masked_embedding, k)
+            masked_spam_score = sum(s for s, idx in zip(masked_scores[0], masked_indices[0])
+                                   if self.train_metadata[idx]["label"] == "spam")
+            
+            saliency = original_spam_score - masked_spam_score
+            saliencies.append(saliency)
+        
+        # Normalize saliencies
+        arr = np.array(saliencies)
+        if len(arr) > 1:
+            arr = (arr - arr.min()) / (np.ptp(arr) + 1e-12)
+        else:
+            arr = np.array([1.0])
+        
+        return arr
+    
+    def _classify_with_weighted_knn(self, query_text, query_embedding=None, k=10, alpha=0.5, explain=False):
+        """Enhanced KNN classification with custom weighting formula"""
+        self._load_model()
+        
+        # Get query embedding if not provided
+        if query_embedding is None:
+            query_with_prefix = f"query: {query_text}"
+            batch_dict = self.tokenizer([query_with_prefix], max_length=512, padding=True, truncation=True, return_tensors="pt")
+            batch_dict = {k: v.to(self.device) for k, v in batch_dict.items()}
+            
+            with torch.no_grad():
+                outputs = self.model(**batch_dict)
+                query_embedding = self._average_pool(outputs.last_hidden_state, batch_dict["attention_mask"])
+                query_embedding = F.normalize(query_embedding, p=2, dim=1)
+                query_embedding = query_embedding.cpu().numpy().astype("float32")
+        
+        # Get nearest neighbors
+        scores, indices = self.index.search(query_embedding, k)
+        
+        # Compute saliency weight
+        if explain:
+            saliency_scores = self._compute_saliency_scores(query_text, k)
+            saliency_weight = np.mean(saliency_scores)
+            tokens = self.tokenizer.tokenize(query_text)
+        else:
+            saliency_weight = self._compute_quick_saliency(query_text)
+            saliency_scores = None
+            tokens = None
+        
+        # Calculate weighted votes
+        vote_scores = {"ham": 0.0, "spam": 0.0}
+        neighbor_info = []
+        
+        for i in range(k):
+            neighbor_idx = indices[0][i]
+            similarity = float(scores[0][i])
+            neighbor_label = self.train_metadata[neighbor_idx]["label"]
+            neighbor_message = self.train_metadata[neighbor_idx]["message"]
+            
+            # Apply custom weighting formula
+            weight = (1 - alpha) * similarity * self.class_weights[neighbor_label] + alpha * saliency_weight
+            vote_scores[neighbor_label] += weight
+            
+            neighbor_info.append({
+                "score": similarity,
+                "weight": weight,
+                "label": neighbor_label,
+                "message": neighbor_message[:100] + "..." if len(neighbor_message) > 100 else neighbor_message
+            })
+        
+        # Get prediction
+        predicted_label = max(vote_scores, key=vote_scores.get)
+        
+        result = {
+            "prediction": predicted_label,
+            "vote_scores": vote_scores,
+            "neighbors": neighbor_info,
+            "saliency_weight": saliency_weight,
+            "alpha": alpha
+        }
+        
+        if explain:
+            result["tokens"] = tokens
+            result["saliency_scores"] = saliency_scores
+        
+        return result
+    
+    def _classify_spam_subcategory(self, spam_texts):
+        """Classify spam into subcategories"""
+        if not spam_texts:
+            return []
+        
+        subcategories = []
+        
+        # Define category keywords
+        category_keywords = {
+            'spam_quangcao': [
+                'khuyến mãi', 'giảm giá', 'sale', 'ưu đãi', 'mua ngay', 'giá rẻ', 'miễn phí',
+                'quà tặng', 'voucher', 'coupon', 'giải thưởng', 'trúng thưởng', 'cơ hội', 'trúng',
+                'discount', 'sale', 'offer', 'promotion', 'free', 'deal', 'buy now', 'limited time',
+                'special offer', 'bargain', 'cheap', 'save money', 'win', 'prize', 'gift', 'won',
+                'congratulations', 'claim', 'click here', '$', 'money', 'cash'
+            ],
+            'spam_hethong': [
+                'thông báo', 'cảnh báo', 'tài khoản', 'bảo mật', 'xác nhận', 'cập nhật',
+                'hệ thống', 'đăng nhập', 'mật khẩu', 'bị khóa', 'hết hạn', 'gia hạn', 'khóa',
+                'notification', 'alert', 'account', 'security', 'confirm', 'update',
+                'system', 'login', 'password', 'locked', 'expired', 'renewal', 'verify',
+                'suspended', 'warning', 'breach', 'urgent', 'immediately'
+            ]
+        }
+        
+        for text in spam_texts:
+            text_lower = text.lower()
+            
+            # Score each category
+            category_scores = {}
+            for category, keywords in category_keywords.items():
+                score = sum(1 for keyword in keywords if keyword in text_lower)
+                category_scores[category] = score
+            
+            # Classify based on highest score
+            if max(category_scores.values()) == 0:
+                subcategories.append('spam_khac')
             else:
-                print("ℹ️ No augmented data generated")
-        except Exception as e:
-            print(f"⚠️ Augmentation failed: {e}")
-            print("ℹ️ Continuing with original data...")
-    else:
-        print("ℹ️ Data augmentation disabled")
-
-    print("Generating embeddings...")
-    X_embeddings = get_embeddings(messages, model, tokenizer, device)
+                best_category = max(category_scores, key=category_scores.get)
+                subcategories.append(best_category)
+        
+        return subcategories
     
-    metadata = [{"index": i, "message": message, "label": label, "label_encoded": y[i]}
-                for i, (message, label) in enumerate(zip(messages, labels))]
-
-    X_train_emb, X_test_emb, train_metadata, test_metadata = train_test_split(
-        X_embeddings, metadata, test_size=test_size, random_state=42,
-        stratify=[m["label"] for m in metadata]
-    )
-
-    print("Creating FAISS index...")
-    dimension = X_train_emb.shape[1]
-    index = faiss.IndexFlatIP(dimension)
-    index.add(X_train_emb.astype("float32"))
-
-    train_labels = [m["label"] for m in train_metadata]
-    class_weights = calculate_class_weights(train_labels)
+    def train(self, messages, labels, test_size=0.2, progress_callback=None):
+        """Train the spam classification model"""
+        if progress_callback:
+            progress_callback(0.1, "Initializing model...")
+        
+        self._load_model()
+        
+        # Prepare data
+        le = LabelEncoder()
+        y = le.fit_transform(labels)
+        
+        if progress_callback:
+            progress_callback(0.2, "Generating embeddings...")
+        
+        # Generate embeddings
+        X_embeddings = self.get_embeddings(messages)
+        
+        # Create metadata
+        metadata = [{"index": i, "message": message, "label": label, "label_encoded": y[i]}
+                    for i, (message, label) in enumerate(zip(messages, labels))]
+        
+        if progress_callback:
+            progress_callback(0.5, "Splitting data...")
+        
+        # Train-test split
+        X_train_emb, X_test_emb, train_metadata, test_metadata = train_test_split(
+            X_embeddings, metadata, test_size=test_size, random_state=42,
+            stratify=[m["label"] for m in metadata]
+        )
+        
+        if progress_callback:
+            progress_callback(0.6, "Creating FAISS index...")
+        
+        # Create FAISS index
+        dimension = X_train_emb.shape[1]
+        self.index = faiss.IndexFlatIP(dimension)
+        self.index.add(X_train_emb.astype("float32"))
+        
+        # Store training metadata
+        self.train_metadata = train_metadata
+        
+        if progress_callback:
+            progress_callback(0.7, "Calculating class weights...")
+        
+        # Calculate class weights
+        train_labels = [m["label"] for m in train_metadata]
+        self.class_weights = self._calculate_class_weights(train_labels)
+        
+        if progress_callback:
+            progress_callback(0.8, "Optimizing parameters...")
+        
+        # Optimize alpha parameter
+        self.best_alpha = self._optimize_alpha_parameter(X_test_emb, test_metadata)
+        
+        if progress_callback:
+            progress_callback(0.9, "Evaluating model...")
+        
+        # Final evaluation
+        accuracy_results = self._evaluate_accuracy(X_test_emb, test_metadata)
+        
+        # Store model info
+        self.model_info = {
+            'dataset_size': len(messages),
+            'model_name': self.model_name,
+            'best_alpha': self.best_alpha,
+            'training_date': datetime.now().isoformat(),
+            'accuracy_results': accuracy_results
+        }
+        
+        if progress_callback:
+            progress_callback(1.0, "Training completed!")
+        
+        return {
+            'best_alpha': self.best_alpha,
+            'accuracy_results': accuracy_results,
+            'class_weights': self.class_weights
+        }
     
-    test_labels = [m["label"] for m in test_metadata]
-    best_alpha, alpha_results = optimize_alpha_parameter(
-        X_test_emb, test_labels, test_metadata, index, train_metadata, class_weights
-    )
-
-    print(f"✅ Training complete. Best alpha: {best_alpha:.1f}")
-
-    return {
-        "index": index,
-        "train_metadata": train_metadata,
-        "class_weights": class_weights,
-        "best_alpha": best_alpha
-    }
-
-def enhanced_spam_classifier_pipeline(user_input, index, train_metadata, class_weights, best_alpha, k=5, explain=False):
-    print(f'\n***Classifying: "{user_input}"')
-    print(f"***Using alpha={best_alpha:.1f}, k={k}")
+    def _evaluate_accuracy(self, test_embeddings, test_metadata, k_values=[1, 3, 5]):
+        """Evaluate accuracy using weighted KNN classification"""
+        results = {}
+        
+        for k in k_values:
+            correct = 0
+            total = len(test_embeddings)
+            
+            for i in range(total):
+                query_text = test_metadata[i]["message"]
+                true_label = test_metadata[i]["label"]
+                query_embedding = test_embeddings[i:i+1].astype("float32")
+                
+                result = self._classify_with_weighted_knn(
+                    query_text, query_embedding, k=k, alpha=self.best_alpha, explain=False
+                )
+                
+                if result["prediction"] == true_label:
+                    correct += 1
+            
+            accuracy = correct / total
+            results[k] = accuracy
+        
+        return results
     
-    result = classify_with_weighted_knn(
-        user_input, model, tokenizer, device, index, train_metadata,
-        class_weights, k=k, alpha=best_alpha, explain=explain
-    )
-
-    prediction = result["prediction"]
-    vote_scores = result["vote_scores"]
+    def classify_message(self, message, k=5, explain=False):
+        """Classify a single message"""
+        if not self.model or not self.index:
+            raise ValueError("Model not trained. Please train the model first.")
+        
+        # Get prediction
+        result = self._classify_with_weighted_knn(
+            message, k=k, alpha=self.best_alpha, explain=explain
+        )
+        
+        # If spam, classify subcategory
+        if result["prediction"] == "spam":
+            subcategories = self._classify_spam_subcategory([message])
+            result["subcategory"] = subcategories[0] if subcategories else "spam_khac"
+        
+        return result
     
-    subcategory = None
-    if prediction == "spam":
-        subcategories = classify_spam_subcategory([user_input], model, tokenizer, device)
-        subcategory = subcategories[0] if subcategories else "spam_khac"
+    def save_to_files(self):
+        """Save model artifacts to files"""
+        # Save FAISS index
+        faiss.write_index(self.index, "faiss_index.bin")
+        
+        # Save metadata and weights
+        with open("train_metadata.json", "w", encoding="utf-8") as f:
+            json.dump(self.train_metadata, f, ensure_ascii=False, indent=2)
+        
+        with open("class_weights.json", "w", encoding="utf-8") as f:
+            json.dump(self.class_weights, f, indent=2)
+        
+        with open("model_config.json", "w", encoding="utf-8") as f:
+            config = {
+                'model_name': self.model_name,
+                'best_alpha': self.best_alpha,
+                'model_info': self.model_info
+            }
+            json.dump(config, f, indent=2)
+        
+        # Save other artifacts
+        artifacts = {
+            'tokenizer': self.tokenizer,
+            'device': str(self.device)
+        }
+        
+        with open("model_artifacts.pkl", "wb") as f:
+            pickle.dump(artifacts, f)
     
-    final_result = {
-        "prediction": prediction,
-        "subcategory": subcategory,
-        "vote_scores": vote_scores,
-        "neighbors": result["neighbors"],
-        "saliency_weight": result["saliency_weight"],
-        "alpha": best_alpha
-    }
-
-    if explain and result.get("tokens") is not None:
-        final_result["tokens"] = result["tokens"]
-        final_result["saliency_scores"] = result["saliency_scores"]
-
-    return final_result
-
-if __name__ == '__main__':
-    print("This script is a module and should be imported by app.py.")
+    @classmethod
+    def load_from_files(cls):
+        """Load model from saved files"""
+        # Load config
+        with open("model_config.json", "r") as f:
+            config = json.load(f)
+        
+        # Create instance
+        classifier = cls(config['model_name'])
+        classifier.best_alpha = config['best_alpha']
+        classifier.model_info = config['model_info']
+        
+        # Load model components
+        classifier._load_model()
+        
+        # Load FAISS index
+        classifier.index = faiss.read_index("faiss_index.bin")
+        
+        # Load metadata and weights
+        with open("train_metadata.json", "r", encoding="utf-8") as f:
+            classifier.train_metadata = json.load(f)
+        
+        with open("class_weights.json", "r") as f:
+            classifier.class_weights = json.load(f)
+        
+        return classifier
