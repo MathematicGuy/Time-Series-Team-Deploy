@@ -31,7 +31,7 @@ Vì một số hạn chế khi deploy lên Streamlit Cloud nên có thể sẽ x
 
 ### 🧪 File Source Code: 
 [Code_Streamlit] (https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/feature_spamdetector)  
-[Google_Colab](https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)  
+[Google_Colab] (https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing)  
 
 ### 👉 Đối Tượng Người Dùng  
 - **Người dùng cá nhân**: Kiểm tra tin nhắn hoặc email đáng ngờ để bảo vệ thông tin cá nhân.  
