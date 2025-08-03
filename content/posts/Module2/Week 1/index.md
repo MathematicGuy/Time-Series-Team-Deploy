@@ -12,7 +12,7 @@ draft: false
 
 🎉 **Chào mừng đến với blog Tuần 1 của team Time Series – Module 2!**
 
-Tuần đầu tiên của Module 2 đã khởi động mạnh mẽ với những kiến thức nền tảng không thể thiếu cho hành trình học AI. Từ việc làm quen với **Numpy** để xử lý và biểu diễn dữ liệu, đến những bước đầu khám phá **MongoDB** và tư duy giải quyết vấn đề bằng logic – tất cả đều hướng tới việc xây dựng nền móng vững chắc cho các ứng dụng AI thực tiễn trong tương lai.
+Tuần đầu tiên của Module 2 đã khởi động mạnh mẽ với những kiến thức nền tảng không thể thiếu cho hành trình học AI. Từ việc làm quen với **Numpy** để xử lý và biểu diễn dữ liệu, đến những bước đầu khám phá **MongoDB** và tư duy giải quyết vấn đề bằng logic – tất cả đều hướng tới việc xây dựng nền móng vững chắc cho các ứng dụng AI thực tiễn trong tương lai. Bạn nhớ xem chi tiết ở tài liệu đính kèm nhé!
 
 ---
 

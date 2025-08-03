@@ -13,7 +13,7 @@ draft: false
 
 🎉 **Chào mừng đến với blog Tuần 3 của team Time Series!**
 
-Tuần học thứ 3 đã tiếp tục
+Tuần học thứ 3 đã tiếp tục! Tuần học này tụi mình tập trung vào nội dung liên quan đến Thống Kê, Ứng dụng Correlation và NoSQL. Bạn hãy xem qua nội dung tổng quan trước khi đi vào kiến thức mở rộng và kiến thức chi tiết ở tài liệu đính kèm bên dưới nhé!
 
 ---
 

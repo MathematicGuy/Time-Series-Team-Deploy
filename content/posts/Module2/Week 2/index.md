@@ -1,6 +1,6 @@
 ---
 title: "Module 2 - Tuần 2: Xác Suất, Cơ Sở Dữ Liệu và Những Pha Bayes “Khét Lẹt”!"
-date: 2025-06-28T13:03:07+07:00
+date: 2025-07-10T13:03:07+07:00
 # slug: /module-2-tuan-4/
 description: Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về Xác Suất
 image: images/desktop-wallpaper-space-and-earth-nasa-widescreen-united-states-horizon-from-space-nasa.jpg
@@ -13,7 +13,7 @@ draft: false
 
 🎉 **Chào mừng đến với blog Tuần 2 của team Time Series!**
 
-Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về **Xác Suất** – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong **MongoDB** và thuật toán **Naive Bayes Classifier**. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!
+Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về **Xác Suất** – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong **MongoDB** và thuật toán **Naive Bayes Classifier**. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé! Bạn nhớ xem chi tiết kiến thức bao gồm kiến thức mở rộng của từng lớp học ở tài liệu đính kèm nhé!
 
 ---
 
