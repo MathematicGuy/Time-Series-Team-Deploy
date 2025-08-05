@@ -335,7 +335,11 @@ def main():
                     with col2:
                         st.metric("Spam Score", f"{vote_scores['spam']:.3f}")
                     with col3:
-                        confidence = max(vote_scores.values()) / sum(vote_scores.values())
+                        total_votes = sum(vote_scores.values())
+                        if total_votes > 0:
+                            confidence = max(vote_scores.values()) / total_votes
+                        else:
+                            confidence = 0.0
                         st.metric("Confidence", f"{confidence:.1%}")
                     
                     # Explainability section
