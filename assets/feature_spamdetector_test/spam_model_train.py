@@ -781,7 +781,6 @@ def load_data_from_gdrive(file_id="1N7rk-kfnDFIGMeX0ROVTjKh71gcgx-7R"):
     return df_augmented
 
 """## Prepare Data"""
-
 def preprocess_dataframe(df):
     """Preprocess the loaded dataframe to extract messages and labels"""
     print("Preprocessing dataframe...")
