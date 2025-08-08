@@ -7,9 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ
 """
 
-!pip install faiss-cpu
-
-!pip install flaml kagglehub pandas scikit-learn
 
 import pandas as pd
 import numpy as np
@@ -30,6 +27,9 @@ import warnings
 import gdown
 import kagglehub
 from kagglehub import KaggleDatasetAdapter
+from pathlib import Path
+
+
 warnings.filterwarnings('ignore')
 
 """## Data Augmentation"""
@@ -867,9 +867,16 @@ def load_dataset(source='kaggle', file_id=None):
 
 """## Embedding model"""
 
+token_path = Path("./tokens/hugging_face_token.txt")
+if token_path.exists():
+	with token_path.open("r") as f:
+		hf_token = f.read().strip()
+else:
+	hf_token = None
+
 model_name = "intfloat/multilingual-e5-base"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModel.from_pretrained(model_name)
+model = AutoModel.from_pretrained(model_name, token=hf_token)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)

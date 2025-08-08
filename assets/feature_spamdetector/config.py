@@ -111,10 +111,10 @@ def get_config(section, key=None, default=None):
     """Get configuration value"""
     if section not in CONFIG:
         return default
-    
+
     if key is None:
         return CONFIG[section]
-    
+
     return CONFIG[section].get(key, default)
 
 def update_config(section, key, value):
