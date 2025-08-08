@@ -71,6 +71,8 @@ def initialize_session_state():
         st.session_state.training_progress = 0
     if 'training_status' not in st.session_state:
         st.session_state.training_status = ""
+    if 'current_language' not in st.session_state:
+        st.session_state.current_language = None
 
 def render_saliency_heatmap(tokens, saliency_scores):
     """Render saliency heatmap using Plotly"""
@@ -100,17 +102,19 @@ def render_saliency_heatmap(tokens, saliency_scores):
 
 def load_trained_model(language):
     """Load pre-trained model artifacts if they exist"""
-    folder_path = "model_resources/en" if language == 'English' else "model_resources/vi"
+    model_resource_path = model_language_code(language) # model_resources/vi or model_resources/en
 
     model_files = [
-        f'{folder_path}/model_artifacts.pkl',
-        f'{folder_path}/faiss_index.bin',
-        f'{folder_path}/train_metadata.json',
-        f'{folder_path}/class_weights.json',
-        f'{folder_path}/model_config.json'
+        f'{model_resource_path}/model_artifacts.pkl',
+        f'{model_resource_path}/faiss_index.bin',
+        f'{model_resource_path}/train_metadata.json',
+        f'{model_resource_path}/class_weights.json',
+        f'{model_resource_path}/model_config.json'
     ]
+    print(model_files)
 
-    classifier = SpamClassifier() # initialize SpamClassifier class from spam_model.py to use .load_from_files function
+
+    classifier = SpamClassifier(classification_language=model_resource_path) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
 
     if all(os.path.exists(f) for f in model_files):
         try:
@@ -151,9 +155,6 @@ def train_model_callback(classification_language):
             )
         )
 
-        status_text.text("Saving model artifacts...")
-        progress_bar.progress(95)
-
         # Save model artifacts
         classifier.save_to_files()
 
@@ -182,6 +183,31 @@ def train_model_callback(classification_language):
         st.error(f"Training failed: {str(e)}")
         return False
 
+
+def reset_to_welcome():
+    """Reset session state to show the Welcome screen."""
+    st.session_state.model_trained = False
+    st.session_state.current_language = None
+    st.session_state.classifier = None
+
+def model_language_code(classification_language):
+    match classification_language:
+        case 'English':
+            return 'en'
+        case 'Vietnamese':
+            return 'vi'
+        case _:
+            return 'None'
+
+def check_model_ready(model_path):
+    #? Check if Embedding Model is train or not
+    if os.path.isfile(model_path):
+        print("Trained True")
+        st.session_state.model_trained = True
+    else:
+        print(f'Trained False')
+        st.session_state.model_trained = False
+
 def main():
     """Main Streamlit application"""
     initialize_session_state()
@@ -196,40 +222,52 @@ def main():
 
     # Sidebar
     with st.sidebar:
-        st.header("⚙️ Configuration")
-
         # Language selection
         classification_language = st.selectbox(
             "Select Language",
-            ["Vietnamese", "English"],
+            ["None", "Vietnamese", "English"],
             help="Vietnamese: Loads Kaggle dataset\nEnglish: Loads Google Drive dataset"
         )
         st.write(f"**Selected Language:** {classification_language}")
 
         st.markdown("---")
 
-        # Model status
+        model_path = f"model_resources/{model_language_code(classification_language)}/model_config.json"
+        print(model_path)
+
+        # check model trained or not, if trained st.session_state.model_trained = True else False
+        check_model_ready(model_path)
+
         st.subheader("📊 Model Status")
         if st.session_state.model_trained:
-            st.success("✅ Model Ready")
+            #? Update Embedding model each time a new language get chosen
+            if st.session_state.current_language != classification_language:
+                st.session_state.current_language = classification_language
+                print('current_languages:', st.session_state.current_language)
+
+                with st.spinner(f"Loading {classification_language} model..."): # add loading icon when function still running
+                    if load_trained_model(language=classification_language):
+                        st.success("Model Ready !")
+
+                with open(model_path, 'r', encoding='utf-8') as f:
+                    train_result = json.load(f)
+                    model_info = train_result['model_info']
+
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Dataset Size", model_info['dataset_size'])
+                with col2:
+                    st.metric("Best Alpha", f"{model_info['best_alpha']:.2f}")
+                with col3:
+                    best_accuracy = max(model_info['accuracy_results'].values())
+                    st.metric("Best Accuracy", f"{best_accuracy:.1%}")
         else:
             st.warning("⏳ Model Not Trained")
-
-        # Try to load existing model
-        if not st.session_state.model_trained:
-            if st.button("🔄 Load Existing Model"):
-                with st.spinner("Loading model..."):
-                    if load_trained_model(language=classification_language): # Vietnamese or English
-                        st.success("Model loaded successfully!")
-                        st.rerun()
-                    else:
-                        st.info("No pre-trained model found. Please train a new model.")
 
         st.markdown("---")
 
         # Training section
         st.subheader("🎯 Model Training")
-
         if st.button("🚀 Train New Model", disabled=False):
             st.info(f"Starting training with {classification_language} dataset...")
             train_model_callback(classification_language)

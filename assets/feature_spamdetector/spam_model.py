@@ -192,6 +192,11 @@ class SpamClassifier:
     def get_embeddings(self, texts, batch_size=32):
         """Generate embeddings for texts"""
         self._load_model()
+
+        # Verify model components are loaded
+        if self.tokenizer is None or self.model is None:
+            raise RuntimeError("Failed to load model components. Please check your internet connection and model name.")
+
         embeddings = []
 
         for i in tqdm(range(0, len(texts), batch_size), desc="Generating embeddings"):
@@ -635,26 +640,42 @@ class SpamClassifier:
     #? Change @classmethod to Object Method
     def load_from_files(self): #? set folder_path in app.py
         """Load model from saved files"""
+        print('path:', self.save_folder_path)
+
         # Load config
         with open(f"{self.save_folder_path}/model_config.json", "r") as f:
+            """
+            config = {
+                'model_name': 'intfloat/multilingual-e5-base',
+                'best_alpha': 1.0,
+                'model_info': {
+                    'dataset_size': 5572,
+                    'model_name': 'intfloat/multilingual-e5-base',
+                    'best_alpha': 1.0,
+                    'training_date': '2025-08-08T20:32:16.059342',
+                    'accuracy_results': {'1': 0.9901345291479821, '3': 0.9919282511210762, '5': 0.9910313901345291}
+                }
+            }
+            """
             config = json.load(f)
 
-        # Create instance
-        classifier = config['model_name']
-        classifier.best_alpha = config['best_alpha']
-        classifier.model_info = config['model_info']
+        # load config to SpamClassifier Object's attribute
+        self.model_name = config['model_name']
+        self.best_alpha = config['best_alpha']
+        self.model_info = config['model_info']
 
         # Load model components
-        classifier._load_model()
+        self._load_model()
 
         # Load FAISS index
-        classifier.index = faiss.read_index(f"{self.save_folder_path}/faiss_index.bin")
+        self.index = faiss.read_index(f"{self.save_folder_path}/faiss_index.bin")
 
         # Load metadata and weights
         with open(f"{self.save_folder_path}/train_metadata.json", "r", encoding="utf-8") as f:
-            classifier.train_metadata = json.load(f)
+            self.train_metadata = json.load(f)
 
         with open(f"{self.save_folder_path}/class_weights.json", "r") as f:
-            classifier.class_weights = json.load(f)
+            self.class_weights = json.load(f)
 
-        return classifier
+        print(f"Model loaded successfully from {self.save_folder_path}")
+        return self
