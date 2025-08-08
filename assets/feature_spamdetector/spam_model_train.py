@@ -947,7 +947,7 @@ def compute_saliency_scores(query_text, model, tokenizer, device, index, train_m
 
     original_scores, original_indices = index.search(original_embedding, k)
     original_spam_score = sum(s for s, idx in zip(original_scores[0], original_indices[0])
-                             if train_metadata[idx]["label"] == "spam")
+							if train_metadata[idx]["label"] == "spam")
 
     saliencies = []
 
@@ -969,7 +969,7 @@ def compute_saliency_scores(query_text, model, tokenizer, device, index, train_m
 
         masked_scores, masked_indices = index.search(masked_embedding, k)
         masked_spam_score = sum(s for s, idx in zip(masked_scores[0], masked_indices[0])
-                               if train_metadata[idx]["label"] == "spam")
+							if train_metadata[idx]["label"] == "spam")
 
         saliency = original_spam_score - masked_spam_score
         saliencies.append(saliency)
