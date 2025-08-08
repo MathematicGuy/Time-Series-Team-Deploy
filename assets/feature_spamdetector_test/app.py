@@ -232,6 +232,11 @@ def main():
 
         st.markdown("---")
 
+        if not os.path.exists('model_resources/'):
+            os.makedirs('model_resources/vi', exist_ok=True)
+            os.makedirs('model_resources/en', exist_ok=True)
+            print(f"Created directory: {'model_resources/'}")
+
         model_path = f"model_resources/{model_language_code(classification_language)}/model_config.json"
         print(model_path)
 
@@ -239,12 +244,13 @@ def main():
         check_model_ready(model_path)
 
         st.subheader("📊 Model Status")
-        if st.session_state.model_trained:
-            #? Update Embedding model each time a new language get chosen
-            if st.session_state.current_language != classification_language:
-                st.session_state.current_language = classification_language
-                print('current_languages:', st.session_state.current_language)
 
+        #? Update Embedding model each time a new language get chosen
+        if st.session_state.current_language != classification_language:
+            st.session_state.current_language = classification_language
+            print('current_languages:', st.session_state.current_language)
+
+            if st.session_state.model_trained:
                 with st.spinner(f"Loading {classification_language} model..."): # add loading icon when function still running
                     if load_trained_model(language=classification_language):
                         st.success("Model Ready !")
@@ -261,8 +267,8 @@ def main():
                 with col3:
                     best_accuracy = max(model_info['accuracy_results'].values())
                     st.metric("Best Accuracy", f"{best_accuracy:.1%}")
-        else:
-            st.warning("⏳ Model Not Trained")
+            else:
+                st.warning("⏳ Model Not Trained")
 
         st.markdown("---")
 
