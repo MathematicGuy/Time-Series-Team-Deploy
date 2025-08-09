@@ -5,7 +5,7 @@
     "dataset_size": 5569,
     "model_name": "intfloat/multilingual-e5-base",
     "best_alpha": 1.0,
-    "training_date": "2025-08-08T21:46:10.400116",
+    "training_date": "2025-08-09T09:24:09.102152",
     "accuracy_results": {
       "1": 0.9326750448833034,
       "3": 0.9353680430879713,
