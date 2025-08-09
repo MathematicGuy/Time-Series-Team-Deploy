@@ -103,15 +103,15 @@ def render_saliency_heatmap(tokens, saliency_scores):
 def load_trained_model(language):
     """Load pre-trained model artifacts if they exist"""
     model_resource_path = model_language_code(language) # model_resources/vi or model_resources/en
-
+    print("model_resource_path:", model_resource_path)
     model_files = [
-        f'{model_resource_path}/model_artifacts.pkl',
-        f'{model_resource_path}/faiss_index.bin',
-        f'{model_resource_path}/train_metadata.json',
-        f'{model_resource_path}/class_weights.json',
-        f'{model_resource_path}/model_config.json'
+        f'model_resources/{model_resource_path}/model_artifacts.pkl',
+        f'model_resources/{model_resource_path}/faiss_index.bin',
+        f'model_resources/{model_resource_path}/train_metadata.json',
+        f'model_resources/{model_resource_path}/class_weights.json',
+        f'model_resources/{model_resource_path}/model_config.json'
     ]
-    print(model_files)
+    print('model_files:', model_files)
 
 
     classifier = SpamClassifier(classification_language=model_resource_path) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
@@ -124,6 +124,7 @@ def load_trained_model(language):
         except Exception as e:
             st.error(f"Error loading model: {str(e)}")
             return False
+
     return False
 
 def train_model_callback(classification_language):
@@ -232,6 +233,11 @@ def main():
 
         st.markdown("---")
 
+        if not os.path.exists('model_resources/'):
+            os.makedirs('model_resources/vi', exist_ok=True)
+            os.makedirs('model_resources/en', exist_ok=True)
+            print(f"Created directory: {'model_resources/'}")
+
         model_path = f"model_resources/{model_language_code(classification_language)}/model_config.json"
         print(model_path)
 
@@ -239,6 +245,8 @@ def main():
         check_model_ready(model_path)
 
         st.subheader("📊 Model Status")
+        
+        print('Model Status:', st.session_state.model_trained)
         if st.session_state.model_trained:
             #? Update Embedding model each time a new language get chosen
             if st.session_state.current_language != classification_language:
@@ -249,18 +257,20 @@ def main():
                     if load_trained_model(language=classification_language):
                         st.success("Model Ready !")
 
-                with open(model_path, 'r', encoding='utf-8') as f:
-                    train_result = json.load(f)
-                    model_info = train_result['model_info']
+            # Always display model status metrics when model is trained
+            with open(model_path, 'r', encoding='utf-8') as f:
+                train_result = json.load(f)
+                model_info = train_result['model_info']
+                print('Model Infor:', model_info)
 
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.metric("Dataset Size", model_info['dataset_size'])
-                with col2:
-                    st.metric("Best Alpha", f"{model_info['best_alpha']:.2f}")
-                with col3:
-                    best_accuracy = max(model_info['accuracy_results'].values())
-                    st.metric("Best Accuracy", f"{best_accuracy:.1%}")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Dataset Size", model_info['dataset_size'])
+            with col2:
+                st.metric("Best Alpha", f"{model_info['best_alpha']:.2f}")
+            with col3:
+                best_accuracy = max(model_info['accuracy_results'].values())
+                st.metric("Best Accuracy", f"{best_accuracy:.1%}")
         else:
             st.warning("⏳ Model Not Trained")
 
@@ -378,11 +388,7 @@ def main():
                     with col2:
                         st.metric("Spam Score", f"{vote_scores['spam']:.3f}")
                     with col3:
-                        total_votes = sum(vote_scores.values())
-                        if total_votes > 0:
-                            confidence = max(vote_scores.values()) / total_votes
-                        else:
-                            confidence = 0.0
+                        confidence = max(vote_scores.values()) / sum(vote_scores.values())
                         st.metric("Confidence", f"{confidence:.1%}")
 
                     # Explainability section
