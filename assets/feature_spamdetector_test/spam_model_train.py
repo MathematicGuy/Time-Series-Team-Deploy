@@ -7,6 +7,9 @@ Original file is located at
     https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ
 """
 
+!pip install faiss-cpu
+
+!pip install flaml kagglehub pandas scikit-learn
 
 import pandas as pd
 import numpy as np
@@ -20,8 +23,6 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 import json
-import pickle
-import os
 from datetime import datetime
 from collections import Counter
 import re
@@ -29,9 +30,6 @@ import warnings
 import gdown
 import kagglehub
 from kagglehub import KaggleDatasetAdapter
-from pathlib import Path
-
-
 warnings.filterwarnings('ignore')
 
 """## Data Augmentation"""
@@ -869,43 +867,13 @@ def load_dataset(source='kaggle', file_id=None):
 
 """## Embedding model"""
 
-def initialize_global_model():
-    """Initialize global model components for spam_model_train.py"""
-    global model, tokenizer, device, model_name
+model_name = "intfloat/multilingual-e5-base"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModel.from_pretrained(model_name)
 
-    token_path = Path("./tokens/hugging_face_token.txt")
-    hf_token = None
-    if token_path.exists():
-        with token_path.open("r") as f:
-            hf_token = f.read().strip()
-    else:
-        hf_token = None  # Use without authentication
-
-    model_name = "intfloat/multilingual-e5-base"
-    try:
-        tokenizer = AutoTokenizer.from_pretrained(model_name, token=hf_token)
-        model = AutoModel.from_pretrained(model_name, token=hf_token)
-    except Exception as e:
-        print(f"Loading model without token due to: {e}")
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModel.from_pretrained(model_name)
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = model.to(device)
-    model.eval()
-
-    print(f"✅ Global model initialized: {model_name} on {device}")
-    return model, tokenizer, device
-
-# Initialize global variables
-try:
-    model, tokenizer, device = initialize_global_model()
-    model_name = "intfloat/multilingual-e5-base"
-except Exception as e:
-    print(f"⚠️ Failed to initialize global model: {e}")
-    print("Some functions may not work until model is initialized manually")
-    model = tokenizer = device = None
-    model_name = "intfloat/multilingual-e5-base"
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+model.eval()
 
 def average_pool(last_hidden_states, attention_mask):
     last_hidden = last_hidden_states.masked_fill(

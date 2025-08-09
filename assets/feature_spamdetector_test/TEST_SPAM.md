@@ -8,7 +8,7 @@
 
 "Giảm giá sốc 80% cho 50 khách hàng đầu tiên, đặt ngay kẻo hết."
 
-"Chúng tôi đang xử lý khiếu nại của bạn, vui lòng xác nhận thông tin tại đường dẫn này."
+Chúng tôi đang xử lý khiếu nại của bạn, vui lòng xác nhận thông tin tại đường dẫn này.
 
 - Tiếng Anh (5 câu)
 

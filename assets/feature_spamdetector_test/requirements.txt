@@ -1,26 +1,3 @@
-# Streamlit app dependencies
-streamlit
-plotly
-
-# Model and data processing
-transformers
-scikit-learn
-tqdm
-pandas
-torch
-faiss-cpu
-
-# Data augmentation and NLP
-nltk
-
-# Miscellaneous
-kagglehub
-base64
-pickle
-os
-json
-datetime
-pathlib
 # Core dependencies
 streamlit
 torch
@@ -29,7 +6,6 @@ faiss-cpu
 scikit-learn
 pandas
 numpy
-flaml
 
 # Data processing and augmentation
 nltk

@@ -63,48 +63,10 @@ class SpamClassifier:
     def _load_model(self):
         """Load the transformer model and tokenizer"""
         if self.tokenizer is None or self.model is None:
-            try:
-                print(f"🔄 Loading model: {self.model_name}")
-
-                # Load without authentication token to avoid 401 errors
-                self.tokenizer = AutoTokenizer.from_pretrained(
-                    self.model_name,
-                    use_auth_token=False,
-                    trust_remote_code=False
-                )
-                print("✅ Tokenizer loaded successfully")
-
-                self.model = AutoModel.from_pretrained(
-                    self.model_name,
-                    use_auth_token=False,
-                    trust_remote_code=False
-                )
-                print("✅ Model loaded successfully")
-
-                self.model = self.model.to(self.device)
-                self.model.eval()
-                print(f"✅ Model moved to device: {self.device}")
-
-            except Exception as e:
-                error_msg = str(e)
-                print(f"❌ Error loading model: {error_msg}")
-
-                # Provide specific guidance for common errors
-                if "401" in error_msg or "Unauthorized" in error_msg:
-                    raise Exception(
-                        f"Authentication error when loading {self.model_name}. "
-                        f"This model should be publicly available. "
-                        f"Try running the fix_hf_auth.py script or check your internet connection. "
-                        f"Original error: {error_msg}"
-                    )
-                elif "ConnectTimeout" in error_msg or "timeout" in error_msg.lower():
-                    raise Exception(
-                        f"Network timeout when loading {self.model_name}. "
-                        f"Check your internet connection and try again. "
-                        f"Original error: {error_msg}"
-                    )
-                else:
-                    raise Exception(f"Failed to load model {self.model_name}: {error_msg}")
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self.model = AutoModel.from_pretrained(self.model_name)
+            self.model = self.model.to(self.device)
+            self.model.eval()
 
     def load_dataset(self, source='kaggle', file_id=None):
         """Load dataset from Kaggle or Google Drive"""
@@ -192,11 +154,6 @@ class SpamClassifier:
     def get_embeddings(self, texts, batch_size=32):
         """Generate embeddings for texts"""
         self._load_model()
-
-        # Verify model components are loaded
-        if self.tokenizer is None or self.model is None:
-            raise RuntimeError("Failed to load model components. Please check your internet connection and model name.")
-
         embeddings = []
 
         for i in tqdm(range(0, len(texts), batch_size), desc="Generating embeddings"):
@@ -331,7 +288,7 @@ class SpamClassifier:
 
         original_scores, original_indices = self.index.search(original_embedding, k)
         original_spam_score = sum(s for s, idx in zip(original_scores[0], original_indices[0])
-                                if self.train_metadata[idx]["label"] == "spam")
+                                 if self.train_metadata[idx]["label"] == "spam")
 
         saliencies = []
 
@@ -353,7 +310,7 @@ class SpamClassifier:
 
             masked_scores, masked_indices = self.index.search(masked_embedding, k)
             masked_spam_score = sum(s for s, idx in zip(masked_scores[0], masked_indices[0])
-                                if self.train_metadata[idx]["label"] == "spam")
+                                   if self.train_metadata[idx]["label"] == "spam")
 
             saliency = original_spam_score - masked_spam_score
             saliencies.append(saliency)
@@ -408,7 +365,10 @@ class SpamClassifier:
 
             # Apply custom weighting formula
             weight = (1 - alpha) * similarity * self.class_weights[neighbor_label] + alpha * saliency_weight
-            vote_scores[neighbor_label] += weight
+            if weight == 0:
+                vote_scores[neighbor_label] += 1
+            else:
+                vote_scores[neighbor_label] += weight
 
             neighbor_info.append({
                 "score": float(similarity),  # Ensure Python float
