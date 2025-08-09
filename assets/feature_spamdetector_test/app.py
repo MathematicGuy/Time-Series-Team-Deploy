@@ -101,20 +101,19 @@ def render_saliency_heatmap(tokens, saliency_scores):
     return html_content
 
 def load_trained_model(language):
+    print(f'Load Trained Model Language: {language}')
     """Load pre-trained model artifacts if they exist"""
-    model_resource_path = model_language_code(language) # model_resources/vi or model_resources/en
-    print("model_resource_path:", model_resource_path)
     model_files = [
-        f'model_resources/{model_resource_path}/model_artifacts.pkl',
-        f'model_resources/{model_resource_path}/faiss_index.bin',
-        f'model_resources/{model_resource_path}/train_metadata.json',
-        f'model_resources/{model_resource_path}/class_weights.json',
-        f'model_resources/{model_resource_path}/model_config.json'
+        f'model_resources/{language}/model_artifacts.pkl',
+        f'model_resources/{language}/faiss_index.bin',
+        f'model_resources/{language}/train_metadata.json',
+        f'model_resources/{language}/class_weights.json',
+        f'model_resources/{language}/model_config.json'
     ]
     print('model_files:', model_files)
 
 
-    classifier = SpamClassifier(classification_language=model_resource_path) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
+    classifier = SpamClassifier(classification_language=language) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
 
     if all(os.path.exists(f) for f in model_files):
         try:
@@ -245,7 +244,7 @@ def main():
         check_model_ready(model_path)
 
         st.subheader("📊 Model Status")
-        
+
         print('Model Status:', st.session_state.model_trained)
         if st.session_state.model_trained:
             #? Update Embedding model each time a new language get chosen
@@ -254,7 +253,7 @@ def main():
                 print('current_languages:', st.session_state.current_language)
 
                 with st.spinner(f"Loading {classification_language} model..."): # add loading icon when function still running
-                    if load_trained_model(language=classification_language):
+                    if load_trained_model(language=model_language_code(classification_language)):
                         st.success("Model Ready !")
 
             # Always display model status metrics when model is trained
