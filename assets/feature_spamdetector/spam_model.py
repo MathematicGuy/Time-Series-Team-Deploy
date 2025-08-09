@@ -38,7 +38,7 @@ def convert_numpy_types(obj):
     return obj
 
 class SpamClassifier:
-    def __init__(self, model_name="intfloat/multilingual-e5-base", classification_language='en'):
+    def __init__(self, model_name="intfloat/multilingual-e5-base", classification_language='English'):
         self.model_name = model_name
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.save_folder_path = f"model_resources/{classification_language}"

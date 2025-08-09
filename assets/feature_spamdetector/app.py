@@ -190,7 +190,7 @@ def reset_to_welcome():
     st.session_state.current_language = None
     st.session_state.classifier = None
 
-def model_language_code(classification_language):
+def classification_language():
     match classification_language:
         case 'English':
             return 'en'
@@ -233,11 +233,11 @@ def main():
         st.markdown("---")
 
         if not os.path.exists('model_resources/'):
-            os.makedirs('model_resources/vi', exist_ok=True)
-            os.makedirs('model_resources/en', exist_ok=True)
+            os.makedirs('model_resources/Vietnamese', exist_ok=True)
+            os.makedirs('model_resources/English', exist_ok=True)
             print(f"Created directory: {'model_resources/'}")
 
-        model_path = f"model_resources/{model_language_code(classification_language)}/model_config.json"
+        model_path = f"model_resources/{classification_language}/model_config.json"
         print(model_path)
 
         # check model trained or not, if trained st.session_state.model_trained = True else False
@@ -253,7 +253,7 @@ def main():
                 print('current_languages:', st.session_state.current_language)
 
                 with st.spinner(f"Loading {classification_language} model..."): # add loading icon when function still running
-                    if load_trained_model(language=model_language_code(classification_language)):
+                    if load_trained_model(language=classification_language):
                         st.success("Model Ready !")
 
             # Always display model status metrics when model is trained
