@@ -573,7 +573,7 @@ class SpamClassifier:
     def save_to_files(self):
         # Save FAISS index
         faiss.write_index(self.index, f"{self.save_folder_path}/faiss_index.bin")
-
+		
         # Save metadata and weights - FIX: Convert numpy types before saving
         with open(f"{self.save_folder_path}/train_metadata.json", "w", encoding="utf-8") as f:
             json.dump(convert_numpy_types(self.train_metadata), f, ensure_ascii=False, indent=2)

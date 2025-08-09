@@ -113,7 +113,7 @@ def load_trained_model(language):
     print('model_files:', model_files)
 
 
-    classifier = SpamClassifier(classification_language=language) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
+    classifier = SpamClassifier(classification_language=model_language_code(language)) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
 
     if all(os.path.exists(f) for f in model_files):
         try:
