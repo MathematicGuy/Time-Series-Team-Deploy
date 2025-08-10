@@ -6,7 +6,6 @@ faiss-cpu
 scikit-learn
 pandas
 numpy
-flaml
 
 # Data processing and augmentation
 nltk

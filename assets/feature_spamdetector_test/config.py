@@ -13,7 +13,7 @@ MODEL_CONFIG = {
 DATASET_CONFIG = {
     "kaggle_dataset": "victorhoward2/vietnamese-spam-post-in-social-network",
     "kaggle_file": "vi_dataset.csv",
-    "gdrive_file_id": "mode_resources/1N7rk-kfnDFIGMeX0ROVTjKh71gcgx-7R",  # Default Google Drive file ID
+    "gdrive_file_id": "1N7rk-kfnDFIGMeX0ROVTjKh71gcgx-7R",  # Default Google Drive file ID
     "augmentation": {
         "enabled": True,
         "aug_ratio": 0.2,  # Synonym replacement ratio
@@ -111,10 +111,10 @@ def get_config(section, key=None, default=None):
     """Get configuration value"""
     if section not in CONFIG:
         return default
-
+    
     if key is None:
         return CONFIG[section]
-
+    
     return CONFIG[section].get(key, default)
 
 def update_config(section, key, value):
