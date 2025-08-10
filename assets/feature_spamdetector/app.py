@@ -101,20 +101,19 @@ def render_saliency_heatmap(tokens, saliency_scores):
     return html_content
 
 def load_trained_model(language):
+    print(f'Load Trained Model Language: {language}')
     """Load pre-trained model artifacts if they exist"""
-    model_resource_path = model_language_code(language) # model_resources/vi or model_resources/en
-    print("model_resource_path:", model_resource_path)
     model_files = [
-        f'model_resources/{model_resource_path}/model_artifacts.pkl',
-        f'model_resources/{model_resource_path}/faiss_index.bin',
-        f'model_resources/{model_resource_path}/train_metadata.json',
-        f'model_resources/{model_resource_path}/class_weights.json',
-        f'model_resources/{model_resource_path}/model_config.json'
+        f'model_resources/{language}/model_artifacts.pkl',
+        f'model_resources/{language}/faiss_index.bin',
+        f'model_resources/{language}/train_metadata.json',
+        f'model_resources/{language}/class_weights.json',
+        f'model_resources/{language}/model_config.json'
     ]
     print('model_files:', model_files)
 
 
-    classifier = SpamClassifier(classification_language=model_resource_path) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
+    classifier = SpamClassifier(classification_language=language) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
 
     if all(os.path.exists(f) for f in model_files):
         try:
@@ -191,7 +190,7 @@ def reset_to_welcome():
     st.session_state.current_language = None
     st.session_state.classifier = None
 
-def model_language_code(classification_language):
+def classification_language():
     match classification_language:
         case 'English':
             return 'en'
@@ -234,18 +233,18 @@ def main():
         st.markdown("---")
 
         if not os.path.exists('model_resources/'):
-            os.makedirs('model_resources/vi', exist_ok=True)
-            os.makedirs('model_resources/en', exist_ok=True)
+            os.makedirs('model_resources/Vietnamese', exist_ok=True)
+            os.makedirs('model_resources/English', exist_ok=True)
             print(f"Created directory: {'model_resources/'}")
 
-        model_path = f"model_resources/{model_language_code(classification_language)}/model_config.json"
+        model_path = f"model_resources/{classification_language}/model_config.json"
         print(model_path)
 
         # check model trained or not, if trained st.session_state.model_trained = True else False
         check_model_ready(model_path)
 
         st.subheader("📊 Model Status")
-        
+
         print('Model Status:', st.session_state.model_trained)
         if st.session_state.model_trained:
             #? Update Embedding model each time a new language get chosen
