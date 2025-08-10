@@ -13,6 +13,7 @@ import time
 # Import your training modules
 from spam_model import SpamClassifier
 from utils import load_model_artifacts, save_model_artifacts
+from enhanced_training_clean import add_enhanced_method_to_classifier
 
 # Configure Streamlit page
 st.set_page_config(
@@ -113,7 +114,7 @@ def load_trained_model(language):
     print('model_files:', model_files)
 
 
-    classifier = SpamClassifier(classification_language=model_language_code(language)) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
+    classifier = SpamClassifier(classification_language=language) # initialize SpamClassifier class from spam_model.py to use .load_from_files function
 
     if all(os.path.exists(f) for f in model_files):
         try:
@@ -125,6 +126,7 @@ def load_trained_model(language):
             return False
 
     return False
+
 
 def train_model_callback(classification_language):
     """Callback function for model training"""
@@ -165,22 +167,85 @@ def train_model_callback(classification_language):
         progress_bar.progress(100)
         status_text.text("Training completed successfully!")
 
-        # Show training results
-        st.success("✅ Model training completed!")
-
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Dataset Size", len(messages))
-        with col2:
-            st.metric("Best Alpha", f"{results['best_alpha']:.2f}")
-        with col3:
-            best_accuracy = max(results['accuracy_results'].values())
-            st.metric("Best Accuracy", f"{best_accuracy:.1%}")
+        # Simple completion message - detailed results now shown in Model Status
+        st.success("✅ Model training completed! Check the Model Status section above for detailed results.")
 
         return True
 
     except Exception as e:
         st.error(f"Training failed: {str(e)}")
+        return False
+
+#! FIX THIS into using augment_data_protype.py from HardExamGenerator
+def train_enhanced_model_callback(classification_language, aug_ratio, alpha):
+    """Callback function for enhanced model training with data augmentation"""
+    try:
+        # Debug: Print received parameters
+        print(f"🔧 Enhanced Training Debug:")
+        print(f"  - classification_language: {classification_language}")
+        print(f"  - aug_ratio: {aug_ratio}")
+        print(f"  - alpha: {alpha}")
+
+        # Display parameters in UI for verification
+        st.write(f"🔧 **Parameters received:**")
+        st.write(f"  • Language: {classification_language}")
+        st.write(f"  • Augmentation Ratio: {aug_ratio}")
+        st.write(f"  • Hard Ham Alpha: {alpha}")
+
+        # Add enhanced method to SpamClassifier
+        add_enhanced_method_to_classifier()
+
+        # Initialize classifier
+        classifier = SpamClassifier(classification_language=classification_language,
+                                    aug_ratio=aug_ratio,
+                                    alpha_hard_ham=alpha)
+
+        # Update progress
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+
+        status_text.text("Loading dataset...")
+        progress_bar.progress(10)
+
+        # Load data based on classification_language selection
+        data_source = 'kaggle' if classification_language == 'Vietnamese' else 'gdrive'
+        messages, labels = classifier.load_dataset(source=data_source)
+
+        status_text.text(f"Loaded {len(messages)} messages. Starting enhanced training with data augmentation...")
+        status_text.text(f"Using aug_ratio={aug_ratio}, alpha={alpha}")
+        progress_bar.progress(20)
+
+        # Use enhanced pipeline instead of regular training
+        results = classifier.run_enhanced_pipeline(
+            messages, labels,
+            test_size=0.2,
+            use_augmentation=True,
+        )
+
+        progress_bar.progress(85)
+        status_text.text("Saving enhanced model...")
+
+        # Save model artifacts
+        classifier.save_to_files()
+
+        # Update session state
+        st.session_state.classifier = classifier
+        st.session_state.model_trained = True
+
+        progress_bar.progress(100)
+        status_text.text("Enhanced training completed successfully!")
+
+        # Simple completion message - detailed results now shown in Model Status
+        st.success("✅ Enhanced model training completed! Check the Model Status section above for detailed results.")
+
+        # Display final augmentation summary
+        st.info(f"🎯 **Training completed** using aug_ratio={aug_ratio}, alpha={alpha}")
+
+        return True
+
+    except Exception as e:
+        st.error(f"Enhanced training failed: {str(e)}")
+        print(f"Enhanced training error: {e}")  # Debug print
         return False
 
 
@@ -190,14 +255,14 @@ def reset_to_welcome():
     st.session_state.current_language = None
     st.session_state.classifier = None
 
-def model_language_code(classification_language):
-    match classification_language:
-        case 'English':
-            return 'en'
-        case 'Vietnamese':
-            return 'vi'
-        case _:
-            return 'None'
+def classification_language_code(classification_language):
+    if classification_language == 'English':
+        return 'en'
+    elif classification_language == 'Vietnamese':
+        return 'vi'
+    else:
+        return 'None'
+
 
 def check_model_ready(model_path):
     #? Check if Embedding Model is train or not
@@ -233,11 +298,11 @@ def main():
         st.markdown("---")
 
         if not os.path.exists('model_resources/'):
-            os.makedirs('model_resources/vi', exist_ok=True)
-            os.makedirs('model_resources/en', exist_ok=True)
+            os.makedirs('model_resources/Vietnamese', exist_ok=True)
+            os.makedirs('model_resources/English', exist_ok=True)
             print(f"Created directory: {'model_resources/'}")
 
-        model_path = f"model_resources/{model_language_code(classification_language)}/model_config.json"
+        model_path = f"model_resources/{classification_language}/model_config.json"
         print(model_path)
 
         # check model trained or not, if trained st.session_state.model_trained = True else False
@@ -253,8 +318,8 @@ def main():
                 print('current_languages:', st.session_state.current_language)
 
                 with st.spinner(f"Loading {classification_language} model..."): # add loading icon when function still running
-                    if load_trained_model(language=model_language_code(classification_language)):
-                        st.success("Model Ready !")
+                    if load_trained_model(language=classification_language):
+                        st.success("✅ Model Ready!")
 
             # Always display model status metrics when model is trained
             with open(model_path, 'r', encoding='utf-8') as f:
@@ -262,26 +327,172 @@ def main():
                 model_info = train_result['model_info']
                 print('Model Infor:', model_info)
 
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Dataset Size", model_info['dataset_size'])
-            with col2:
-                st.metric("Best Alpha", f"{model_info['best_alpha']:.2f}")
-            with col3:
-                best_accuracy = max(model_info['accuracy_results'].values())
-                st.metric("Best Accuracy", f"{best_accuracy:.1%}")
+            # Enhanced model status display
+            st.success("🎯 **Model Successfully Trained & Loaded**")
+
+            # Check if this was enhanced training (has original/final dataset info)
+            if 'original_dataset_size' in model_info and 'final_dataset_size' in model_info:
+                # Enhanced training results
+                st.markdown("**📈 Enhanced Training Results:**")
+
+                col1, col2, col3, col4 = st.columns(4)
+                with col1:
+                    st.metric("Original Dataset", model_info.get('original_dataset_size', 'N/A'))
+                with col2:
+                    final_size = model_info.get('final_dataset_size', model_info.get('dataset_size', 'N/A'))
+                    st.metric("Final Dataset", final_size)
+                with col3:
+                    st.metric("Best Alpha", f"{model_info['best_alpha']:.2f}")
+                with col4:
+                    best_accuracy = max(model_info['accuracy_results'].values())
+                    st.metric("Best Accuracy", f"{best_accuracy:.1%}")
+
+                # Show augmentation details if available
+                if 'original_dataset_size' in model_info and 'final_dataset_size' in model_info:
+                    augmented_count = model_info['final_dataset_size'] - model_info['original_dataset_size']
+                    if augmented_count > 0:
+                        st.info(f"🎯 **Data Augmentation:** Added {augmented_count} examples (+{(augmented_count/model_info['original_dataset_size']*100):.1f}%) for improved robustness")
+
+            else:
+                # Standard training results
+                st.markdown("**📊 Standard Training Results:**")
+
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Dataset Size", model_info['dataset_size'])
+                with col2:
+                    st.metric("Best Alpha", f"{model_info['best_alpha']:.2f}")
+                with col3:
+                    best_accuracy = max(model_info['accuracy_results'].values())
+                    st.metric("Best Accuracy", f"{best_accuracy:.1%}")
+
+            # Additional model information
+            with st.expander("📋 Detailed Model Information"):
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.write("**Model Details:**")
+                    st.write(f"• Model Type: {model_info.get('model_name', 'multilingual-e5-base')}")
+                    st.write(f"• Language: {classification_language}")
+                    st.write(f"• Training Date: {model_info.get('training_date', 'N/A')[:10]}")
+
+                with col_b:
+                    st.write("**Performance by K-value:**")
+                    accuracy_results = model_info.get('accuracy_results', {})
+                    for k, acc in accuracy_results.items():
+                        st.write(f"• k={k}: {acc:.1%}")
+
         else:
             st.warning("⏳ Model Not Trained")
+            st.info("Select a language and choose a training mode below to get started.")
 
         st.markdown("---")
 
         # Training section
         st.subheader("🎯 Model Training")
-        if st.button("🚀 Train New Model", disabled=False):
-            st.info(f"Starting training with {classification_language} dataset...")
-            train_model_callback(classification_language)
 
-    # Main content
+        # Training option selection
+        training_option = st.radio(
+            "Select Training Mode:",
+            [
+                "🚀 Standard Training",
+                "⚡ Enhanced Training (with Data Augmentation)"
+            ],
+            help="Standard: Basic training with original dataset only\nEnhanced: Training with data augmentation for better performance",
+            key="training_mode"
+        )
+
+
+        # Augmentation parameters (only show for Enhanced Training)
+        if training_option == "⚡ Enhanced Training (with Data Augmentation)":
+            st.markdown("**🎛️ Augmentation Settings:**")
+
+            col_aug1, col_aug2 = st.columns(2)
+
+            with col_aug1:
+                aug_ratio = st.slider(
+                    "Synonym Replacement Ratio",
+                    min_value=0.1,
+                    max_value=0.5,
+                    value=0.3,
+                    step=0.1,
+                    help="Controls how many synonym replacement examples to generate (30% = 30% of original dataset size)"
+                )
+                st.caption(f"Will generate ~{aug_ratio*100:.0f}% synonym examples")
+
+            with col_aug2:
+                alpha = st.slider(
+                    "Hard Ham Generation Ratio",
+                    min_value=0.1,
+                    max_value=0.5,
+                    value=0.3,
+                    step=0.1,
+                    help="Controls hard ham generation based on dataset imbalance (30% = 30% of ham-spam difference)"
+                )
+                st.caption(f"Will generate {alpha*100:.0f}% of ham-spam diff")
+
+            # Training buttons based on selection
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if training_option == "🚀 Standard Training":
+                    if st.button("🚀 Train Standard Model", type="primary", key="standard_train_btn"):
+                        st.info(f"Starting standard training with {classification_language} dataset...")
+                        train_model_callback(classification_language)
+                else:
+                    if st.button("🚀 Train Standard Model", disabled=True, key="standard_train_btn_disabled"):
+                        st.caption("Select Standard Training option above")
+
+            with col2:
+                if training_option == "⚡ Enhanced Training (with Data Augmentation)":
+                    if st.button("⚡ Train Enhanced Model", type="primary", key="enhanced_train_btn"):
+                        st.info(f"Starting enhanced training with {classification_language} dataset + augmentation...")
+                        st.info(f"📊 Using aug_ratio={aug_ratio}, alpha={alpha}")
+                        # Add debug information to verify parameters
+                        st.write(f"🔧 Debug: Received parameters - aug_ratio={aug_ratio}, alpha={alpha}")
+                        train_enhanced_model_callback(classification_language, aug_ratio, alpha)
+                else:
+                    if st.button("⚡ Train Enhanced Model", disabled=True, key="enhanced_train_btn_disabled"):
+                        st.caption("Select Enhanced Training option above")
+
+
+        # Training information
+        with st.expander("ℹ️ Training Options Info"):
+            st.markdown("""
+            **🚀 Standard Training:**
+            - Uses original dataset only
+            - Faster training time
+            - Good for basic spam detection
+
+            **⚡ Enhanced Training:**
+            - Uses original dataset + augmented data
+            - Includes Hard Ham generation (legitimate messages that look like spam)
+            - Includes Synonym replacement for variety
+            - Better performance on edge cases
+            - Slightly longer training time
+            - Recommended for production use
+
+            **🎛️ Augmentation Parameters:**
+
+            **Synonym Replacement Ratio (0.1-0.5):**
+            - Controls how many synonym replacement examples to generate
+            - 0.1 = 10% of original dataset size
+            - 0.3 = 30% of original dataset size (recommended)
+            - 0.5 = 50% of original dataset size (maximum)
+            - Higher values = more variety but longer training time
+
+            **Hard Ham Generation Ratio (0.1-0.5):**
+            - Controls generation of legitimate messages that look like spam
+            - Based on dataset imbalance (ham_count - spam_count)
+            - 0.1 = Generate 10% of the difference
+            - 0.3 = Generate 30% of the difference (recommended)
+            - 0.5 = Generate 50% of the difference (maximum)
+            - Helps model learn to distinguish tricky cases
+
+            **💡 Tips:**
+            - Start with default values (0.3, 0.3) for balanced augmentation
+            - Increase for more robust models but longer training
+            - Decrease for faster training with less augmentation
+            """)    # Main content
     if not st.session_state.model_trained:
         # Welcome screen
         st.markdown("""

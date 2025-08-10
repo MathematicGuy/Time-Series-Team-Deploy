@@ -19,7 +19,9 @@ import warnings
 import gdown
 import kagglehub
 from kagglehub import KaggleDatasetAdapter
-import nltk
+
+# Import augmentation functions from enhanced_training_clean
+from enhanced_training_clean import enhanced_augmentation
 
 warnings.filterwarnings('ignore')
 
@@ -37,11 +39,15 @@ def convert_numpy_types(obj):
         return [convert_numpy_types(item) for item in obj]
     return obj
 
+
+
 class SpamClassifier:
-    def __init__(self, model_name="intfloat/multilingual-e5-base", classification_language='en'):
+    def __init__(self, model_name="intfloat/multilingual-e5-base", classification_language='English', aug_ratio=0.5, alpha_hard_ham=0.5):
         self.model_name = model_name
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.save_folder_path = f"model_resources/{classification_language}"
+        self.aug_ratio = aug_ratio
+        self.alpha_hard_ham = alpha_hard_ham
 
         # Initialize model components
         self.tokenizer = None
@@ -51,14 +57,6 @@ class SpamClassifier:
         self.class_weights = None
         self.best_alpha = 0.5
         self.model_info = {}
-
-        # Download NLTK data for augmentation
-        try:
-            nltk.download('wordnet', quiet=True)
-            nltk.download('omw-1.4', quiet=True)
-            self.wordnet_available = True
-        except:
-            self.wordnet_available = False
 
     def _load_model(self):
         """Load the transformer model and tokenizer"""
@@ -88,9 +86,10 @@ class SpamClassifier:
         )
         return self._preprocess_dataframe(df)
 
+	#! MOVE DATA to /data folder
     def _load_data_from_gdrive(self, file_id):
         """Load dataset from Google Drive"""
-        output_path = f"gdrive_dataset_{file_id}.csv"
+        output_path = f"data/gdrive_dataset.csv"
         gdown.download(f"https://drive.google.com/uc?id={file_id}", output_path, quiet=False)
         df = pd.read_csv(output_path)
         return self._preprocess_dataframe(df)
@@ -378,7 +377,7 @@ class SpamClassifier:
             })
 
         # Get prediction
-        predicted_label = max(vote_scores, key=vote_scores.get)
+        predicted_label = max(vote_scores.keys(), key=lambda k: vote_scores[k])
 
         result = {
             "prediction": predicted_label,
@@ -540,6 +539,139 @@ class SpamClassifier:
 
         return results
 
+    def run_enhanced_pipeline(self, messages, labels, test_size=0.2, use_augmentation=True):
+        """Run the complete enhanced spam classification pipeline with data augmentation"""
+
+        print("=== Enhanced Spam Classification Pipeline ===")
+
+        # 1. Prepare data
+        le = LabelEncoder()
+        y = le.fit_transform(labels)
+
+        # ===== DATA AUGMENTATION =====
+        if use_augmentation:
+            print("\n=== Data Augmentation ===")
+            try:
+                augmented_messages, augmented_labels = enhanced_augmentation(
+                    messages, labels,
+                    aug_ratio=self.aug_ratio,
+                    alpha_hard_ham=self.alpha_hard_ham,
+                )
+
+                if augmented_messages:  # Only add if data was generated
+                    # Combine original + augmented
+                    original_count = len(messages)
+                    messages = messages + augmented_messages  # Extend list
+                    labels = labels + augmented_labels       # Extend list
+
+                    print(f"📈 Dataset size: {original_count} → {len(messages)} (+{len(augmented_messages)})")
+
+                    # Re-encode labels with augmented data
+                    y = le.fit_transform(labels)
+                else:
+                    print("ℹ️ No augmented data generated")
+            except Exception as e:
+                print(f"⚠️ Augmentation failed: {e}")
+                print("ℹ️ Continuing with original data...")
+        else:
+            print("ℹ️ Data augmentation disabled")
+
+        # 2. Load model and generate embeddings
+        print("Generating embeddings...")
+        self._load_model()
+        X_embeddings = self.get_embeddings(messages)
+
+        # 3. Create metadata
+        metadata = []
+        for i, (message, label) in enumerate(zip(messages, labels)):
+            # Simple label encoding: ham=0, spam=1
+            label_encoded = 1 if label == 'spam' else 0
+
+            metadata.append({
+                "index": i,
+                "message": message,
+                "label": label,
+                "label_encoded": label_encoded
+            })
+
+        # 4. Train-test split
+        X_train_emb, X_test_emb, train_metadata, test_metadata = train_test_split(
+            X_embeddings, metadata, test_size=test_size, random_state=42,
+            stratify=[m["label"] for m in metadata]
+        )
+
+        # 5. Create FAISS index
+        print("Creating FAISS index...")
+        dimension = X_train_emb.shape[1]
+        self.index = faiss.IndexFlatIP(dimension)
+        # Ensure proper numpy array format for FAISS
+        if not isinstance(X_train_emb, np.ndarray):
+            X_train_emb = np.array(X_train_emb)
+        X_train_emb_float32 = X_train_emb.astype(np.float32)
+        self.index.add(X_train_emb_float32)
+
+        # Store training metadata
+        self.train_metadata = train_metadata
+
+        # 6. Calculate class weights
+        train_labels = [m["label"] for m in train_metadata]
+        self.class_weights = self._calculate_class_weights(train_labels)
+
+        # 7. Optimize alpha parameter
+        test_labels = [m["label"] for m in test_metadata]
+        self.best_alpha = self._optimize_alpha_parameter(X_test_emb, test_metadata)
+
+        # 8. Final evaluation
+        print("\n=== Final Evaluation ===")
+        accuracy_results = self._evaluate_accuracy(X_test_emb, test_metadata)
+
+        # Print results
+        print("Accuracy by k-value:")
+        for k, acc in accuracy_results.items():
+            print(f"  k={k}: {acc:.4f} ({acc*100:.2f}%)")
+
+        # 9. Analyze spam subcategories
+        subcat_counts = {}  # Initialize empty dict
+        spam_texts = [m["message"] for m in test_metadata if m["label"] == "spam"]
+        if spam_texts:
+            print(f"\n=== Spam Subcategory Analysis ===")
+            spam_subcategories = self._classify_spam_subcategory(spam_texts)
+            subcat_counts = Counter(spam_subcategories)
+
+            print("Spam subcategory distribution:")
+            for subcat, count in subcat_counts.items():
+                print(f"  {subcat}: {count} ({count/len(spam_texts)*100:.1f}%)")
+
+        # 10. Save results
+        results = {
+            "timestamp": datetime.now().isoformat(),
+            "model": self.model_name,
+            "dataset_size": len(X_embeddings),
+            "train_size": len(X_train_emb),
+            "test_size": len(X_test_emb),
+            "best_alpha": float(self.best_alpha),
+            "accuracy_results": convert_numpy_types(accuracy_results),
+            "class_weights": convert_numpy_types(self.class_weights),
+            "spam_subcategories": dict(subcat_counts) if spam_texts else {}
+        }
+
+        # Store model info
+        self.model_info = results
+
+        with open("enhanced_results.json", "w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
+
+        print(f"\n*** Results saved to enhanced_results.json ***")
+
+        return {
+            "index": self.index,
+            "train_metadata": self.train_metadata,
+            "test_metadata": test_metadata,
+            "class_weights": self.class_weights,
+            "best_alpha": self.best_alpha,
+            "results": results,
+        }
+
     def classify_message(self, message, k=5, explain=False):
         """Classify a single message"""
         # FIX: Better check for model and index existence
@@ -573,7 +705,7 @@ class SpamClassifier:
     def save_to_files(self):
         # Save FAISS index
         faiss.write_index(self.index, f"{self.save_folder_path}/faiss_index.bin")
-		
+
         # Save metadata and weights - FIX: Convert numpy types before saving
         with open(f"{self.save_folder_path}/train_metadata.json", "w", encoding="utf-8") as f:
             json.dump(convert_numpy_types(self.train_metadata), f, ensure_ascii=False, indent=2)
