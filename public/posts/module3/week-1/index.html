@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head><script src="/Time-Series-Team-Hub/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=Time-Series-Team-Hub/livereload" data-no-instant defer></script>
+	<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Module 3 – Tuần 1: Chinh Phục Pandas – Từ Bảng Dữ Liệu Đến Biểu Đồ Sống Động | Time Series Team Hub</title>
+
+<meta name="description" content="Tuần đầu tiên của Module 3 tập trung vào kỹ năng xử lý dữ liệu bảng, trực quan hóa dữ liệu và các kỹ thuật phân tích từ cơ bản đến nâng cao, kết hợp công cụ Pandas, ETL Pipelines và Excel. Đây là bước đệm quan trọng để ứng dụng vào các bài toán AI thực tế.">
+    <link rel="stylesheet" href="/Time-Series-Team-Hub/css/main.css">
+
+<link rel="icon" type="image/svg+xml" href="http://localhost:1313/Time-Series-Team-Hub/favicon.svg"> 
+<link rel="icon" type="image/x-icon" href="http://localhost:1313/Time-Series-Team-Hub/favicon.ico"> 
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/Time-Series-Team-Hub/favicon.png"> 
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/Time-Series-Team-Hub/favicon-32.png"> 
+<link rel="icon" type="image/png" sizes="64x64" href="http://localhost:1313/Time-Series-Team-Hub/favicon-64.png"> 
+
+	
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+	integrity="sha384-GqV8jWJ4M4d7KpAaFdFHQPJoPIZHjI46tD/1m5K8Fg8z57EIsYjyN8e/XuID8vQv" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+	integrity="sha384-vL+PRUsWbppvSttTjlL6R9T/cAzSBx3IMT/14F4Hqp6NAY7G6UJzKuZ1S74gCkQw"
+	crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+	integrity="sha384-mll67QQ5HOwCRm7C0blXZqXQKUX2eX0TQ1gV7m4nG1cTQqgXk7HbiUJxO2bdfXU0" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+            delimiters: [
+				{left: '$$', right: '$$', display: true},
+				{left: '$', right: '$', display: false}
+            ]
+		});">
+		</script>
+ 
+</head>
+<body>
+  <header class="py-6 border-b"><div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 flex flex-col">
+	<div class="flex items-center">
+		<div class="flex items-center">
+			<button class="flex items-center space-x-2 rounded-full border py-1 pr-[5px] pl-3 group bg-zinc-100 hover:bg-zinc-200 toggle-button" data-target="menu-bar">
+				<svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path>
+				</svg>
+				<span class="bg-blue-500 fill-white rounded-full p-1.5">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="group-hover:animate-spin bi bi-egg-fried fill-white" viewBox="0 0 16 16">
+						<path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+						<path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z"></path>
+					</svg>
+				</span>
+			</button>
+			<div class="relative rounded-full py-1.5 px-6 bg-zinc-100 hover:bg-zinc-200 text-xl font-bold uppercase mx-2">
+				<h2><a class="before:content-[''] before:z-10 before:top-0 before:right-0 before:left-0 before:bottom-0 before:absolute before:pointer-events-auto" href="http://localhost:1313/Time-Series-Team-Hub/">Time Series Team Hub</a></h2>
+			</div>
+		</div>
+		<div class="flex items-center ml-auto">
+			<button class="flex items-center rounded-full p-3 bg-zinc-100 hover:bg-zinc-200 toggle-button" data-target="search-bar">
+				<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+					<path id="path1" class="transition-all ease-linear" d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+					<path id="path2" class="transition-all ease-linear hidden" d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+  <nav id="menu-bar" class="block mt-3 close">
+    <ul class="flex items-center flex flex-nowrap whitespace-nowrap overflow-x-auto space-x-4">
+    <li class="my-2">
+      <a class="rounded-full border px-6 py-2 bg-zinc-100 hover:bg-zinc-200" href="/Time-Series-Team-Hub/">Home</a>
+    </li>
+    <li class="my-2">
+      <a class="rounded-full border px-6 py-2 bg-zinc-100 hover:bg-zinc-200" href="/Time-Series-Team-Hub/about/">About</a>
+    </li>
+    </ul>
+  </nav>
+<div id="search-bar" class="block mt-3 close">
+	<form id="search" class="flex items-stretch">
+		<input class="w-full block px-6 py-2 rounded-l-full focus:outline-none border border-zinc-200" type="text" placeholder="Search...">
+		<button class="flex items-center px-7 py-2.5 rounded-r-full border border-zinc-200 ">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="group-hover:animate-pulse" viewBox="0 0 16 16">
+				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+			</svg>
+		</button>
+	</form>
+</div>
+</div></header>
+  <main class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8"><div id="breadcrumb" class="max-w-7xl mx-auto py-8">
+	<ul class="flex space-x-4 text-sm text-zinc-500">
+		<li class="after:content-['❯'] after:ml-4 after:opacity-30 last:after:content-none uppercase">
+			<a href="http://localhost:1313/Time-Series-Team-Hub/">Time Series Team Hub</a>
+		</li>
+		<li class="after:content-['❯'] after:ml-4 after:opacity-30 last:after:content-none uppercase">
+			<a href="http://localhost:1313/Time-Series-Team-Hub/posts/">Posts</a>
+		</li>
+	</ul>
+</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+
+  <article class="md:col-span-2 prose lg:prose-lg">
+
+    <header class="not-prose">
+      
+      <h1 id="title" class="text-4xl font-bold leading-normal">Module 3 – Tuần 1: Chinh Phục Pandas – Từ Bảng Dữ Liệu Đến Biểu Đồ Sống Động</h1>
+
+      <div id="lead" class="my-6">
+
+        <p class="font-bold">Tuần đầu tiên của Module 3 tập trung vào kỹ năng xử lý dữ liệu bảng, trực quan hóa dữ liệu và các kỹ thuật phân tích từ cơ bản đến nâng cao, kết hợp công cụ Pandas, ETL Pipelines và Excel. Đây là bước đệm quan trọng để ứng dụng vào các bài toán AI thực tế. </p>
+
+      </div>
+      
+      <div id="writer" class="flex items-center space-x-4"><ul class="flex items-center space-x-4 flex-nowrap whitespace-nowrap overflow-x-auto">
+          
+          <li class="font-semibold my-2"></li>
+          
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2"><time datetime="2025-08-11T13:03:07&#43;07:00">August 11, 2025</time>
+          </li>
+
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2">
+            3 min read
+          </li>
+
+        </ul>
+
+      </div>
+      
+    </header>
+
+    <figure id="featureimage" class="rounded-xl aspect-video">
+            <img class="rounded-lg" src="http://localhost:1313/Time-Series-Team-Hub/images/data_visualize_hu_94f5cb74591bc90b.jpg" alt="" width="750" height="546">
+        <figcaption class="text-center italic text-xs">Illustration by Time Series Team</figcaption>
+
+    </figure>
+
+    <div id="content" class="mb-14">
+      <p>🎉 <strong>Chào mừng đến với blog Tuần 1 của team Time Series – Module 3!</strong></p>
+<p>Tuần này, chúng ta sẽ cùng nhau khám phá sức mạnh của <strong>Pandas</strong> trong việc xử lý và trực quan hóa dữ liệu, từ dữ liệu bảng, dữ liệu time-series cho tới các pipeline ETL và Excel. Đây là những kỹ năng thiết yếu để phân tích dữ liệu và xây dựng nền tảng cho các ứng dụng AI.</p>
+<hr>
+<h2 id="-lịch-trình-học-và-nội-dung-chính">📅 <strong>Lịch trình học và nội dung chính</strong></h2>
+<h3 id="-thứ-3--ngày-29072025">🧑‍🏫 <strong>Thứ 3 – Ngày 29/07/2025</strong></h3>
+<p><em>(Buổi warm-up – MSc. Quốc Thái)</em></p>
+<p><strong>Chủ đề:</strong> Cơ bản về Pandas</p>
+<ul>
+<li>Đọc và thao tác dữ liệu bảng và time-series dùng Pandas</li>
+<li>Thảo luận cơ bản về Series và DataFrame</li>
+</ul>
+<hr>
+<h3 id="-thứ-4--ngày-30072025">👨‍🎓 <strong>Thứ 4 – Ngày 30/07/2025</strong></h3>
+<p><em>(Buổi học chính – Dr. Quang Vinh)</em></p>
+<p><strong>Chủ đề:</strong> Data Visualization and Analysis</p>
+<ul>
+<li>Thảo luận về Series và DataFrame</li>
+<li>Biểu diễn và thao tác dữ liệu time-series và dữ liệu bảng</li>
+<li>Data visualization dùng Pandas (tích hợp matplotlib và seaborn)</li>
+<li>Ứng dụng cho các bài toán AI thực tế</li>
+</ul>
+<hr>
+<h3 id="-thứ-5--ngày-31072025">👨‍💻 <strong>Thứ 5 – Ngày 31/07/2025</strong></h3>
+<p><em>(Data Engineering – TA Đăng Nhã)</em></p>
+<p><strong>Chủ đề:</strong> ETL Pipelines</p>
+<ul>
+<li>Các bước Extract, Transform, Load cho dữ liệu thô</li>
+<li>Thư viện phổ biến cho ETL và ví dụ minh họa</li>
+</ul>
+<hr>
+<h3 id="-thứ-6--ngày-01082025">👨‍🎓 <strong>Thứ 6 – Ngày 01/08/2025</strong></h3>
+<p><em>(Buổi học chính – Dr. Đình Vinh)</em></p>
+<p><strong>Chủ đề:</strong> Advanced Data Visualization</p>
+<ul>
+<li>Chọn lựa cách biểu diễn dữ liệu cho từng mục đích</li>
+<li>Thực hành với nhiều dạng dữ liệu khác nhau</li>
+</ul>
+<hr>
+<h3 id="-thứ-7--ngày-02082025">📊 <strong>Thứ 7 – Ngày 02/08/2025</strong></h3>
+<p><em>(Data Analysis – Dr. Thái Hà)</em></p>
+<p><strong>Chủ đề:</strong> Excel for Data Analysis (1)</p>
+<ul>
+<li>Hiểu xu hướng dữ liệu qua thống kê cơ bản</li>
+<li>Trực quan hoá dữ liệu và sử dụng biểu đồ hiệu quả</li>
+</ul>
+<hr>
+<h3 id="-chủ-nhật--ngày-03082025">📝 <strong>Chủ nhật – Ngày 03/08/2025</strong></h3>
+<p><em>(Buổi học chính – TA Quốc Thái)</em></p>
+<p><strong>Chủ đề:</strong> Exercise</p>
+<ul>
+<li>Ôn nhanh nội dung buổi thứ 4 và thứ 6</li>
+<li>Giải các bài tập thực hành</li>
+</ul>
+<hr>
+<h2 id="-tổng-hợp-kiến-thức--điểm-nhấn">📌 <strong>Tổng hợp kiến thức &amp; điểm nhấn</strong></h2>
+<h3 id="-pandas--xử-lý--trực-quan-hóa-dữ-liệu">✅ <strong>Pandas – Xử lý &amp; trực quan hóa dữ liệu</strong></h3>
+<ul>
+<li>Hiểu và sử dụng Series, DataFrame</li>
+<li>Biểu diễn dữ liệu bảng và time-series</li>
+<li>Trực quan hóa dữ liệu tích hợp matplotlib, seaborn</li>
+</ul>
+<hr>
+<h3 id="-etl-pipelines">✅ <strong>ETL Pipelines</strong></h3>
+<ul>
+<li>Nắm quy trình Extract, Transform, Load</li>
+<li>Thư viện và công cụ hỗ trợ ETL</li>
+</ul>
+<hr>
+<h3 id="-advanced-data-visualization--excel">✅ <strong>Advanced Data Visualization &amp; Excel</strong></h3>
+<ul>
+<li>Lựa chọn phương pháp trực quan hóa phù hợp</li>
+<li>Sử dụng Excel để phân tích dữ liệu và tạo biểu đồ</li>
+</ul>
+<hr>
+<p>📂 <em>Tài liệu đi kèm:</em><br>
+<details>
+	<summary> M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis </summary>
+	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+			<span class="font-semibold text-sm">📄 M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis </span>
+			<div class="flex space-x-2">
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+					Open in New Tab
+				</a>
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+					Download
+				</a>
+			</div>
+		</div>
+		<iframe
+			src="/Time-Series-Team-Hub/pdf/M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis.pdf"
+			width="100%"
+			height="700px"
+			class="border-0"
+			title="M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis">
+			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/M3W1D3&#43;4_Pandas&#43;DataVisualizationAndAnalysis.pdf">Download the PDF</a>.</p>
+		</iframe>
+	</div>
+</details>
+
+<details>
+	<summary> M3W1D5_ETL </summary>
+	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+			<span class="font-semibold text-sm">📄 M3W1D5_ETL </span>
+			<div class="flex space-x-2">
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D5_ETL.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+					Open in New Tab
+				</a>
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D5_ETL.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+					Download
+				</a>
+			</div>
+		</div>
+		<iframe
+			src="/Time-Series-Team-Hub/pdf/M3W1D5_ETL.pdf"
+			width="100%"
+			height="700px"
+			class="border-0"
+			title="M3W1D5_ETL">
+			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/M3W1D5_ETL.pdf">Download the PDF</a>.</p>
+		</iframe>
+	</div>
+</details>
+
+<details>
+	<summary> M3W1D6_AdvancedDataVisualization </summary>
+	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+			<span class="font-semibold text-sm">📄 M3W1D6_AdvancedDataVisualization </span>
+			<div class="flex space-x-2">
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D6_AdvancedDataVisualization.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+					Open in New Tab
+				</a>
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D6_AdvancedDataVisualization.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+					Download
+				</a>
+			</div>
+		</div>
+		<iframe
+			src="/Time-Series-Team-Hub/pdf/M3W1D6_AdvancedDataVisualization.pdf"
+			width="100%"
+			height="700px"
+			class="border-0"
+			title="M3W1D6_AdvancedDataVisualization">
+			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/M3W1D6_AdvancedDataVisualization.pdf">Download the PDF</a>.</p>
+		</iframe>
+	</div>
+</details>
+
+<details>
+	<summary> M3W1D7_Excel_for_Data_Analysis(1) </summary>
+	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+			<span class="font-semibold text-sm">📄 M3W1D7_Excel_for_Data_Analysis(1) </span>
+			<div class="flex space-x-2">
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D7_Excel_for_Data_Analysis%281%29.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+					Open in New Tab
+				</a>
+				<a href="/Time-Series-Team-Hub/pdf/M3W1D7_Excel_for_Data_Analysis%281%29.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+					Download
+				</a>
+			</div>
+		</div>
+		<iframe
+			src="/Time-Series-Team-Hub/pdf/M3W1D7_Excel_for_Data_Analysis%281%29.pdf"
+			width="100%"
+			height="700px"
+			class="border-0"
+			title="M3W1D7_Excel_for_Data_Analysis(1)">
+			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/M3W1D7_Excel_for_Data_Analysis%281%29.pdf">Download the PDF</a>.</p>
+		</iframe>
+	</div>
+</details>
+</p>
+<hr>
+<p>🧠 <em>Repository managed by <a href="https://github.com/Jennifer1907/Time-Series-Team-Hub">Time Series Team Hub</a></em></p>
+
+</div>
+
+    <footer id="content-footer" class="not-prose">
+
+      <div id="related-post" class="">
+
+        <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Recommended for You</h2>
+      </div>
+
+    </footer>
+
+  </article>
+
+  
+  <aside class="md:col-span-1"><div class="lg:sticky lg:top-8">
+
+	
+
+	<div class="space-y-6">
+
+		<h2 class="font-bold text-xl mb-8">Recent Post</h2>
+
+		<article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week3---extra/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/house_price_prediction_hu_6f97c387fc015932.png" alt="Module 5 - Tuần 3&#43;4: Dự đoán giá nhà với Machine Learning – Từ tiền xử lý đến mô hình hóa" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 3&#43;4: Dự đoán giá nhà với Machine Learning – Từ tiền xử lý đến mô hình hóa</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-4/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/house_prediction_hu_8be3a32fddb410b2.jpg" alt="Module 5 - Tuần 4: Advanced Regression &amp; AI Agent for Housing Appraisal" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 4: Advanced Regression &amp; AI Agent for Housing Appraisal</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-3/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/GA_hu_8fdfa4a3f8ae13fc.jpg" alt="Module 5 - Tuần 3: Genetic Algorithms &amp; XAI (SHAP)" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 3: Genetic Algorithms &amp; XAI (SHAP)</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week1&#43;2/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/Advanced_Linear_FeatureStore_hu_8b9eecce38576bbf.jpeg" alt="Module 5 - Tuần 1 &#43; 2: Chinh phục Linear Regression &amp; Hủy Diệt Data Conflicts cùng MLOps Versioning và Feast" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 1 &#43; 2: Chinh phục Linear Regression &amp; Hủy Diệt Data Conflicts cùng MLOps Versioning và Feast</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-3---extra/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/all_about_tree_hu_cb545c6c30038f07.jpg" alt="Module 4 - Tuần 3: Hành trình khám phá **Tree-Based Models**: Từ lý thuyết đến thực chiến" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 4 - Tuần 3: Hành trình khám phá **Tree-Based Models**: Từ lý thuyết đến thực chiến</h3>
+	</div>
+</article>
+		
+	</div>
+
+</div>
+</aside>
+
+</div>
+  
+</main>
+  <footer class="bg-zinc-100 py-10 md:py-14"><div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+
+  <div class="flex flex-wrap space-y-6 mb-4">
+
+    <div class="w-full md:w-3/5 flex flex-col space-y-4 md:pr-8 lg:pr-10">
+
+      <a class="flex items-center group" href="http://localhost:1313/Time-Series-Team-Hub/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="mr-2 group-hover:animate-spin" viewBox="0 0 16 16">
+          <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z"/>
+        </svg>
+        
+        <span class="text-2xl font-semibold uppercase">Time Series Team Hub</span>
+      </a>
+
+      <p class="font-semibold">
+        Write with love. Minimalism design.<br>
+      </p>
+    </div>
+
+    <div class="self-center flex flex-col w-full md:w-2/5">
+
+<ul id="social-media" class="flex items-center space-x-4">
+	
+	<li>
+		<a class="w-12 h-12 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center p-2" href="https://github.com/Jennifer1907" target="_blank" rel="noopener noreferrer">
+			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+				  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+			</svg>
+		</a>
+	</li>
+	<li>
+    <a class="w-12 h-12 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center p-2" href="https://www.linkedin.com/in/ha-jennifer-nguyen/" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+    </a>
+	</li>
+</ul>
+
+    </div>
+    
+  </div>
+
+  <div class="my-8">
+    <ul class="flex items-center space-x-4">
+      
+        <li><a class="decoration-auto hover:underline font-semibold" href="/Time-Series-Team-Hub/">Home</a></li>
+      
+        <li><a class="decoration-auto hover:underline font-semibold" href="/Time-Series-Team-Hub/about/">About</a></li>
+      
+    </ul>
+  </div>
+
+  <div class="border-t pt-4">
+
+    <p class="text-sm">Copyright © 2025. All rights reserved.</p>
+
+  </div>
+  
+</div>
+</footer>
+      <script src="/Time-Series-Team-Hub/js/insertoggle.js"></script>
+</body>
+</html>

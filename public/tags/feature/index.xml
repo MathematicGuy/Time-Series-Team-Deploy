@@ -6,14 +6,21 @@
     <description>Recent content in Feature on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 28 Jun 2025 13:03:07 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 01 Nov 2025 10:00:00 +0700</lastBuildDate>
     <atom:link href="http://localhost:1313/Time-Series-Team-Hub/tags/feature/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Module 1 - Tuần 4 - Trợ lý Gạo AI đã xuất hiện</title>
-      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-4/chat_bot/</link>
-      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-4/chat_bot/</guid>
-      <description>&lt;h2 id=&#34;-trợ-lý-gạo-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý Gạo AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot Gạo AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;/p&gt;</description>
+      <title>Module 5 - Tuần 3&#43;4: Dự đoán giá nhà với Machine Learning – Từ tiền xử lý đến mô hình hóa</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week3---extra/</link>
+      <pubDate>Sat, 01 Nov 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week3---extra/</guid>
+      <description>&lt;p&gt;🏡 &lt;strong&gt;Dự án Tuần 3+4 của Module 5&lt;/strong&gt; là một bài học thực chiến đầy đủ quy trình của một dự án &lt;strong&gt;Machine Learning&lt;/strong&gt;: từ thu thập, xử lý dữ liệu, đến huấn luyện và đánh giá mô hình.&#xA;Chủ đề trọng tâm là &lt;strong&gt;Dự đoán giá nhà (House Price Prediction)&lt;/strong&gt; — một bài toán kinh điển nhưng chứa đựng nhiều thách thức trong xử lý dữ liệu thực tế.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 5 - Tuần 4: Advanced Regression &amp; AI Agent for Housing Appraisal</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-4/</link>
+      <pubDate>Tue, 28 Oct 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-4/</guid>
+      <description>&lt;p&gt;🎓 &lt;strong&gt;All-in-One Course 2025 – aivietnam.edu.vn&lt;/strong&gt;&lt;br&gt;&#xA;📘 &lt;strong&gt;Project: Module 5 – Week 4&lt;/strong&gt;&lt;br&gt;&#xA;🏠 &lt;strong&gt;Chủ đề:&lt;/strong&gt; Advanced Regression Techniques &amp;amp; AI Agent for Housing Appraisal&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

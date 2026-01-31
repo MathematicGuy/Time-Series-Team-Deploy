@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head><script src="/Time-Series-Team-Hub/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=Time-Series-Team-Hub/livereload" data-no-instant defer></script>
+	<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Module 2 - Tuần 4 - Dũng sĩ diệt SPAM đã trở lại và lợi hại hơn xưa | Time Series Team Hub</title>
+
+<meta name="description" content="Hệ thống phân loại tin nhắn spam/ham nâng cao với khả năng giải thích, được xây dựng bằng Streamlit và các kỹ thuật học máy/học sâu hiện đại.">
+    <link rel="stylesheet" href="/Time-Series-Team-Hub/css/main.css">
+
+<link rel="icon" type="image/svg+xml" href="http://localhost:1313/Time-Series-Team-Hub/favicon.svg"> 
+<link rel="icon" type="image/x-icon" href="http://localhost:1313/Time-Series-Team-Hub/favicon.ico"> 
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/Time-Series-Team-Hub/favicon.png"> 
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/Time-Series-Team-Hub/favicon-32.png"> 
+<link rel="icon" type="image/png" sizes="64x64" href="http://localhost:1313/Time-Series-Team-Hub/favicon-64.png"> 
+
+	
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+	integrity="sha384-GqV8jWJ4M4d7KpAaFdFHQPJoPIZHjI46tD/1m5K8Fg8z57EIsYjyN8e/XuID8vQv" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+	integrity="sha384-vL+PRUsWbppvSttTjlL6R9T/cAzSBx3IMT/14F4Hqp6NAY7G6UJzKuZ1S74gCkQw"
+	crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+	integrity="sha384-mll67QQ5HOwCRm7C0blXZqXQKUX2eX0TQ1gV7m4nG1cTQqgXk7HbiUJxO2bdfXU0" crossorigin="anonymous" onload="renderMathInElement(document.body, {
+            delimiters: [
+				{left: '$$', right: '$$', display: true},
+				{left: '$', right: '$', display: false}
+            ]
+		});">
+		</script>
+ 
+</head>
+<body>
+  <header class="py-6 border-b"><div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 flex flex-col">
+	<div class="flex items-center">
+		<div class="flex items-center">
+			<button class="flex items-center space-x-2 rounded-full border py-1 pr-[5px] pl-3 group bg-zinc-100 hover:bg-zinc-200 toggle-button" data-target="menu-bar">
+				<svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path>
+				</svg>
+				<span class="bg-blue-500 fill-white rounded-full p-1.5">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="group-hover:animate-spin bi bi-egg-fried fill-white" viewBox="0 0 16 16">
+						<path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+						<path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z"></path>
+					</svg>
+				</span>
+			</button>
+			<div class="relative rounded-full py-1.5 px-6 bg-zinc-100 hover:bg-zinc-200 text-xl font-bold uppercase mx-2">
+				<h2><a class="before:content-[''] before:z-10 before:top-0 before:right-0 before:left-0 before:bottom-0 before:absolute before:pointer-events-auto" href="http://localhost:1313/Time-Series-Team-Hub/">Time Series Team Hub</a></h2>
+			</div>
+		</div>
+		<div class="flex items-center ml-auto">
+			<button class="flex items-center rounded-full p-3 bg-zinc-100 hover:bg-zinc-200 toggle-button" data-target="search-bar">
+				<svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+					<path id="path1" class="transition-all ease-linear" d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+					<path id="path2" class="transition-all ease-linear hidden" d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+  <nav id="menu-bar" class="block mt-3 close">
+    <ul class="flex items-center flex flex-nowrap whitespace-nowrap overflow-x-auto space-x-4">
+    <li class="my-2">
+      <a class="rounded-full border px-6 py-2 bg-zinc-100 hover:bg-zinc-200" href="/Time-Series-Team-Hub/">Home</a>
+    </li>
+    <li class="my-2">
+      <a class="rounded-full border px-6 py-2 bg-zinc-100 hover:bg-zinc-200" href="/Time-Series-Team-Hub/about/">About</a>
+    </li>
+    </ul>
+  </nav>
+<div id="search-bar" class="block mt-3 close">
+	<form id="search" class="flex items-stretch">
+		<input class="w-full block px-6 py-2 rounded-l-full focus:outline-none border border-zinc-200" type="text" placeholder="Search...">
+		<button class="flex items-center px-7 py-2.5 rounded-r-full border border-zinc-200 ">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="group-hover:animate-pulse" viewBox="0 0 16 16">
+				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+			</svg>
+		</button>
+	</form>
+</div>
+</div></header>
+  <main class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8"><div id="breadcrumb" class="max-w-7xl mx-auto py-8">
+	<ul class="flex space-x-4 text-sm text-zinc-500">
+		<li class="after:content-['❯'] after:ml-4 after:opacity-30 last:after:content-none uppercase">
+			<a href="http://localhost:1313/Time-Series-Team-Hub/">Time Series Team Hub</a>
+		</li>
+		<li class="after:content-['❯'] after:ml-4 after:opacity-30 last:after:content-none uppercase">
+			<a href="http://localhost:1313/Time-Series-Team-Hub/posts/">Posts</a>
+		</li>
+	</ul>
+</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+
+  <article class="md:col-span-2 prose lg:prose-lg">
+
+    <header class="not-prose">
+      
+      <h1 id="title" class="text-4xl font-bold leading-normal">Module 2 - Tuần 4 - Dũng sĩ diệt SPAM đã trở lại và lợi hại hơn xưa</h1>
+
+      <div id="lead" class="my-6">
+
+        <p class="font-bold">Hệ thống phân loại tin nhắn spam/ham nâng cao với khả năng giải thích, được xây dựng bằng Streamlit và các kỹ thuật học máy/học sâu hiện đại. </p>
+
+      </div>
+      
+      <div id="writer" class="flex items-center space-x-4"><ul class="flex items-center space-x-4 flex-nowrap whitespace-nowrap overflow-x-auto">
+          
+          <li class="font-semibold my-2"></li>
+          
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2"><time datetime="2025-08-02T10:00:00&#43;07:00">August 2, 2025</time>
+          </li>
+
+          <li class="before:content-['•'] before:mr-2 before:opacity-50 my-2">
+            4 min read
+          </li>
+
+        </ul>
+
+      </div>
+      
+    </header>
+
+    <figure id="featureimage" class="rounded-xl aspect-video">
+            <img class="rounded-lg" src="http://localhost:1313/Time-Series-Team-Hub/images/spam_detector_hu_d2a37c2348a23113.jpg" alt="" width="750" height="422">
+        <figcaption class="text-center italic text-xs"></figcaption>
+
+    </figure>
+
+    <div id="content" class="mb-14">
+      <h2 id="-module-2---tuần-4----dũng-sĩ-diệt-spam-đã-trở-lại">🤖 Module 2 - Tuần 4 - 🛡️ Dũng Sĩ Diệt SPAM đã trở lại</h2>
+<p>Chào mừng bạn đến với <strong>Dũng Sĩ Diệt SPAM</strong> của Time-Series Team! Đây là một công cụ tiên tiến giúp <strong>phân loại tin nhắn thành spam hoặc ham</strong> với độ chính xác cao và cung cấp <strong>giải thích chi tiết</strong> về cách hệ thống đưa ra quyết định. Hệ thống này không chỉ lọc tin nhắn rác mà còn mang lại sự minh bạch trong quá trình xử lý dữ liệu.</p>
+<p>Hệ thống Dũng Sĩ Diệt SPAM sử dụng 3 cấp độ phân loại từ cơ bản đến nâng cao:</p>
+<p>🎯 Phân loại tin nhắn cơ bản (HAM vs SPAM)
+🔍 Phân loại với giải thích (Explainable AI)
+🏷️ Phân loại phụ chi tiết (Spam Subcategorization)</p>
+<hr>
+<h2 id="-trải-nghiệm-dũng-sĩ-diệt-spam-tại-đây">🧪 Trải nghiệm Dũng sĩ diệt spam tại đây:</h2>
+<p><strong>Dùng thử ngay</strong>: <strong><a href="https://superherospamai.streamlit.app/">Streamlit</a></strong></p>
+<p>Vì một số hạn chế khi deploy lên Streamlit Cloud nên có thể sẽ xảy ra lỗi nếu cùng nhiều người vào một lúc. Nếu trường hợp xảy ra thì cho nhóm xin lỗi và bạn có thể clone code của nhóm từ Github về máy để chạy local nhé.</p>
+<p>Bên cạnh đó app đang thực hiện rất tốt phần Tiếng Việt, về phần Tiếng Anh nhóm có áp dụng Data Augmentation trong quá trình train model nên có thể hay crash trên Streamlit vì vậy bạn clone Github về máy chạy luôn nhé!</p>
+<h3 id="-file-source-code">🧪 File Source Code:</h3>
+<p>[Code_Streamlit] (<a href="https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/feature_spamdetector">https://github.com/Jennifer1907/Time-Series-Team-Hub/tree/main/assets/feature_spamdetector</a>)<br>
+[Google_Colab] (<a href="https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing">https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing</a>)</p>
+<h3 id="-đối-tượng-người-dùng">👉 Đối Tượng Người Dùng</h3>
+<ul>
+<li><strong>Người dùng cá nhân</strong>: Kiểm tra tin nhắn hoặc email đáng ngờ để bảo vệ thông tin cá nhân.</li>
+<li><strong>Doanh nghiệp</strong>: Tự động lọc email, giảm thiểu nguy cơ lừa đảo.</li>
+<li><strong>Nhà nghiên cứu</strong>: Tìm hiểu cách AI phân tích và giải thích dữ liệu tin nhắn.</li>
+</ul>
+<p>Bạn có thể nhập một tin nhắn để kiểm tra hoặc tích hợp hệ thống vào pipeline xử lý dữ liệu lớn.</p>
+<hr>
+<h2 id="-cách-hoạt-động">🧠 Cách Hoạt Động</h2>
+<p>Hệ thống sử dụng các kỹ thuật học máy và công nghệ hiện đại:</p>
+<ul>
+<li><strong>Data Augmentation</strong>: Tăng cường dữ liệu để cải thiện khả năng nhận diện spam tinh vi và tránh phân loại nhầm email có nội dung ham thành spam .</li>
+<li><strong>Weighted KNN</strong>: Phân loại dựa trên mức độ tương đồng, ưu tiên các mẫu gần nhất.</li>
+<li><strong>Explainable AI (XAI)</strong>: Sử dụng <strong>Masking-based Saliency</strong> để giải thích quyết định phân loại.</li>
+<li><strong>HuggingFace + FAISS</strong>: Tạo embedding ngữ nghĩa và tìm kiếm tin nhắn tương tự.</li>
+</ul>
+<p>Quy trình:</p>
+<ol>
+<li>Tin nhắn được mã hóa thành vector bằng mô hình <code>multilingual-e5-base</code>.</li>
+<li>Weighted KNN phân loại dựa trên dữ liệu huấn luyện.</li>
+<li>XAI phân tích và chỉ ra các từ khóa quan trọng ảnh hưởng đến kết quả.</li>
+</ol>
+<hr>
+<h2 id="-tính-năng-nổi-bật">🔍 Tính Năng Nổi Bật</h2>
+<ul>
+<li><strong>Phân loại chính xác</strong>: Gắn nhãn tin nhắn là spam hoặc ham.</li>
+<li><strong>Giải thích rõ ràng</strong>: Hiển thị các từ khóa và mức độ ảnh hưởng đến kết quả.</li>
+<li><strong>Phân loại tiểu mục</strong>: Xác định loại spam (quảng cáo, lừa đảo, v.v.).</li>
+<li><strong>Trực quan hóa</strong>: Hiển thị các tin nhắn tương tự và điểm tương đồng.</li>
+</ul>
+<hr>
+<h2 id="-ưu-điểm">♻️ Ưu Điểm</h2>
+<ul>
+<li><strong>Độ chính xác cao</strong>: Nhờ Weighted KNN và dữ liệu tăng cường lên đến 94%</li>
+<li><strong>Minh bạch</strong>: Giải thích AI giúp người dùng hiểu rõ quyết định.</li>
+<li><strong>Linh hoạt</strong>: Hỗ trợ song ngữ Tiếng Anh và Tiếng Việt và tích hợp dễ dàng.</li>
+<li><strong>Ứng dụng thực tế</strong>: Từ bảo vệ cá nhân đến tự động hóa doanh nghiệp.</li>
+</ul>
+<hr>
+<h2 id="-công-nghệ-sử-dụng">🛠️ Công Nghệ Sử Dụng</h2>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Thành Phần</strong></th>
+          <th><strong>Công Cụ</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Mã nguồn</td>
+          <td><a href="https://colab.research.google.com/drive/1dNQ4gKpXB7Q6kDdi18sEGRiZxcWRVAgZ?usp=sharing">Google Colab</a></td>
+      </tr>
+      <tr>
+          <td>Mô hình NLP</td>
+          <td><a href="https://huggingface.co/bert-base-multilingual-cased">BERT</a></td>
+      </tr>
+      <tr>
+          <td>Slide giới thiệu</td>
+          <td><a href="https://www.canva.com/design/DAGu3xJo4fw/wHrvqq_Zcu1q6WCW-DIIBA/view">Slide</a></td>
+      </tr>
+      <tr>
+          <td>Embedding</td>
+          <td><code>multilingual-e5-base</code></td>
+      </tr>
+      <tr>
+          <td>Tìm kiếm tương đồng</td>
+          <td>FAISS</td>
+      </tr>
+      <tr>
+          <td>Giải thích AI</td>
+          <td>Masking-based Saliency</td>
+      </tr>
+      <tr>
+          <td>Phân loại tiểu mục</td>
+          <td>Semi-supervised Learning</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p>📂 <em>Tài liệu đi kèm:</em>
+<details>
+	<summary> M2W4D1_Spam_Detector </summary>
+	<div class="pdf-container my-6 border rounded-lg overflow-hidden shadow-lg">
+		<div class="pdf-header bg-zinc-100 px-4 py-2 flex items-center justify-between">
+			<span class="font-semibold text-sm">📄 M2W4D1_Spam_Detector </span>
+			<div class="flex space-x-2">
+				<a href="/Time-Series-Team-Hub/pdf/M2W4D1_Spam_Detector.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+					Open in New Tab
+				</a>
+				<a href="/Time-Series-Team-Hub/pdf/M2W4D1_Spam_Detector.pdf" download class="text-blue-600 hover:text-blue-800 text-sm">
+					Download
+				</a>
+			</div>
+		</div>
+		<iframe
+			src="/Time-Series-Team-Hub/pdf/M2W4D1_Spam_Detector.pdf"
+			width="100%"
+			height="700px"
+			class="border-0"
+			title="M2W4D1_Spam_Detector">
+			<p>Your browser does not support PDFs. <a href="/Time-Series-Team-Hub/pdf/M2W4D1_Spam_Detector.pdf">Download the PDF</a>.</p>
+		</iframe>
+	</div>
+</details>
+</p>
+<p>Hãy trải nghiệm hệ thống ngay hôm nay để khám phá cách AI bảo vệ bạn khỏi tin nhắn rác một cách thông minh và minh bạch.</p>
+
+</div>
+
+    <footer id="content-footer" class="not-prose">
+
+      <div id="related-post" class="">
+
+        <h2 class="text-xl md:text-2xl font-bold mb-6 md:mb-8">Recommended for You</h2>
+      </div>
+
+    </footer>
+
+  </article>
+
+  
+  <aside class="md:col-span-1"><div class="lg:sticky lg:top-8">
+
+	
+
+	<div class="space-y-6">
+
+		<h2 class="font-bold text-xl mb-8">Recent Post</h2>
+
+		<article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week3---extra/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/house_price_prediction_hu_6f97c387fc015932.png" alt="Module 5 - Tuần 3&#43;4: Dự đoán giá nhà với Machine Learning – Từ tiền xử lý đến mô hình hóa" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 3&#43;4: Dự đoán giá nhà với Machine Learning – Từ tiền xử lý đến mô hình hóa</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-4/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/house_prediction_hu_8be3a32fddb410b2.jpg" alt="Module 5 - Tuần 4: Advanced Regression &amp; AI Agent for Housing Appraisal" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 4: Advanced Regression &amp; AI Agent for Housing Appraisal</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-3/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/GA_hu_8fdfa4a3f8ae13fc.jpg" alt="Module 5 - Tuần 3: Genetic Algorithms &amp; XAI (SHAP)" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 3: Genetic Algorithms &amp; XAI (SHAP)</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module5/week1&#43;2/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/Advanced_Linear_FeatureStore_hu_8b9eecce38576bbf.jpeg" alt="Module 5 - Tuần 1 &#43; 2: Chinh phục Linear Regression &amp; Hủy Diệt Data Conflicts cùng MLOps Versioning và Feast" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 5 - Tuần 1 &#43; 2: Chinh phục Linear Regression &amp; Hủy Diệt Data Conflicts cùng MLOps Versioning và Feast</h3>
+	</div>
+</article><article class="relative group flex flex-row">
+	<a class="insert-link" href="http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-3---extra/"></a>
+	<figure class="basis-1/3 aspect-square overflow-hidden rounded-2xl bg-zinc-100"><img class="object-cover h-full w-full group-hover:scale-105 transition duration-500 cursor-pointer" src="http://localhost:1313/Time-Series-Team-Hub/images/all_about_tree_hu_cb545c6c30038f07.jpg" alt="Module 4 - Tuần 3: Hành trình khám phá **Tree-Based Models**: Từ lý thuyết đến thực chiến" width="250" height="250">
+
+	</figure>
+	<div class="basis-2/3 self-center ml-4">
+		<h3 class="font-bold group-hover:underline decoration-auto">Module 4 - Tuần 3: Hành trình khám phá **Tree-Based Models**: Từ lý thuyết đến thực chiến</h3>
+	</div>
+</article>
+		
+	</div>
+
+</div>
+</aside>
+
+</div>
+  
+</main>
+  <footer class="bg-zinc-100 py-10 md:py-14"><div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+
+  <div class="flex flex-wrap space-y-6 mb-4">
+
+    <div class="w-full md:w-3/5 flex flex-col space-y-4 md:pr-8 lg:pr-10">
+
+      <a class="flex items-center group" href="http://localhost:1313/Time-Series-Team-Hub/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="mr-2 group-hover:animate-spin" viewBox="0 0 16 16">
+          <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path d="M13.997 5.17a5 5 0 0 0-8.101-4.09A5 5 0 0 0 1.28 9.342a5 5 0 0 0 8.336 5.109 3.5 3.5 0 0 0 5.201-4.065 3.001 3.001 0 0 0-.822-5.216zm-1-.034a1 1 0 0 0 .668.977 2.001 2.001 0 0 1 .547 3.478 1 1 0 0 0-.341 1.113 2.5 2.5 0 0 1-3.715 2.905 1 1 0 0 0-1.262.152 4 4 0 0 1-6.67-4.087 1 1 0 0 0-.2-1 4 4 0 0 1 3.693-6.61 1 1 0 0 0 .8-.2 4 4 0 0 1 6.48 3.273z"/>
+        </svg>
+        
+        <span class="text-2xl font-semibold uppercase">Time Series Team Hub</span>
+      </a>
+
+      <p class="font-semibold">
+        Write with love. Minimalism design.<br>
+      </p>
+    </div>
+
+    <div class="self-center flex flex-col w-full md:w-2/5">
+
+<ul id="social-media" class="flex items-center space-x-4">
+	
+	<li>
+		<a class="w-12 h-12 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center p-2" href="https://github.com/Jennifer1907" target="_blank" rel="noopener noreferrer">
+			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+				  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+			</svg>
+		</a>
+	</li>
+	<li>
+    <a class="w-12 h-12 rounded-full bg-white hover:bg-zinc-200 flex items-center justify-center p-2" href="https://www.linkedin.com/in/ha-jennifer-nguyen/" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+    </a>
+	</li>
+</ul>
+
+    </div>
+    
+  </div>
+
+  <div class="my-8">
+    <ul class="flex items-center space-x-4">
+      
+        <li><a class="decoration-auto hover:underline font-semibold" href="/Time-Series-Team-Hub/">Home</a></li>
+      
+        <li><a class="decoration-auto hover:underline font-semibold" href="/Time-Series-Team-Hub/about/">About</a></li>
+      
+    </ul>
+  </div>
+
+  <div class="border-t pt-4">
+
+    <p class="text-sm">Copyright © 2025. All rights reserved.</p>
+
+  </div>
+  
+</div>
+</footer>
+      <script src="/Time-Series-Team-Hub/js/insertoggle.js"></script>
+</body>
+</html>

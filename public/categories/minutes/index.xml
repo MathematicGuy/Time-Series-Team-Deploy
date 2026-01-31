@@ -6,21 +6,126 @@
     <description>Recent content in Minutes on Time Series Team Hub</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Jul 2025 13:03:07 +0700</lastBuildDate>
+    <lastBuildDate>Sat, 01 Nov 2025 10:00:00 +0700</lastBuildDate>
     <atom:link href="http://localhost:1313/Time-Series-Team-Hub/categories/minutes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Module 5 - Tuần 3&#43;4: Dự đoán giá nhà với Machine Learning – Từ tiền xử lý đến mô hình hóa</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week3---extra/</link>
+      <pubDate>Sat, 01 Nov 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week3---extra/</guid>
+      <description>&lt;p&gt;🏡 &lt;strong&gt;Dự án Tuần 3+4 của Module 5&lt;/strong&gt; là một bài học thực chiến đầy đủ quy trình của một dự án &lt;strong&gt;Machine Learning&lt;/strong&gt;: từ thu thập, xử lý dữ liệu, đến huấn luyện và đánh giá mô hình.&#xA;Chủ đề trọng tâm là &lt;strong&gt;Dự đoán giá nhà (House Price Prediction)&lt;/strong&gt; — một bài toán kinh điển nhưng chứa đựng nhiều thách thức trong xử lý dữ liệu thực tế.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 5 - Tuần 4: Advanced Regression &amp; AI Agent for Housing Appraisal</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-4/</link>
+      <pubDate>Tue, 28 Oct 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-4/</guid>
+      <description>&lt;p&gt;🎓 &lt;strong&gt;All-in-One Course 2025 – aivietnam.edu.vn&lt;/strong&gt;&lt;br&gt;&#xA;📘 &lt;strong&gt;Project: Module 5 – Week 4&lt;/strong&gt;&lt;br&gt;&#xA;🏠 &lt;strong&gt;Chủ đề:&lt;/strong&gt; Advanced Regression Techniques &amp;amp; AI Agent for Housing Appraisal&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 5 - Tuần 3: Genetic Algorithms &amp; XAI (SHAP)</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-3/</link>
+      <pubDate>Mon, 20 Oct 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week-3/</guid>
+      <description>&lt;p&gt;🎓 &lt;strong&gt;All-in-One Course 2025 – aivietnam.edu.vn&lt;/strong&gt;&lt;br&gt;&#xA;📘 &lt;strong&gt;Study Guide: Module 5 – Week 3&lt;/strong&gt;&lt;br&gt;&#xA;🧬 &lt;strong&gt;Chủ đề:&lt;/strong&gt; Genetic Algorithms &amp;amp; Explainable AI (SHAP)&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 5 - Tuần 1 &#43; 2: Chinh phục Linear Regression &amp; Hủy Diệt Data Conflicts cùng MLOps Versioning và Feast</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week1&#43;2/</link>
+      <pubDate>Mon, 13 Oct 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module5/week1&#43;2/</guid>
+      <description>&lt;p&gt;🎓 &lt;strong&gt;All-in-One Course 2025 – aivietnam.edu.vn&lt;/strong&gt;&#xA;📘 &lt;strong&gt;Study Guide: Module 5 – Week 1 + 2&lt;/strong&gt;&#xA;🧩 &lt;strong&gt;Chủ đề:&lt;/strong&gt; Chinh phục Linear Regression từ Cơ Bản tới Nâng Cao &amp;amp; Hủy Diệt Data Conflicts cùng MLOps Versioning và Feast&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 4 - Tuần 3: Hành trình khám phá **Tree-Based Models**: Từ lý thuyết đến thực chiến</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-3---extra/</link>
+      <pubDate>Mon, 22 Sep 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-3---extra/</guid>
+      <description>&lt;p&gt;✨ Đây không chỉ là một bài blog, mà là toàn bộ &lt;strong&gt;tinh túy quá trình học tập và tổng hợp&lt;/strong&gt; của nhóm với các mô hình cây. Từ những bước tính tay đơn giản nhất cho một cây quyết định, đến việc so sánh benchmark hàng loạt mô hình hiện đại như &lt;strong&gt;XGBoost&lt;/strong&gt; và &lt;strong&gt;LightGBM&lt;/strong&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 4 - Tuần 3: Tree Review &amp; LightGBM – Cây cối nở rộ và nở hoa với Time-series</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-3/</link>
+      <pubDate>Mon, 22 Sep 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-3/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 – Module 4 của AIO Course 2025!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;🌟 &lt;strong&gt;Giới thiệu&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Nếu tuần trước chúng ta dừng lại ở Gradient Boosting &amp;amp; XGBoost, thì tuần này là một &lt;strong&gt;hành trình tổng hợp&lt;/strong&gt;:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 4 - Tuần 2: Tree Series Tiếp Tục – Gradient Boosting, XGBoost &amp; FastAPI Deployment</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-2/</link>
+      <pubDate>Sun, 14 Sep 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-2/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 2 của team Time Series – Module 4!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;🌟 &lt;strong&gt;Giới thiệu&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Sau khi “làm bạn” với &lt;strong&gt;Random Forest&lt;/strong&gt; và &lt;strong&gt;AdaBoost&lt;/strong&gt; ở tuần trước, tuần này series Tree-based models tiếp tục với hai cao thủ đình đám: &lt;strong&gt;Gradient Boosting&lt;/strong&gt; và &lt;strong&gt;XGBoost&lt;/strong&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 3 - Tuần 4 - Abstract Classifier: Phân loại chủ đề bài báo khoa học có giải thích</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-4/</link>
+      <pubDate>Sat, 06 Sep 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-4/</guid>
+      <description>&lt;h2 id=&#34;-module-3---tuần-4---abstract-classifier-có-giải-thích&#34;&gt;🧠 Module 3 - Tuần 4 — 🔎 Abstract Classifier có giải thích&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với &lt;strong&gt;Abstract Classifier&lt;/strong&gt; của Time-Series Team! Hệ thống này giúp &lt;strong&gt;phân loại một publication abstract&lt;/strong&gt; vào các topic: &lt;strong&gt;astro-ph, cond-mat, cs, math, physics&lt;/strong&gt;. Điểm đặc biệt: mô hình đi kèm &lt;strong&gt;khả năng giải thích (XAI)&lt;/strong&gt; ở mức token/cụm từ, giúp bạn hiểu rõ &lt;em&gt;vì sao&lt;/em&gt; một abstract được gán vào chủ đề dự đoán.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 4 - Tuần 4 - Tabular Data Project: Phân loại khả năng mắc bệnh tim dựa vào các triệu chứng</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-4/</link>
+      <pubDate>Sat, 06 Sep 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-4/</guid>
+      <description>&lt;h2 id=&#34;-module-4---tuần-4---heart-disease-classifier--time-series-team&#34;&gt;🧠 Module 4 - Tuần 4 — ❤️ Heart Disease Classifier – Time-Series Team&lt;/h2&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với Heart Disease Classifier – dự án mở rộng từ nhóm Time-Series Team.&#xA;Hệ thống này tập trung vào chẩn đoán và phân loại bệnh tim dựa trên nhiều hướng tiếp cận tiên tiến trong Machine Learning &amp;amp; Deep Learning, đồng thời tích hợp Explainable AI (XAI) giúp giải thích quyết định mô hình.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 4 - Tuần 1: Random Forest • AdaBoost • Gradio demo • Tổng quan Time-series</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-1/</link>
+      <pubDate>Tue, 02 Sep 2025 09:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module4/week-1/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 1 của team Time Series – Module 4!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;🌟 &lt;strong&gt;Giới thiệu&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần này, chúng ta bước vào các kỹ thuật &lt;strong&gt;ensemble learning&lt;/strong&gt; trọng yếu: &lt;strong&gt;Random Forest&lt;/strong&gt; và &lt;strong&gt;AdaBoost&lt;/strong&gt;. Bên cạnh phần thuật toán, bạn sẽ học cách &lt;strong&gt;triển khai demo mô hình bằng Gradio&lt;/strong&gt; để trình bày và kiểm thử nhanh, đồng thời &lt;strong&gt;củng cố nền tảng về dữ liệu time-series&lt;/strong&gt; nhằm định hướng mô hình và đánh giá đúng bản chất chuỗi thời gian. Kết thúc tuần là một phiên &lt;strong&gt;bài tập tổng hợp&lt;/strong&gt; để bạn liên kết toàn bộ kiến thức đã học vào thực hành end-to-end. (Lịch &amp;amp; nội dung chi tiết dựa trên Study Guide tuần này. :contentReference[oaicite:0]{index=0})&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 3 - Tuần 3: Decision Tree định hướng - Cloud lưu giữ - Excel phân tích</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-3/</link>
+      <pubDate>Mon, 18 Aug 2025 09:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-3/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 của team Time Series – Module 3!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;🌟 &lt;strong&gt;Giới thiệu&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với tuần học thú vị về các chủ đề cốt lõi trong Trí tuệ nhân tạo và Khoa học dữ liệu!! Tuần này, chúng ta sẽ cùng khám phá &lt;strong&gt;Decision Tree – thuật toán trực quan và dễ hiểu&lt;/strong&gt; bậc nhất trong học có giám sát, được ứng dụng mạnh mẽ trong cả phân loại và dự đoán. Bạn sẽ được đi từ lý thuyết đến thực hành với các ví dụ thực tế, trực tiếp xây dựng cây quyết định và phân tích độ chính xác của mô hình. Không dừng lại ở đó, bạn cũng sẽ tiếp cận với kiến thức về &lt;strong&gt;Cloud Storage &amp;amp; Management&lt;/strong&gt; – nền tảng không thể thiếu trong xử lý và lưu trữ dữ liệu lớn thời hiện đại. Bên cạnh đó, bạn sẽ tiếp tục rèn luyện kỹ năng &lt;strong&gt;phân tích dữ liệu bằng Excel&lt;/strong&gt;, bao gồm kiểm định giả thuyết, hồi quy và trực quan hóa dữ liệu.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 3 – Tuần 1: Chinh Phục Pandas – Từ Bảng Dữ Liệu Đến Biểu Đồ Sống Động</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-1/</link>
+      <pubDate>Mon, 11 Aug 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-1/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 1 của team Time Series – Module 3!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần này, chúng ta sẽ cùng nhau khám phá sức mạnh của &lt;strong&gt;Pandas&lt;/strong&gt; trong việc xử lý và trực quan hóa dữ liệu, từ dữ liệu bảng, dữ liệu time-series cho tới các pipeline ETL và Excel. Đây là những kỹ năng thiết yếu để phân tích dữ liệu và xây dựng nền tảng cho các ứng dụng AI.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 3 - Tuần 2: K-Học-K-Vui: Hành Trình Tìm K Hoàn Hảo và Những Cú Chạm Py-Spark Ngoạn Mục!</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-2/</link>
+      <pubDate>Sun, 03 Aug 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module3/week-2/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 2 của team Time Series – Module 3!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;🌟 &lt;strong&gt;Giới thiệu&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với tuần học thú vị về hai thuật toán quan trọng nhất trong Machine Learning! Tuần này chúng ta sẽ khám phá &lt;strong&gt;K-Nearest Neighbors (KNN)&lt;/strong&gt; - một thuật toán học có giám sát đơn giản nhưng mạnh mẽ, và &lt;strong&gt;K-Means Clustering&lt;/strong&gt; - thuật toán phân cụm phổ biến trong học không giám sát.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 2 - Tuần 4 - Dũng sĩ diệt SPAM đã trở lại và lợi hại hơn xưa</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-4/spam_ham_classifier/</link>
+      <pubDate>Sat, 02 Aug 2025 10:00:00 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-4/spam_ham_classifier/</guid>
+      <description>&lt;h2 id=&#34;-module-2---tuần-4----dũng-sĩ-diệt-spam-đã-trở-lại&#34;&gt;🤖 Module 2 - Tuần 4 - 🛡️ Dũng Sĩ Diệt SPAM đã trở lại&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với &lt;strong&gt;Dũng Sĩ Diệt SPAM&lt;/strong&gt; của Time-Series Team! Đây là một công cụ tiên tiến giúp &lt;strong&gt;phân loại tin nhắn thành spam hoặc ham&lt;/strong&gt; với độ chính xác cao và cung cấp &lt;strong&gt;giải thích chi tiết&lt;/strong&gt; về cách hệ thống đưa ra quyết định. Hệ thống này không chỉ lọc tin nhắn rác mà còn mang lại sự minh bạch trong quá trình xử lý dữ liệu.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Module 2 - Tuần 3: Thống kê, Firebase và trải nhiệm xử lý ảnh đầu tiên sử dụng thống kê</title>
       <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-3/</link>
       <pubDate>Mon, 21 Jul 2025 13:03:07 +0700</pubDate>
       <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-3/</guid>
-      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 3 đã tiếp tục&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-lịch-trình-học-và-nội-dung-chính&#34;&gt;📅 &lt;strong&gt;Lịch trình học và nội dung chính&lt;/strong&gt;&lt;/h2&gt;&#xA;&lt;h3 id=&#34;-thứ-3--ngày-15072025&#34;&gt;🧑‍🏫 &lt;strong&gt;Thứ 3 – Ngày 15/07/2025&lt;/strong&gt;&lt;/h3&gt;&#xA;&lt;p&gt;&lt;em&gt;(Buổi warm-up – TA Quốc Thái)&lt;/em&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 3 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 3 đã tiếp tục! Tuần học này tụi mình tập trung vào nội dung liên quan đến Thống Kê, Ứng dụng Correlation và NoSQL. Bạn hãy xem qua nội dung tổng quan trước khi đi vào kiến thức mở rộng và kiến thức chi tiết ở tài liệu đính kèm bên dưới nhé!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Module 2 - Tuần 2: Xác Suất, Cơ Sở Dữ Liệu và Những Pha Bayes “Khét Lẹt”!</title>
+      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-2/</link>
+      <pubDate>Thu, 10 Jul 2025 13:03:07 +0700</pubDate>
+      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-2/</guid>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 2 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về &lt;strong&gt;Xác Suất&lt;/strong&gt; – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong &lt;strong&gt;MongoDB&lt;/strong&gt; và thuật toán &lt;strong&gt;Naive Bayes Classifier&lt;/strong&gt;. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé! Bạn nhớ xem chi tiết kiến thức bao gồm kiến thức mở rộng của từng lớp học ở tài liệu đính kèm nhé!&lt;/p&gt;</description>
     </item>
     <item>
       <title>Module 2 - Tuần 1: Đại Số Tuyến Tính, Numpy và Những Cú Lướt MongoDB Đầu Tiên!</title>
       <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-1/</link>
       <pubDate>Sun, 06 Jul 2025 13:03:07 +0700</pubDate>
       <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-1/</guid>
-      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 1 của team Time Series – Module 2!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần đầu tiên của Module 2 đã khởi động mạnh mẽ với những kiến thức nền tảng không thể thiếu cho hành trình học AI. Từ việc làm quen với &lt;strong&gt;Numpy&lt;/strong&gt; để xử lý và biểu diễn dữ liệu, đến những bước đầu khám phá &lt;strong&gt;MongoDB&lt;/strong&gt; và tư duy giải quyết vấn đề bằng logic – tất cả đều hướng tới việc xây dựng nền móng vững chắc cho các ứng dụng AI thực tiễn trong tương lai.&lt;/p&gt;</description>
+      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 1 của team Time Series – Module 2!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần đầu tiên của Module 2 đã khởi động mạnh mẽ với những kiến thức nền tảng không thể thiếu cho hành trình học AI. Từ việc làm quen với &lt;strong&gt;Numpy&lt;/strong&gt; để xử lý và biểu diễn dữ liệu, đến những bước đầu khám phá &lt;strong&gt;MongoDB&lt;/strong&gt; và tư duy giải quyết vấn đề bằng logic – tất cả đều hướng tới việc xây dựng nền móng vững chắc cho các ứng dụng AI thực tiễn trong tương lai. Bạn nhớ xem chi tiết ở tài liệu đính kèm nhé!&lt;/p&gt;</description>
     </item>
     <item>
       <title>Module 1 - Tuần 1 - Phương pháp nghiên cứu và lập trình cơ bản cho Python và SQL</title>
@@ -49,13 +154,6 @@
       <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
       <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module1/week-4/chat_bot/</guid>
       <description>&lt;h2 id=&#34;-trợ-lý-gạo-ai-tiếng-việt--pdf-rag-assistant&#34;&gt;🤖 Trợ Lý Gạo AI Tiếng Việt — PDF RAG Assistant&lt;/h2&gt;&#xA;&lt;p&gt;Chào mừng bạn đến với chatbot Gạo AI thông minh của nhóm, được huấn luyện để &lt;strong&gt;trả lời câu hỏi từ tài liệu PDF&lt;/strong&gt; bằng tiếng Việt.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Module 2 - Tuần 2: Xác Suất, Cơ Sở Dữ Liệu và Những Pha Bayes “Khét Lẹt”!</title>
-      <link>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-2/</link>
-      <pubDate>Sat, 28 Jun 2025 13:03:07 +0700</pubDate>
-      <guid>http://localhost:1313/Time-Series-Team-Hub/posts/module2/week-2/</guid>
-      <description>&lt;p&gt;🎉 &lt;strong&gt;Chào mừng đến với blog Tuần 2 của team Time Series!&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Tuần học thứ 2 đã tiếp tục mở rộng hiểu biết về &lt;strong&gt;Xác Suất&lt;/strong&gt; – một trong những nền tảng quan trọng nhất để phát triển mô hình AI, cùng với các ứng dụng thực tiễn trong &lt;strong&gt;MongoDB&lt;/strong&gt; và thuật toán &lt;strong&gt;Naive Bayes Classifier&lt;/strong&gt;. Hãy cùng nhìn lại mỗi buổi học trong tuần này nhé!&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
