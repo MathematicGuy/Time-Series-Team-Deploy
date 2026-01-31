@@ -76,7 +76,7 @@ def render_saliency_heatmap(tokens, saliency_scores):
     """Render saliency heatmap using Plotly"""
     if not tokens or not saliency_scores:
         return None
-    
+
     # Normalize saliency scores to 0-1 range
     if len(saliency_scores) > 1:
         min_score = min(saliency_scores)
@@ -87,7 +87,7 @@ def render_saliency_heatmap(tokens, saliency_scores):
             normalized_scores = [0.5] * len(saliency_scores)
     else:
         normalized_scores = [0.5] * len(saliency_scores)
-    
+
     # Create HTML with colored spans
     html_content = ""
     for token, score in zip(tokens, normalized_scores):
@@ -95,7 +95,7 @@ def render_saliency_heatmap(tokens, saliency_scores):
         red_intensity = int(255 * score)
         color = f"rgba(255, {255 - red_intensity}, {255 - red_intensity}, 0.7)"
         html_content += f'<span class="saliency-word" style="background-color: {color};">{token}</span> '
-    
+
     return html_content
 
 def load_trained_model():
@@ -107,7 +107,7 @@ def load_trained_model():
         'class_weights.json',
         'model_config.json'
     ]
-    
+
     if all(os.path.exists(f) for f in model_files):
         try:
             st.session_state.classifier = SpamClassifier.load_from_files()
@@ -123,21 +123,21 @@ def train_model_callback(language):
     try:
         # Initialize classifier
         classifier = SpamClassifier()
-        
+
         # Update progress
         progress_bar = st.progress(0)
         status_text = st.empty()
-        
+
         status_text.text("Loading dataset...")
         progress_bar.progress(10)
-        
+
         # Load data based on language selection
         source = 'kaggle' if language == 'Vietnamese' else 'gdrive'
         messages, labels = classifier.load_dataset(source=source)
-        
+
         status_text.text(f"Loaded {len(messages)} messages. Starting training...")
         progress_bar.progress(30)
-        
+
         # Train the model
         results = classifier.train(
             messages, labels,
@@ -146,23 +146,23 @@ def train_model_callback(language):
                 status_text.text(msg)
             )
         )
-        
+
         status_text.text("Saving model artifacts...")
         progress_bar.progress(95)
-        
+
         # Save model artifacts
         classifier.save_to_files()
-        
+
         # Update session state
         st.session_state.classifier = classifier
         st.session_state.model_trained = True
-        
+
         progress_bar.progress(100)
         status_text.text("Training completed successfully!")
-        
+
         # Show training results
         st.success("✅ Model training completed!")
-        
+
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Dataset Size", len(messages))
@@ -171,9 +171,9 @@ def train_model_callback(language):
         with col3:
             best_accuracy = max(results['accuracy_results'].values())
             st.metric("Best Accuracy", f"{best_accuracy:.1%}")
-        
+
         return True
-        
+
     except Exception as e:
         st.error(f"Training failed: {str(e)}")
         return False
@@ -181,7 +181,7 @@ def train_model_callback(language):
 def main():
     """Main Streamlit application"""
     initialize_session_state()
-    
+
     # Header
     st.markdown("""
     <div class="main-header">
@@ -189,27 +189,27 @@ def main():
         <p>Advanced Multilingual Spam Detection with Explainable AI</p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     # Sidebar
     with st.sidebar:
         st.header("⚙️ Configuration")
-        
+
         # Language selection
         language = st.selectbox(
             "Select Language",
             ["Vietnamese", "English"],
             help="Vietnamese: Loads Kaggle dataset\nEnglish: Loads Google Drive dataset"
         )
-        
+
         st.markdown("---")
-        
+
         # Model status
         st.subheader("📊 Model Status")
         if st.session_state.model_trained:
             st.success("✅ Model Ready")
         else:
             st.warning("⏳ Model Not Trained")
-        
+
         # Try to load existing model
         if not st.session_state.model_trained:
             if st.button("🔄 Load Existing Model"):
@@ -219,29 +219,29 @@ def main():
                         st.rerun()
                     else:
                         st.info("No pre-trained model found. Please train a new model.")
-        
+
         st.markdown("---")
-        
+
         # Training section
         st.subheader("🎯 Model Training")
-        
+
         if st.button("🚀 Train New Model", disabled=False):
             st.info(f"Starting training with {language} dataset...")
             train_model_callback(language)
-    
+
     # Main content
     if not st.session_state.model_trained:
         # Welcome screen
         st.markdown("""
         ## 👋 Welcome to Spam Slayer!
-        
+
         Get started by training a model:
-        
+
         1. **Select Language** in the sidebar (Vietnamese or English)
         2. **Click "Train New Model"** to start training
         3. **Wait for training to complete** (this may take a few minutes)
         4. **Start classifying messages!**
-        
+
         ### 🌟 Features:
         - **Multilingual Support**: Vietnamese and English datasets
         - **Advanced AI**: Uses multilingual E5 embeddings with weighted KNN
@@ -249,43 +249,43 @@ def main():
         - **Spam Subcategorization**: Detailed spam type classification
         - **Real-time Processing**: Instant classification results
         """)
-        
+
         # Show training demo
         with st.expander("📖 How It Works"):
             st.markdown("""
             **Spam Slayer** uses state-of-the-art machine learning techniques:
-            
+
             1. **Text Embedding**: Converts messages to numerical representations using multilingual E5
             2. **Similarity Search**: Uses FAISS for efficient nearest neighbor search
             3. **Weighted Classification**: Combines similarity scores with class weights and saliency
             4. **Explainability**: Computes token-level importance scores
             5. **Subcategorization**: Classifies spam into specific types (promotional, system alerts, etc.)
             """)
-    
+
     else:
         # Classification interface
         st.markdown("## 🔍 Message Classification")
-        
+
         # Input section
         col1, col2 = st.columns([3, 1])
-        
+
         with col1:
             user_message = st.text_area(
                 "Enter message to classify:",
                 placeholder="Type your message here...",
                 height=100
             )
-        
+
         with col2:
             st.markdown("<br>", unsafe_allow_html=True)  # Spacing
             classify_button = st.button("🔍 Classify", type="primary")
-            
+
             # Advanced options
             with st.expander("⚙️ Advanced Options"):
                 k_neighbors = st.slider("K Neighbors", 1, 20, 5)
                 show_neighbors = st.checkbox("Show Similar Messages", False)
                 explain_prediction = st.checkbox("Show Explainability", True)
-        
+
         # Classification results
         if classify_button and user_message.strip():
             with st.spinner("Analyzing message..."):
@@ -296,18 +296,18 @@ def main():
                         k=k_neighbors,
                         explain=explain_prediction
                     )
-                    
+
                     # Display prediction
                     prediction = result['prediction']
                     vote_scores = result['vote_scores']
-                    
+
                     if prediction == 'spam':
                         st.markdown(f"""
                         <div class="prediction-box spam-box">
                             🚨 SPAM DETECTED 🚨
                         </div>
                         """, unsafe_allow_html=True)
-                        
+
                         # Show subcategory
                         if 'subcategory' in result and result['subcategory']:
                             subcategory_map = {
@@ -316,18 +316,18 @@ def main():
                                 'spam_khac': '🔍 Other Spam Type'
                             }
                             subcategory_name = subcategory_map.get(
-                                result['subcategory'], 
+                                result['subcategory'],
                                 result['subcategory']
                             )
                             st.info(f"**Spam Type:** {subcategory_name}")
-                    
+
                     else:
                         st.markdown(f"""
                         <div class="prediction-box ham-box">
                             ✅ LEGITIMATE MESSAGE ✅
                         </div>
                         """, unsafe_allow_html=True)
-                    
+
                     # Show confidence scores
                     col1, col2, col3 = st.columns(3)
                     with col1:
@@ -341,38 +341,38 @@ def main():
                         else:
                             confidence = 0.0
                         st.metric("Confidence", f"{confidence:.1%}")
-                    
+
                     # Explainability section
                     if explain_prediction and 'tokens' in result and 'saliency_scores' in result:
                         st.markdown("### 🔬 Explainability Analysis")
-                        
+
                         # Saliency heatmap
                         heatmap_html = render_saliency_heatmap(
-                            result['tokens'], 
+                            result['tokens'],
                             result['saliency_scores']
                         )
-                        
+
                         if heatmap_html:
                             st.markdown("**Word Importance Heatmap:**")
-                            st.markdown(f'<div style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fafafa;">{heatmap_html}</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: rgb(60, 60, 60);">{heatmap_html}</div>', unsafe_allow_html=True)
                             st.caption("Darker red indicates higher influence on spam classification")
-                    
+
                     # Similar messages section
                     if show_neighbors and 'neighbors' in result:
                         st.markdown("### 📋 Similar Training Messages")
-                        
+
                         for i, neighbor in enumerate(result['neighbors'][:5], 1):
                             with st.expander(f"Similar Message #{i} - {neighbor['label'].upper()}"):
                                 st.write(f"**Similarity:** {neighbor['score']:.3f}")
                                 st.write(f"**Weight:** {neighbor['weight']:.3f}")
                                 st.write(f"**Message:** {neighbor['message']}")
-                
+
                 except Exception as e:
                     st.error(f"Classification error: {str(e)}")
-        
+
         elif classify_button:
             st.warning("Please enter a message to classify.")
-        
+
         # Usage statistics
         with st.expander("📊 Model Information"):
             if hasattr(st.session_state.classifier, 'model_info'):
