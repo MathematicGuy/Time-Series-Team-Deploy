@@ -1,11 +1,4 @@
 # 🛡️ Spam Slayer
-
-**Core Functionality**
-- Advanced ML Models: Uses multilingual E5 embeddings with FAISS similarity search
-- Interactive Web Interface: Built with Streamlit for easy use
-- Visual Analytics: Real-time performance charts and confidence visualizations
-- Saliency Analysis: Highlights important words contributing to spam classification
-
 **Spam Categories**
 - 📢 Promotional/Advertisement: Marketing and sales messages
 - ⚠️ System Alert/Phishing: Fake security alerts and phishing attempts
@@ -66,9 +59,7 @@ streamlit run app.py
    - Result formatting
 
 
-## 📝 Additional Resources
-
-### Sample Data Format
+## Sample Data Format
 
 Example training data structure:
 ```csv
