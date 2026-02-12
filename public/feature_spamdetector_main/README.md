@@ -13,7 +13,7 @@
 - ✅ Ham (Not Spam): Legitimate messages
 
 
-## Quick start
+## Setup Here
 
 1. Go to the project folder
 ```
