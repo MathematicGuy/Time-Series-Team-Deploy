@@ -26,12 +26,20 @@ venv\Scripts\activate
 
 3. Install dependencies
 ```
+3. Install dependencies
+```
 pip install -r requirements.txt
 ```
 
 4. Add optional hugging face token
 ```
+4. Add optional hugging face token
+```
 echo "your_huggingface_token_here" > token.txt
+```
+
+5. Run the app
+```
 ```
 
 5. Run the app
@@ -63,6 +71,8 @@ streamlit run app.py
    - Category assignment
    - Result formatting
 
+
+## Sample Data Format
 
 ## Sample Data Format
 
